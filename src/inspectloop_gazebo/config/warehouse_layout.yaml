@@ -1,0 +1,75 @@
+# Single source of truth for the InspectLoop warehouse.
+# scripts/generate_warehouse.py turns this file into:
+#   worlds/warehouse.sdf                         (Gazebo world)
+#   models/gauge_panel_<tag>/                   (textured gauge panels)
+#   ../inspectloop_navigation/maps/warehouse.{pgm,yaml}  (Nav2 occupancy map)
+# World frame == map frame (identity transform).
+
+world_name: inspectloop_warehouse
+
+map:
+  resolution: 0.05            # m / cell
+  origin: [-12.5, -8.5]       # lower-left corner of the grid (m)
+  size: [25.0, 17.0]          # extent (m)
+
+walls:
+  # Outer shell (walls are inside the bounds): interior is x in [-11.8, 11.8], y in [-7.8, 7.8]
+  height: 3.0
+  thickness: 0.2
+  x_min: -12.0
+  x_max: 12.0
+  y_min: -8.0
+  y_max: 8.0
+
+racks:                        # pallet racks; solid kick-plate below 0.35 m so the LiDAR sees them
+  # rack front faces are at y = +-4.0
+  size: [4.0, 1.0, 2.0]
+  items:
+    - {name: rack_n1, xy: [-7.0, 4.5]}
+    - {name: rack_n2, xy: [-1.0, 4.5]}
+    - {name: rack_n3, xy: [5.0, 4.5]}
+    - {name: rack_s1, xy: [-7.0, -4.5]}
+    - {name: rack_s2, xy: [-1.0, -4.5]}
+    - {name: rack_s3, xy: [5.0, -4.5]}
+
+pillars:
+  size: [0.4, 0.4, 3.0]
+  items:
+    - {name: pillar_1, xy: [-4.0, 0.0]}
+    - {name: pillar_2, xy: [2.0, 0.0]}
+    - {name: pillar_3, xy: [8.0, 0.0]}
+
+pallets:
+  size: [1.2, 1.0, 0.9]
+  items:
+    - {name: pallet_1, xy: [-10.0, 6.5]}
+    - {name: pallet_2, xy: [9.5, 6.5]}
+    - {name: pallet_3, xy: [9.5, -6.5]}
+    - {name: pallet_4, xy: [-10.0, -6.5]}
+    - {name: pallet_5, xy: [2.0, 6.8]}
+
+# Analog pressure gauges (ground truth). Each gauge panel carries an ArUco DICT_4X4_50 tag
+# (gauge id, used to locate/rectify the dial) and a 0-10 bar dial whose needle shows 'value'.
+# 'normal_yaw' = direction the dial faces (rad, world frame). The vision and mission nodes
+# never read this file; only the offline evaluator does.
+gauges:
+  size: [0.02, 0.40, 0.544]   # depth, width, height (m)
+  center_z: 0.46
+  items:
+    - {id: PG-11, tag_id: 11, xy: [-7.0, 3.99], normal_yaw: -1.5707963, value: 4.2}   # clear view
+    - {id: PG-12, tag_id: 12, xy: [-1.0, -3.99], normal_yaw: 1.5707963, value: 6.8}   # partly occluded
+    - {id: PG-13, tag_id: 13, xy: [5.0, 3.99], normal_yaw: -1.5707963, value: 3.1}    # blocked by crate
+    - {id: PG-14, tag_id: 14, xy: [11.79, 0.0], normal_yaw: 3.1415927, value: 8.7}    # above alarm limit
+
+# Physical occluders. 'z_bottom' > LiDAR scan height (0.245 m) means the 2D LiDAR and the map
+# cannot see the object (an overhanging conduit box) - it can only be discovered visually.
+occluders:
+  # Conduit junction box hanging 0.30 m in front of PG-12's dial (bracket arm to rack S2).
+  # From the frontal viewpoint it hides the dial but not the tag above it.
+  - {name: conduit_box_pg12, xy: [-1.0, -3.69], size: [0.16, 0.06, 0.16], z_bottom: 0.27,
+     bracket_to_y: -4.0, color: [0.30, 0.32, 0.34]}
+  # Stacked crates parked directly in front of PG-13 (floor-standing, in the map).
+  - {name: crate_stack_pg13, xy: [5.0, 3.49], size: [1.6, 0.5, 1.0], z_bottom: 0.0,
+     color: [0.62, 0.45, 0.25]}
+
+robot_spawn: {x: -10.0, y: 0.0, yaw: 0.0}
