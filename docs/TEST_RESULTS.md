@@ -12,8 +12,9 @@ colcon build --symlink-install      -> Summary: 8 packages finished (no warnings
 
 ## 2. Automated tests (`colcon test`)
 
-`colcon test-result --all` → **122 results, 0 errors, 0 failures, 0 skipped**
-(116 test cases + 6 CTest wrapper entries).
+`colcon test-result --all` → **126 results, 0 errors, 0 failures, 0 skipped**
+(120 test cases + 6 CTest wrapper entries). Re-verified on a fresh `git clone` of the repository
+(clean `colcon build` + `colcon test`).
 
 | Package | Framework | Cases | What is covered |
 |---|---|---|---|

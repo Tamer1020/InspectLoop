@@ -34,7 +34,7 @@ observe ──► value ± σ + quality flags ──► decision policy
 Max error of accepted readings 0.0085 bar (0.09 % FS); all within the reported 2σ. Same decisions in
 three independent full runs (two headless, one with Gazebo GUI + RViz). Camera and LiDAR fault
 injection tested: camera loss → UNRESOLVED (no stale frame reused); LiDAR loss → robot stopped from
-0.40 m/s within 1 s, mission aborted safely. 116 automated tests pass (C++ gtest + pytest).
+0.40 m/s within 1 s, mission aborted safely. 120 automated tests pass (C++ gtest + pytest), verified on a fresh clone.
 Details and limitations: [docs/TEST_RESULTS.md](docs/TEST_RESULTS.md),
 [docs/KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md).
 
