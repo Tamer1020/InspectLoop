@@ -1,0 +1,1 @@
+First V3 demo run BEFORE the worker-process fix: PG-11/PG-14 UNRESOLVED because results were 8-13 s old (GIL contention in the reader node) - see report section 'Issue found during live verification'.

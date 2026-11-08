@@ -30,9 +30,12 @@ mission_manager:
     settle_timeout_s: 5.0
     settle_max_v: 0.02
     settle_max_w: 0.05
+    odom_max_age_s: 0.3                # V3 F5: newest odom sample (stamp) must be this fresh
+    max_result_age_s: 8.0              # V3 F5: last frame -> consumption (sim s); demo 0.2-0.8 s
     # Nav2 goal lifecycle (Astra F4)
     nav_accept_timeout_s: 15.0
     nav_cancel_timeout_s: 10.0
     nav_terminal_timeout_s: 15.0
     nav_inhibit_grace_s: 30.0          # unresolved goal -> e-stop latched + mission aborted
     gate_fault_abort_s: 2.0            # gate STOPPED_SCAN_FAULT this long -> abort (Astra F3)
+    gate_unobserved_abort_s: 3.0       # V3 F3: gate BLOCKED_UNOBSERVED this long -> abort

@@ -72,12 +72,20 @@ scripts/fault_test.sh lidar  /tmp/fault_lidar    # LiDAR bridge killed while dri
 ```
 
 Further modes (Astra F3/F5): `scan_nan`, `scan_empty` (LiDAR replaced by present-but-invalid
-scans), `image_frozen`, `image_future` (camera replaced by a frozen / future-stamped stream).
+scans), `image_frozen`, `image_future` (camera replaced by a frozen / future-stamped stream), and
+in V3 `scan_front_nan` (the *live* scan relayed with every beam inside ±35° set to NaN — the rest
+stays valid, the rate stays healthy) and `clock_reset` (Gazebo world-time reset right after the
+robot reached its first viewpoint, i.e. the simulation clock jumps backwards).
+`scripts/interrupt_test.sh <dir>` sends SIGINT to the mission while Nav2 executes a goal.
 
 Expected: camera → `NO_IMAGE` → RETRY_SAME → UNRESOLVED ("moving cannot fix a sensor fault");
 LiDAR loss or invalid scans → gate `STOPPED_SCAN_FAULT` (robot stops, speeds logged to
-`odom_speed.txt`) → mission ABORTED, report still written; frozen / future-stamped images are
-never used as evidence. The script refuses to run while another InspectLoop simulation is up.
+`odom_speed.txt`) → mission ABORTED, report still written; front-sector blindness → gate
+`BLOCKED_UNOBSERVED`, robot stops, mission ABORTED after 3 s; frozen / future-stamped images are
+never used as evidence; a clock reset invalidates the observation in progress (`CLOCK_RESET`,
+clock epoch changes) — Nav2 itself does not recover from a world-time reset, so navigation then
+fails and the gauge ends `UNRESOLVED` / `NAVIGATION_FAILURE`. The script refuses to run while
+another InspectLoop simulation is up. Recorded runs: `docs/evidence/astra_v3/faults/`.
 
 Other useful switches: `mission:=false` (drive with RViz "Nav2 Goal"), `mission_file:=<yaml>`,
 `output_root:=<dir>`, `camera_bridge:=false` (start without camera),

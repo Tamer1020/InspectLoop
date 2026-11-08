@@ -1,0 +1,14 @@
+samples 200  accepted 97  yield 0.485 [0.4167, 0.5539]
+incorrect acceptance (|err|>0.1): 1/97 accepted [0.0018, 0.0561]
+accepted |err|: {'mean': 0.0187, 'median': 0.0116, 'p95': 0.062, 'max': 0.1013}
+within 1 sigma_h 93/97, within 2 sigma_h 97/97
+  clean              n=102  accepted=89   incorrect=1 max|err|=0.1013
+  radial_distractor  n=38   accepted=1    incorrect=0 max|err|=0.0613
+  line_across        n=20   accepted=5    incorrect=0 max|err|=0.0064
+  white_occluder     n=21   accepted=2    incorrect=0 max|err|=0.0124
+  shadow             n=19   accepted=0    incorrect=0 max|err|=None
+  out-of-scale truth n=15 accepted=0
+  [clean       ] n=95   accepted=89   incorrect=1
+  [difficult   ] n=90   accepted=8    incorrect=0
+  [out_of_scale] n=15   accepted=0    incorrect=0
+  INCORRECT #94 clean truth 9.31115 read 9.41247 err +0.10132

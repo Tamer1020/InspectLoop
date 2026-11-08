@@ -44,6 +44,8 @@ import numpy as np
 import rclpy
 from rclpy.action import ActionClient
 from rclpy.callback_groups import ReentrantCallbackGroup
+from rclpy.clock import JumpThreshold
+from rclpy.duration import Duration
 from rclpy.executors import ExternalShutdownException, MultiThreadedExecutor
 from rclpy.node import Node
 from rclpy.qos import DurabilityPolicy, qos_profile_sensor_data, QoSProfile, ReliabilityPolicy
@@ -132,6 +134,9 @@ class MissionManager(Node):
         p('nav_terminal_timeout_s', 15.0)
         p('nav_inhibit_grace_s', 30.0)       # wait for an unresolved goal before e-stop + abort
         p('gate_fault_abort_s', 2.0)         # gate STOPPED_SCAN_FAULT this long -> abort (F3)
+        p('gate_unobserved_abort_s', 3.0)    # gate BLOCKED_UNOBSERVED this long -> abort (V3 F3)
+        p('max_result_age_s', 8.0)           # V3 F5: last frame -> consumption, sim seconds
+        p('odom_max_age_s', 0.3)             # V3 F5: settle check needs fresh odometry
 
         self._cb = ReentrantCallbackGroup()
         self._nav = ActionClient(self, NavigateToPose, 'navigate_to_pose', callback_group=self._cb)
@@ -170,7 +175,13 @@ class MissionManager(Node):
         self._odom = []                       # (t, |v|, |w|) recent samples
         self._gate_state = None
         self._gate_fault_since = None
+        self._gate_unobserved_since = None
         self._epoch = 0                       # viewpoint epoch (F5)
+        self._clock_epoch = 0                 # V3 F5: increments on every ROS-clock discontinuity
+        self._clock_jumps: List[Dict] = []
+        self._jump_handle = self.get_clock().create_jump_callback(
+            JumpThreshold(min_forward=None, min_backward=Duration(nanoseconds=-1),
+                          on_clock_change=True), post_callback=self._on_clock_jump)
         self.mission_id = ''
         self.nav = NavGoalRunner(
             self._nav, self._wait_future, self._sim_now, self.get_logger(),
@@ -200,12 +211,29 @@ class MissionManager(Node):
     def _on_amcl(self, _msg):
         self._amcl_received = True
 
+    def _on_clock_jump(self, jump):
+        with self._lock:
+            self._clock_epoch += 1
+            self._odom.clear()
+            self._clock_jumps.append({'wall': datetime.datetime.now().isoformat(timespec='seconds'),
+                                      'change': jump.clock_change.name,
+                                      'delta_s': round(jump.delta.nanoseconds * 1e-9, 3),
+                                      'clock_epoch': self._clock_epoch})
+        self.get_logger().warning(f'ROS clock discontinuity ({jump.clock_change.name}, '
+                                  f'{jump.delta.nanoseconds * 1e-9:+.3f} s): clock epoch '
+                                  f'{self._clock_epoch}, pending observations invalidated')
+
+    def clock_epoch(self) -> int:
+        with self._lock:
+            return self._clock_epoch
+
     def _on_odom(self, msg: Odometry):
-        t = self._sim_now()
+        # V3 F5: the message stamp (acquisition time), not the receive time
+        t = Time.from_msg(msg.header.stamp).nanoseconds * 1e-9
         v = math.hypot(msg.twist.twist.linear.x, msg.twist.twist.linear.y)
         with self._lock:
             if self._odom and t < self._odom[-1][0]:
-                self._odom.clear()                       # clock reset
+                self._odom.clear()                       # out of order / clock reset
             self._odom.append((t, v, abs(msg.twist.twist.angular.z)))
             if len(self._odom) > 200:
                 del self._odom[:100]
@@ -217,6 +245,10 @@ class MissionManager(Node):
                 self._gate_fault_since = self._gate_fault_since or time.monotonic()
             else:
                 self._gate_fault_since = None
+            if msg.data == 'BLOCKED_UNOBSERVED':
+                self._gate_unobserved_since = self._gate_unobserved_since or time.monotonic()
+            else:
+                self._gate_unobserved_since = None
 
     def _on_map(self, msg: OccupancyGrid):
         data = np.array(msg.data, np.int16).reshape(msg.info.height, msg.info.width)
@@ -265,11 +297,17 @@ class MissionManager(Node):
             raise MissionAborted('LiDAR stream failed (health_monitor ERROR) - stopping for safety')
         with self._lock:
             since = self._gate_fault_since
+            unobserved = self._gate_unobserved_since
         if since is not None and time.monotonic() - since > float(
                 self.get_parameter('gate_fault_abort_s').value):
             # scans may still arrive but be unusable (empty / NaN / bad stamps): the gate knows
             raise MissionAborted('LiDAR data invalid (cmd_vel_gate STOPPED_SCAN_FAULT) - '
                                  'stopping for safety')
+        if unobserved is not None and time.monotonic() - unobserved > float(
+                self.get_parameter('gate_unobserved_abort_s').value):
+            # V3 F3: the scan is structurally fine but the commanded direction is not observed
+            raise MissionAborted('LiDAR does not observe the motion corridor (cmd_vel_gate '
+                                 'BLOCKED_UNOBSERVED) - stopping for safety')
 
     def latch_estop(self, reason: str) -> bool:
         """Hard motion inhibition through the safety gate (used when a goal can't be confirmed
@@ -390,7 +428,8 @@ class MissionManager(Node):
             with self._lock:
                 samples = list(self._odom)
             if is_settled(samples, float(P('settle_window_s').value), float(P('settle_max_v').value),
-                          float(P('settle_max_w').value)):
+                          float(P('settle_max_w').value), now_s=self._sim_now(),
+                          max_age_s=float(P('odom_max_age_s').value)):
                 return True
             time.sleep(0.05)
         return False
@@ -407,21 +446,31 @@ class MissionManager(Node):
         req.viewpoint_epoch = self._epoch
         req.check_pose = True
         req.expected_x, req.expected_y, req.expected_yaw = vp.x, vp.y, vp.yaw
+        # V3 (F7): a service problem is a SYSTEM fault, never reported as a missing image
         fail = {'viewpoint': vp.label, 'observation_id': req.observation_id,
-                'viewpoint_epoch': self._epoch, 'has_value': False, 'value': None,
-                'sigma': None, 'frames_valid': 0, 'quality_flags': ['NO_IMAGE'],
+                'mission_id': self.mission_id, 'viewpoint_epoch': self._epoch,
+                'has_value': False, 'value': None, 'sigma': None, 'frames_valid': 0,
+                'quality_flags': ['SERVICE_FAILURE'], 'fault_class': 'SERVICE_FAILURE',
                 'settled_before_request': settled}
         if not self._read.wait_for_service(timeout_sec=5.0):
             return dict(fail, detail='gauge reading service unavailable')
         request_time = self._sim_now()
+        clock_epoch_request = self.clock_epoch()
         fut = self._read.call_async(req)
         if not self._wait_future(fut, req.frame_timeout_s + 20.0):
             # abandoned: a late reply carries this observation_id and will never be consumed
             return dict(fail, detail='gauge reading service call timed out')
-        r = fut.result().reading
+        try:
+            resp = fut.result()
+        except Exception as e:  # noqa: BLE001 - service call raised on the client side
+            return dict(fail, detail=f'gauge reading service call failed: {e!r}')
+        if resp is None:
+            return dict(fail, detail='gauge reading service returned no response')
+        r = resp.reading
         t = lambda st: round(st.sec + st.nanosec * 1e-9, 3)  # noqa: E731
         out = {
             'viewpoint': vp.label, 'observation_id': r.observation_id,
+            'mission_id': self.mission_id, 'fault_class': r.fault_class or None,
             'viewpoint_epoch': r.viewpoint_epoch, 'settled_before_request': settled,
             'request_time_s': round(request_time, 3),
             'first_frame_stamp_s': t(r.first_frame_stamp), 'last_frame_stamp_s': t(r.stamp),
@@ -442,8 +491,18 @@ class MissionManager(Node):
             'rectified_image_path': r.rectified_image_path, 'detail': r.detail,
         }
         # re-validate before the result may become evidence for THIS viewpoint (F5)
-        exp = ExpectedObservation(req.observation_id, self._epoch, request_time, self._sim_now(),
-                                  vp.x, vp.y, vp.yaw)
+        consumed = self._sim_now()
+        clock_epoch_now = self.clock_epoch()
+        exp = ExpectedObservation(req.observation_id, self._epoch, request_time, consumed,
+                                  vp.x, vp.y, vp.yaw,
+                                  max_result_age_s=float(self.get_parameter('max_result_age_s').value),
+                                  clock_epoch_request=clock_epoch_request,
+                                  clock_epoch_now=clock_epoch_now, mission_id=self.mission_id)
+        out['consumed_time_s'] = round(consumed, 3)
+        last = out.get('last_frame_stamp_s')
+        out['result_age_s'] = (round(consumed - last, 3)
+                               if isinstance(last, float) and out.get('frames_received') else None)
+        out['clock_epoch_request'], out['clock_epoch_consumed'] = clock_epoch_request, clock_epoch_now
         problems = validate_observation(out, exp)
         if not settled:
             problems.append('robot not settled before the request')
@@ -451,6 +510,7 @@ class MissionManager(Node):
             out['provenance_problems'] = problems
             out['quality_flags'] = list(out['quality_flags']) + ['STALE_OBSERVATION']
             out['has_value'], out['value'], out['sigma'] = False, None, None
+            out['fault_class'] = 'IMAGE_INVALID'
             out['detail'] = 'rejected by mission: ' + '; '.join(problems)
         return out
 
@@ -479,7 +539,10 @@ class MissionManager(Node):
         rec = {'id': g.id, 'tag_id': g.tag_id, 'description': g.description, 'unit': g.unit,
                'mount': {'x': g.x, 'y': g.y, 'normal_yaw': g.normal_yaw},
                'alarm_low': g.alarm_low, 'alarm_high': g.alarm_high,
+               # V3 F8: footprint-clear on the map only - Nav2 reachability is NOT pre-checked
                'candidates_feasible': [v.as_dict() for v in planner.candidates],
+               'candidate_feasibility': 'footprint-clear in the occupancy map; Nav2 path '
+                                        'reachability not pre-checked',
                'candidates_rejected': [v.as_dict() for v in planner.rejected],
                'viewpoints': [], 'timeline': [], 'result': None}
         self._marker_candidates(gi, planner)
@@ -490,7 +553,8 @@ class MissionManager(Node):
         while final is None:
             if vp is None:
                 final = {'status': 'UNRESOLVED',
-                         'reason': 'no reachable viewpoint left (all candidates tried or blocked)'}
+                         'reason': 'no viewpoint candidate left (all footprint-clear candidates '
+                                   'tried, blocked or found unreachable)'}
                 break
             planner.mark_tried(vp)
             self._epoch += 1                       # new viewpoint epoch (F5)
@@ -564,6 +628,11 @@ class MissionManager(Node):
                     break
                 final = {'status': 'UNRESOLVED', 'reason': d.reason}
                 break
+        last_obs = next((o for v in reversed(rec['viewpoints'])
+                         for o in reversed(v['observations'])), None)
+        nav_failed = bool(rec['timeline']) and rec['timeline'][-1].get('event') == 'NAV_FAILED'
+        final['outcome_class'] = dp.outcome_class(
+            final['status'], (last_obs or {}).get('quality_flags') or (), nav_failed)
         final['observations'] = obs_count
         final['viewpoints_used'] = len(rec['viewpoints'])
         final['time_s'] = round(self._sim_now() - t0, 1)
@@ -636,7 +705,7 @@ class MissionManager(Node):
                 'max_sigma', 'min_valid_frames', 'max_retries_same', 'max_viewpoints',
                 'max_observations', 'frames_per_observation', 'viewpoint_distances',
                 'viewpoint_angles_deg', 'viewpoint_clearance_m', 'nav_timeout_s',
-                'nav_attempts_per_viewpoint')},
+                'nav_attempts_per_viewpoint', 'max_result_age_s', 'odom_max_age_s')},
             'gauges': [], 'home_return': None,
         }
         self.get_logger().info(
@@ -680,19 +749,32 @@ class MissionManager(Node):
             record['state'] = 'ABORTED'
             record['abort_reason'] = f'internal error: {type(e).__name__}: {e}'
             self.get_logger().error(record['abort_reason'] + '\n' + traceback.format_exc())
-        # never leave a goal running behind us (F4): cancel, confirm, else latch the e-stop
+        # never leave a goal running behind us (F4): cancel, confirm, else latch the e-stop.
+        # V3: cancel_all() never raises; if anything in this block still fails (incl. a second
+        # Ctrl-C) the e-stop is latched anyway - cleanup is never reported as successful.
+        cleanup_ok = False
         try:
-            if not self.nav.cancel_all('mission end'):
+            cleanup_ok = self.nav.cancel_all('mission end')
+        except BaseException as e:  # noqa: BLE001
+            self.get_logger().error(f'goal cleanup raised: {e!r}')
+            record['cleanup_exception'] = f'{type(e).__name__}: {e}'
+        record['nav_cleanup_confirmed'] = cleanup_ok
+        if not cleanup_ok:
+            try:
                 record['estop_latched'] = self.latch_estop(
                     'navigation goal not confirmed cancelled at mission end')
-                record['abort_reason'] = (record.get('abort_reason') or '') + \
-                    ' | unresolved navigation goal at mission end: e-stop latched'
-        except Exception as e:  # noqa: BLE001
-            self.get_logger().error(f'goal cleanup failed: {e!r}')
+            except BaseException as e:  # noqa: BLE001
+                record['estop_latched'] = False
+                self.get_logger().error(f'latching the e-stop failed: {e!r}')
+            record['unresolved_goals'] = self.nav.unresolved()
+            record['abort_reason'] = (record.get('abort_reason') or '') + \
+                ' | unresolved navigation goal at mission end: e-stop ' + \
+                ('latched' if record['estop_latched'] else 'NOT confirmed - check the robot')
         record['duration_wall_s'] = round(time.monotonic() - t_wall0, 1)
         record['duration_sim_s'] = round(self._sim_now() - t_sim0, 1) if t_sim0 else 0.0
         with self._lock:
             record['health_events'] = list(self._health_events)
+            record['clock_discontinuities'] = list(self._clock_jumps)
         record['nav_goal_events'] = list(self.nav.events)
         record['uncertainty_note'] = ('sigma is a HEURISTIC model (frame spread + pixel resolution '
                                       '+ floor); bands are diagnostic, not calibrated confidence '

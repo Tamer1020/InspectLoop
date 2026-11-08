@@ -1,0 +1,2 @@
+[fault_test] 00:36:39.431 injecting camera fault: killing gz_camera_bridge (pid 184068)
+[fault_test] launch exit code 0

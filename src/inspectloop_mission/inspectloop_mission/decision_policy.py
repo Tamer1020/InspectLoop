@@ -26,11 +26,19 @@ DECISION_CODES = {ACCEPT: 0, RETRY_SAME: 1, MOVE_NEW: 2, UNRESOLVED: 3}
 
 TRANSIENT_FLAGS = {'NO_IMAGE', 'TAG_INTERMITTENT', 'INCONSISTENT_FRAMES', 'BLURRED',
                    'TAG_NOT_VISIBLE', 'STALE_OBSERVATION', 'ROBOT_MOVING', 'FROZEN_FRAMES',
-                   'CLOCK_RESET', 'INVALID_MEASUREMENT', 'WRONG_VIEWPOINT'}
+                   'CLOCK_RESET', 'INVALID_MEASUREMENT', 'WRONG_VIEWPOINT', 'INVALID_FRAMES',
+                   'PROCESSING_ERROR', 'SERVICE_FAILURE'}
 GEOMETRIC_FLAGS = {'OCCLUDED', 'OBLIQUE_VIEW', 'TOO_FAR', 'LOW_NEEDLE_CONTRAST', 'OUT_OF_SCALE',
                    'AMBIGUOUS_NEEDLE', 'NEEDLE_PARTIAL'}
 # problems that moving the robot cannot fix (sensor / software): retry, then give up
-NOT_FIXABLE_BY_MOVING = {'NO_IMAGE', 'FROZEN_FRAMES', 'CLOCK_RESET', 'INVALID_MEASUREMENT'}
+NOT_FIXABLE_BY_MOVING = {'NO_IMAGE', 'FROZEN_FRAMES', 'CLOCK_RESET', 'INVALID_MEASUREMENT',
+                         'INVALID_FRAMES', 'PROCESSING_ERROR', 'SERVICE_FAILURE'}
+# V3 (Astra V2 review F7): typed terminal outcomes; a system fault is never reported as a
+# visual-evidence problem (occlusion etc.)
+SYSTEM_FAULT_FLAGS = {'PROCESSING_ERROR', 'SERVICE_FAILURE', 'INVALID_MEASUREMENT'}
+SENSOR_FAULT_FLAGS = {'NO_IMAGE', 'INVALID_FRAMES', 'FROZEN_FRAMES', 'CLOCK_RESET'}
+OUTCOME_CLASSES = ('MEASURED', 'INSUFFICIENT_VISUAL_EVIDENCE', 'CAMERA_UNAVAILABLE',
+                   'IMAGE_INVALID', 'SYSTEM_FAULT', 'NAVIGATION_FAILURE')
 # flags that do not by themselves invalidate a reading with enough valid frames
 INFORMATIONAL_FLAGS = {'TAG_INTERMITTENT'}
 
@@ -80,6 +88,31 @@ def contract_violations(obs, p: PolicyParams) -> List[str]:
     if _is_real(v) and not (p.scale_min - p.out_of_scale_tol <= v <= p.scale_max + p.out_of_scale_tol):
         errs.append(f'value {v} outside the printed scale [{p.scale_min}, {p.scale_max}]')
     return errs
+
+
+def _fault_reason(flags, why: str) -> str:
+    flags = set(flags)
+    if flags & SYSTEM_FAULT_FLAGS:
+        return f'system fault ({why}) persisted: not an image-quality problem, moving cannot fix it'
+    if flags == {'NO_IMAGE'}:
+        return 'camera delivers no frames: moving cannot fix a sensor fault'
+    return f'invalid image data ({why}) persisted: moving cannot fix it'
+
+
+def outcome_class(status: str, last_flags: Iterable[str] = (), nav_failed: bool = False) -> str:
+    """Typed terminal outcome of a gauge (V3, F7)."""
+    if status == 'ACCEPTED':
+        return 'MEASURED'
+    if nav_failed:
+        return 'NAVIGATION_FAILURE'
+    flags = set(last_flags or ())
+    if flags & SYSTEM_FAULT_FLAGS:
+        return 'SYSTEM_FAULT'
+    if 'NO_IMAGE' in flags:
+        return 'CAMERA_UNAVAILABLE'
+    if flags & (SENSOR_FAULT_FLAGS | {'STALE_OBSERVATION', 'WRONG_VIEWPOINT', 'ROBOT_MOVING'}):
+        return 'IMAGE_INVALID'
+    return 'INSUFFICIENT_VISUAL_EVIDENCE'
 
 
 def _hint_for(flags: Iterable[str]) -> str:
@@ -136,9 +169,7 @@ def decide(obs: Dict, retries_at_view: int, viewpoints_remaining: int, observati
         why = ', '.join(sorted(sensor))
         if can_retry:
             return Decision(RETRY_SAME, f'possibly transient ({why}): observe again from the same pose')
-        if sensor == {'NO_IMAGE'}:
-            return Decision(UNRESOLVED, 'camera delivers no frames: moving cannot fix a sensor fault')
-        return Decision(UNRESOLVED, f'{why} persisted: moving cannot fix it')
+        return Decision(UNRESOLVED, _fault_reason(sensor, why))
 
     geometric = blocking & GEOMETRIC_FLAGS
     transient = blocking & TRANSIENT_FLAGS
@@ -169,9 +200,7 @@ def decide(obs: Dict, retries_at_view: int, viewpoints_remaining: int, observati
     if can_retry:
         return Decision(RETRY_SAME, f'possibly transient ({why}): observe again from the same pose')
     if transient and transient <= NOT_FIXABLE_BY_MOVING:
-        if transient == {'NO_IMAGE'}:
-            return Decision(UNRESOLVED, 'camera delivers no frames: moving cannot fix a sensor fault')
-        return Decision(UNRESOLVED, f'{why} persisted: moving cannot fix it')
+        return Decision(UNRESOLVED, _fault_reason(transient, why))
     if can_move:
         return Decision(MOVE_NEW, f'{why} persisted after {retries_at_view} retry(ies)',
                         _hint_for(transient))

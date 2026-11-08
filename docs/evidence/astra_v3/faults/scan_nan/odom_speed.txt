@@ -1,0 +1,8 @@
+READY
+t+0.0-0.5s  max|v|=0.400 m/s  max|w|=0.058 rad/s  (n=20)
+t+0.5-1.0s  max|v|=0.400 m/s  max|w|=0.037 rad/s  (n=14)
+t+1.0-1.5s  max|v|=0.400 m/s  max|w|=0.034 rad/s  (n=13)
+t+1.5-2.0s  max|v|=0.400 m/s  max|w|=0.037 rad/s  (n=14)
+t+2.0-2.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+2.5-3.0s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+3.0-3.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=7)

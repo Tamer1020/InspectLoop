@@ -1,0 +1,20 @@
+Running main() from /opt/ros/jazzy/src/gtest_vendor/src/gtest_main.cc
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from AstraV3F3
+[ RUN      ] AstraV3F3.ForwardSectorNaNBlindnessDoesNotPassForwardMotion
+forward_usable=0.612188 validity=VALID clearance=inf state=PASS out=(0.40, 0.20)
+/home/tamer/InspectLoop/src/inspectloop_safety/test/test_v3_sector_blindness_existing_api.cpp:40: Failure
+Expected: (out.velocity.linear) <= (0.0), actual: 0.4 vs 0
+forward motion passed with an unobserved front sector
+
+[  FAILED  ] AstraV3F3.ForwardSectorNaNBlindnessDoesNotPassForwardMotion (0 ms)
+[----------] 1 test from AstraV3F3 (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] AstraV3F3.ForwardSectorNaNBlindnessDoesNotPassForwardMotion
+
+ 1 FAILED TEST

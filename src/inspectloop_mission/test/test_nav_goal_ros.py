@@ -158,3 +158,39 @@ def test_v1_client_logic_orphans_a_late_goal(ros):
     assert not result.done()                       # orphan goal still executing on the server
     send.result().cancel_goal_async()             # clean up for the other tests
     assert wall_wait(result, 3.0)
+
+
+def test_v3_interrupt_during_acceptance_real_server_goal_is_cancelled(ros):
+    """V3 (Astra V2 review F4): KeyboardInterrupt inside the acceptance wait; the real server
+    accepts 1.5 s later (after the bounded cleanup gave up). The goal must stay owned, block
+    motion, and be cancelled + confirmed terminal on the server."""
+    fake, client = ros
+    before = set(fake.active)       # e.g. the deliberately un-cancellable goal of another test
+    state = {'fired': False}
+
+    def interrupting_wait(fut, timeout, abort_check=None):
+        if not state['fired']:
+            state['fired'] = True
+            time.sleep(0.1)
+            raise KeyboardInterrupt('ctrl-c during acceptance')
+        return wall_wait(fut, timeout, abort_check)
+
+    r = NavGoalRunner(client, interrupting_wait, time.monotonic, None, accept_timeout_s=0.5,
+                      cancel_timeout_s=2.0, terminal_timeout_s=3.0)
+    with pytest.raises(KeyboardInterrupt):
+        r.run(goal(5), 'interrupted', 30.0)
+    assert r.motion_inhibited()                    # request in flight: owned and inhibiting
+    assert r.run(goal(1), 'next', 5.0)['result'] == 'INHIBITED'
+    end = time.monotonic() + 5.0                   # late acceptance arrives on the server
+    while (not any(e['event'] == 'LATE_ACCEPTANCE' for e in r.events) and
+           time.monotonic() < end):
+        r.unresolved()                             # polls the pending send
+        time.sleep(0.05)
+    ok = r.cancel_all('shutdown')
+    assert ok is True
+    time.sleep(0.3)
+    assert fake.active <= before                   # our goal no longer executes on the server
+    assert not r.motion_inhibited()
+    kinds = [e['event'] for e in r.events]
+    assert 'LATE_ACCEPTANCE' in kinds
+    assert any(e['event'] == 'TERMINAL' and 'CANCELED' in e['detail'] for e in r.events), r.events

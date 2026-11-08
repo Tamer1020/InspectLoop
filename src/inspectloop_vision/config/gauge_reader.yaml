@@ -9,7 +9,7 @@ gauge_reader:
     wall_timeout_factor: 3.0    # wall-clock backstop if /clock stops
     # freshness / provenance (Astra F5)
     max_frame_future_s: 0.2     # frames stamped later than now + this are rejected
-    clock_reset_threshold_s: 1.0  # backward clock/stamp jump larger than this clears the buffer
+    clock_jump_tolerance_s: 0.001  # V3: ANY backward clock/stamp step beyond 1 ms clears the buffer
     max_pose_error_m: 0.35      # capture pose vs. requested viewpoint (check_pose)
     max_pose_error_rad: 0.40
     max_motion_m: 0.02          # robot motion during the burst -> ROBOT_MOVING

@@ -1,0 +1,331 @@
+{
+  "id": "PG-11",
+  "tag_id": 11,
+  "description": "Rack N1 - compressed-air header",
+  "unit": "bar",
+  "mount": {
+    "x": -7.0,
+    "y": 3.99,
+    "normal_yaw": -1.5708
+  },
+  "alarm_low": 1.0,
+  "alarm_high": 8.0,
+  "candidates_feasible": [
+    {
+      "index": 0,
+      "label": "V0 d=1.50 a=+0deg",
+      "x": -7.0,
+      "y": 2.49,
+      "yaw": 1.5708,
+      "distance": 1.5,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 1,
+      "label": "V1 d=1.50 a=-30deg",
+      "x": -7.75,
+      "y": 2.691,
+      "yaw": 1.0472,
+      "distance": 1.5,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 2,
+      "label": "V2 d=1.50 a=+30deg",
+      "x": -6.25,
+      "y": 2.691,
+      "yaw": 2.0944,
+      "distance": 1.5,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 3,
+      "label": "V3 d=1.50 a=-45deg",
+      "x": -8.061,
+      "y": 2.929,
+      "yaw": 0.7854,
+      "distance": 1.5,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 4,
+      "label": "V4 d=1.50 a=+45deg",
+      "x": -5.939,
+      "y": 2.929,
+      "yaw": 2.3562,
+      "distance": 1.5,
+      "angle_deg": 45.0
+    },
+    {
+      "index": 5,
+      "label": "V5 d=1.20 a=+0deg",
+      "x": -7.0,
+      "y": 2.79,
+      "yaw": 1.5708,
+      "distance": 1.2,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 6,
+      "label": "V6 d=1.20 a=-30deg",
+      "x": -7.6,
+      "y": 2.951,
+      "yaw": 1.0472,
+      "distance": 1.2,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 7,
+      "label": "V7 d=1.20 a=+30deg",
+      "x": -6.4,
+      "y": 2.951,
+      "yaw": 2.0944,
+      "distance": 1.2,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 8,
+      "label": "V8 d=1.20 a=-45deg",
+      "x": -7.849,
+      "y": 3.141,
+      "yaw": 0.7854,
+      "distance": 1.2,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 9,
+      "label": "V9 d=1.20 a=+45deg",
+      "x": -6.151,
+      "y": 3.141,
+      "yaw": 2.3562,
+      "distance": 1.2,
+      "angle_deg": 45.0
+    },
+    {
+      "index": 10,
+      "label": "V10 d=1.90 a=+0deg",
+      "x": -7.0,
+      "y": 2.09,
+      "yaw": 1.5708,
+      "distance": 1.9,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 11,
+      "label": "V11 d=1.90 a=-30deg",
+      "x": -7.95,
+      "y": 2.345,
+      "yaw": 1.0472,
+      "distance": 1.9,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 12,
+      "label": "V12 d=1.90 a=+30deg",
+      "x": -6.05,
+      "y": 2.345,
+      "yaw": 2.0944,
+      "distance": 1.9,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 13,
+      "label": "V13 d=1.90 a=-45deg",
+      "x": -8.344,
+      "y": 2.647,
+      "yaw": 0.7854,
+      "distance": 1.9,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 14,
+      "label": "V14 d=1.90 a=+45deg",
+      "x": -5.657,
+      "y": 2.646,
+      "yaw": 2.3562,
+      "distance": 1.9,
+      "angle_deg": 45.0
+    }
+  ],
+  "candidate_feasibility": "footprint-clear in the occupancy map; Nav2 path reachability not pre-checked",
+  "candidates_rejected": [],
+  "viewpoints": [
+    {
+      "viewpoint": {
+        "index": 0,
+        "label": "V0 d=1.50 a=+0deg",
+        "x": -7.0,
+        "y": 2.49,
+        "yaw": 1.5708,
+        "distance": 1.5,
+        "angle_deg": 0.0
+      },
+      "navigation": {
+        "outcome": "SUCCEEDED",
+        "attempts": [
+          {
+            "result": "SUCCEEDED",
+            "duration_s": 14.16,
+            "recoveries": 0,
+            "attempt": 1
+          }
+        ],
+        "total_time_s": 14.16,
+        "final_pose": {
+          "x": -7.06,
+          "y": 2.622,
+          "yaw": 1.412
+        },
+        "position_error_m": 0.145,
+        "yaw_error_rad": 0.159
+      },
+      "observations": [
+        {
+          "viewpoint": "V0 d=1.50 a=+0deg",
+          "observation_id": "20261109_003523_0308/PG-11/V0/1",
+          "mission_id": "20261109_003523_0308",
+          "fault_class": "IMAGE_INVALID",
+          "viewpoint_epoch": 1,
+          "settled_before_request": true,
+          "request_time_s": 26.105,
+          "first_frame_stamp_s": 0.0,
+          "last_frame_stamp_s": 0.101,
+          "stamp_s": 0.101,
+          "pose_known": false,
+          "acq_x": null,
+          "acq_y": null,
+          "acq_yaw": null,
+          "pose_motion_m": 0.0,
+          "pose_motion_rad": 0.0,
+          "has_value": false,
+          "value": null,
+          "sigma": null,
+          "unit": "bar",
+          "frames_requested": 5,
+          "frames_received": 0,
+          "frames_tag_detected": 0,
+          "frames_valid": 0,
+          "frame_values": [],
+          "frame_spread": 0.0,
+          "needle_confidence": 0.0,
+          "dial_visibility": 0.0,
+          "view_angle_deg": null,
+          "distance_m": null,
+          "dial_radius_px": 0.0,
+          "sharpness": 0.0,
+          "processing_time_ms": 0.1,
+          "quality_flags": [
+            "INVALID_FRAMES",
+            "CLOCK_RESET",
+            "STALE_OBSERVATION"
+          ],
+          "raw_image_path": "",
+          "annotated_image_path": "",
+          "rectified_image_path": "",
+          "detail": "rejected by mission: clock discontinuity between request and consumption (clock epoch 0 -> 1); clock went backwards during the observation (26.11 -> 0.13 s)",
+          "consumed_time_s": 0.132,
+          "result_age_s": null,
+          "clock_epoch_request": 0,
+          "clock_epoch_consumed": 1,
+          "provenance_problems": [
+            "clock discontinuity between request and consumption (clock epoch 0 -> 1)",
+            "clock went backwards during the observation (26.11 -> 0.13 s)"
+          ],
+          "decision": "RETRY_SAME",
+          "reason": "possibly transient (CLOCK_RESET, INVALID_FRAMES): observe again from the same pose",
+          "index": 1
+        },
+        {
+          "viewpoint": "V0 d=1.50 a=+0deg",
+          "observation_id": "20261109_003523_0308/PG-11/V0/2",
+          "mission_id": "20261109_003523_0308",
+          "fault_class": "IMAGE_INVALID",
+          "viewpoint_epoch": 1,
+          "settled_before_request": false,
+          "request_time_s": 10.941,
+          "first_frame_stamp_s": 11.6,
+          "last_frame_stamp_s": 12.1,
+          "stamp_s": 12.1,
+          "pose_known": false,
+          "acq_x": null,
+          "acq_y": null,
+          "acq_yaw": null,
+          "pose_motion_m": 0.0,
+          "pose_motion_rad": 0.0,
+          "has_value": false,
+          "value": null,
+          "sigma": null,
+          "unit": "bar",
+          "frames_requested": 5,
+          "frames_received": 5,
+          "frames_tag_detected": 5,
+          "frames_valid": 5,
+          "frame_values": [
+            4.2144,
+            4.2144,
+            4.2144,
+            4.2144,
+            4.2144
+          ],
+          "frame_spread": 0.0,
+          "needle_confidence": 0.993,
+          "dial_visibility": 1.0,
+          "view_angle_deg": 22.2,
+          "distance_m": 1.213,
+          "dial_radius_px": 74.5,
+          "sharpness": 1295.8,
+          "processing_time_ms": 449.8,
+          "quality_flags": [
+            "WRONG_VIEWPOINT",
+            "STALE_OBSERVATION"
+          ],
+          "raw_image_path": "/home/tamer/InspectLoop/docs/evidence/astra_v3/faults/clock_reset/20261109_003523_0308/images/PG-11_V0_t00011.60_raw.png",
+          "annotated_image_path": "/home/tamer/InspectLoop/docs/evidence/astra_v3/faults/clock_reset/20261109_003523_0308/images/PG-11_V0_t00011.60_annotated.png",
+          "rectified_image_path": "/home/tamer/InspectLoop/docs/evidence/astra_v3/faults/clock_reset/20261109_003523_0308/images/PG-11_V0_t00011.60_rectified.png",
+          "detail": "rejected by mission: robot pose at acquisition time unknown; robot not settled before the request",
+          "consumed_time_s": 14.521,
+          "result_age_s": 2.421,
+          "clock_epoch_request": 1,
+          "clock_epoch_consumed": 1,
+          "provenance_problems": [
+            "robot pose at acquisition time unknown",
+            "robot not settled before the request"
+          ],
+          "decision": "MOVE_NEW",
+          "reason": "STALE_OBSERVATION, WRONG_VIEWPOINT persisted after 1 retry(ies)",
+          "index": 2
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "t": -11.1,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "event": "OBSERVATION #1",
+      "value": null,
+      "sigma": null,
+      "flags": [
+        "INVALID_FRAMES",
+        "CLOCK_RESET",
+        "STALE_OBSERVATION"
+      ],
+      "decision": "RETRY_SAME",
+      "reason": "possibly transient (CLOCK_RESET, INVALID_FRAMES): observe again from the same pose"
+    },
+    {
+      "t": 3.3,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "event": "OBSERVATION #2",
+      "value": null,
+      "sigma": null,
+      "flags": [
+        "WRONG_VIEWPOINT",
+        "STALE_OBSERVATION"
+      ],
+      "decision": "MOVE_NEW",
+      "reason": "STALE_OBSERVATION, WRONG_VIEWPOINT persisted after 1 retry(ies)"
+    }
+  ],
+  "result": null
+}

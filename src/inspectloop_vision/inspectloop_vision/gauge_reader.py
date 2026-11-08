@@ -82,6 +82,14 @@ AMBIGUITY_LIMIT = 0.45            # competing line >= 45 % of the needle's contr
 RESIDUAL_WINDOW_DEG = 20.0
 MAX_MODEL_RESIDUAL = 0.075
 MIN_NEEDLE_SUPPORT = 0.70         # fraction of rings that see the needle at the consensus angle
+# V3 (Astra V2 review F1, merged distractor): on the outer rings (>= 0.40 R) the needle is narrow,
+# so a dark line a few degrees away that MERGES with it into one lobe makes that lobe wider than
+# any single needle can be. The predicted width already includes a 1.5 image-px blur allowance,
+# hence the physical bound 1.0 (measured half-max width <= predicted full needle width). This is
+# a model bound, not a fitted threshold: on the development set (seed 20261108) correctly
+# accepted readings reached 0.90, the merged-distractor false acceptance (case #183) 1.06.
+OUTER_LOBE_R = 0.40
+MAX_OUTER_LOBE_RATIO = 1.0
 OUT_OF_SCALE_TOL = 0.05           # bar beyond the printed scale before flagging OUT_OF_SCALE
 VIS_R0, VIS_R1 = 0.15, 0.52
 VIS_EXCLUDE = [(150.0, 210.0)]        # 'bar' caption below the hub (degrees, clockwise from up)
@@ -140,6 +148,7 @@ class FrameReading:
     needle_support: float = 0.0       # fraction of rings seeing the needle at the consensus angle
     needle_ambiguity: float = 1.0     # strength of the best competing line / needle (0 = none)
     needle_lobe_ratio: float = 0.0    # measured / predicted needle lobe width (diagnostic)
+    needle_outer_lobe_ratio: float = 0.0  # same on rings >= OUTER_LOBE_R (V3 merged-lobe bound)
     needle_residual: float = 1.0      # unexplained dark energy near the needle / needle energy
     out_of_range: bool = False        # needle at the edge of the search sweep (beyond the scale)
     detail: str = ''
@@ -173,6 +182,7 @@ class Observation:
     needle_support: float = 0.0
     needle_ambiguity: float = 1.0
     needle_residual: float = 1.0
+    needle_outer_lobe_ratio: float = 0.0
 
 
 def value_to_angle(v: float) -> float:
@@ -399,8 +409,9 @@ class GaugeReader:
             fr.dial_visibility = self._visibility(rgrey, rsat, maskf, white, None, up)
             fr.needle_support, fr.needle_ambiguity = 0.0, 1.0
             return fr
-        ang, contrast, support, ambiguity, lobe_ratio = res
+        ang, contrast, support, ambiguity, lobe_ratio, outer_lobe = res
         fr.needle_support, fr.needle_ambiguity, fr.needle_lobe_ratio = support, ambiguity, lobe_ratio
+        fr.needle_outer_lobe_ratio = outer_lobe
         fr.needle_residual = self._model_residual(prof, ang, up)
         conf = min(1.0, contrast / 0.5) * support * max(0.0, 1.0 - ambiguity)
         if not fr.center_refined:
@@ -417,6 +428,7 @@ class GaugeReader:
             fr.value = float(angle_to_value(ang))
         fr.detail = (f'needle {ang:+.1f} deg conf {conf:.2f} support {support:.2f} '
                      f'ambiguity {ambiguity:.2f} residual {fr.needle_residual:.3f} '
+                     f'outer lobe {outer_lobe:.2f} '
                      f'vis {fr.dial_visibility:.2f}'
                      + ('' if fr.center_refined else ' (bezel fit failed)'))
         return fr
@@ -427,10 +439,11 @@ class GaugeReader:
         A needle is ONE straight, tapered dark line through the pivot. On every sampling ring it
         must appear as a single lobe whose width matches the needle geometry (+ image blur), and
         all rings must agree on its angle. Returns (angle, contrast, support, ambiguity,
-        lobe_ratio) or None when no ring sees a line.
+        lobe_ratio, outer_lobe_ratio) or None when no ring sees a line.
           support    fraction of usable rings whose lobe lies at the consensus angle
           ambiguity  75th percentile over outer rings of (best competing lobe / needle lobe)
           lobe_ratio median over outer rings of measured / predicted lobe width
+          outer_lobe_ratio  same over rings >= OUTER_LOBE_R (merged-lobe bound, V3)
         """
         n_ang, n_ring = prof.shape
         exp_hw = needle_halfwidth_deg(self._radii) + np.degrees(1.5 * up / (self._radii * DIAL_R))
@@ -484,7 +497,9 @@ class GaugeReader:
         contrast = float(np.mean([r[2] for r in consistent]))
         ambiguity = float(np.percentile([r[3] for r in outer], 75))
         lobe_ratio = float(np.median([r[4] for r in outer]))
-        return angle, contrast, support, ambiguity, lobe_ratio
+        far = [r[4] for r in rings if self._radii[r[0]] >= OUTER_LOBE_R]
+        outer_lobe = float(np.median(far)) if far else 0.0
+        return angle, contrast, support, ambiguity, lobe_ratio, outer_lobe
 
     def _model_residual(self, prof: np.ndarray, angle: float, up: float) -> float:
         """Fit the physical needle model and return the unexplained dark energy (Astra F1).
@@ -580,6 +595,8 @@ def fuse(frames: List[FrameReading], frames_requested: int,
     support = med([f.needle_support for f in tagged], 0.0)
     ambiguity = med([f.needle_ambiguity for f in tagged], 1.0)
     residual = med([f.needle_residual for f in tagged], 1.0)
+    outer_lobe = med([f.needle_outer_lobe_ratio for f in tagged if f.needle_outer_lobe_ratio > 0],
+                     0.0)
     out_of_range = any(f.out_of_range for f in tagged)
     view = med([f.view_angle_deg for f in tagged])
     dist = med([f.distance_m for f in tagged])
@@ -603,7 +620,8 @@ def fuse(frames: List[FrameReading], frames_requested: int,
             flags.append('TOO_FAR')
         if conf < params.min_needle_confidence:
             flags.append('LOW_NEEDLE_CONTRAST')
-        if ambiguity >= AMBIGUITY_LIMIT or residual > MAX_MODEL_RESIDUAL:
+        if (ambiguity >= AMBIGUITY_LIMIT or residual > MAX_MODEL_RESIDUAL or
+                outer_lobe > MAX_OUTER_LOBE_RATIO):
             flags.append('AMBIGUOUS_NEEDLE')
         if support < MIN_NEEDLE_SUPPORT:
             flags.append('NEEDLE_PARTIAL')
@@ -640,7 +658,8 @@ def fuse(frames: List[FrameReading], frames_requested: int,
         detail = 'no reading: ' + (', '.join(flags) if flags else 'needle not found')
     return Observation(has_value, value, sigma, flags, frames_requested, received, len(tagged),
                        len(vals), [round(v, 4) for v in vals], spread, conf, vis, view, dist,
-                       radius, sharp, detail, radius_minor, support, ambiguity, residual)
+                       radius, sharp, detail, radius_minor, support, ambiguity, residual,
+                       outer_lobe)
 
 
 def annotate(bgr: np.ndarray, fr: FrameReading, obs: Optional[Observation], title: str) -> np.ndarray:

@@ -1,0 +1,18 @@
+# V3 F5 regression tests against V2 code (git f38d7dc), 2026-11-08T23:53:09+01:00
+PASSED src/inspectloop_mission/test/test_v3_freshness.py::test_reference_reading_is_admissible
+PASSED src/inspectloop_mission/test/test_v3_freshness.py::test_value_without_acquisition_pose_is_rejected
+PASSED src/inspectloop_mission/test/test_v3_freshness.py::test_reply_from_another_mission_is_rejected
+FAILED src/inspectloop_mission/test/test_v3_freshness.py::test_astra_23_second_old_result_is_rejected
+FAILED src/inspectloop_mission/test/test_v3_freshness.py::test_astra_0_8_second_rollback_between_request_and_consumption_is_rejected
+FAILED src/inspectloop_mission/test/test_v3_freshness.py::test_first_frame_after_last_frame_is_rejected
+FAILED src/inspectloop_mission/test/test_v3_freshness.py::test_value_without_any_frame_is_rejected
+FAILED src/inspectloop_mission/test/test_v3_freshness.py::test_result_age_limit_is_configurable_and_inclusive
+FAILED src/inspectloop_mission/test/test_v3_freshness.py::test_stale_odometry_cannot_prove_the_robot_is_settled
+FAILED src/inspectloop_mission/test/test_v3_freshness.py::test_future_dated_odometry_is_not_trusted
+FAILED src/inspectloop_mission/test/test_v3_freshness.py::test_sparse_odometry_window_is_not_enough
+8 failed, 3 passed in 0.04s
+PASSED src/inspectloop_vision/test/test_v3_clock_rollback.py::test_monotonic_frames_never_reset
+FAILED src/inspectloop_vision/test/test_v3_clock_rollback.py::test_astra_0_8_second_rollback_invalidates_previous_frames
+FAILED src/inspectloop_vision/test/test_v3_clock_rollback.py::test_small_rollback_of_frame_stamps_is_a_reset
+FAILED src/inspectloop_vision/test/test_v3_clock_rollback.py::test_explicit_jump_notification_clears_the_buffer
+3 failed, 1 passed in 0.03s

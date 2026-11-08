@@ -1,0 +1,252 @@
+{
+  "id": "PG-14",
+  "tag_id": 14,
+  "description": "East wall - boiler feed line",
+  "unit": "bar",
+  "mount": {
+    "x": 11.79,
+    "y": 0.0,
+    "normal_yaw": 3.1416
+  },
+  "alarm_low": 1.0,
+  "alarm_high": 8.0,
+  "candidates_feasible": [
+    {
+      "index": 0,
+      "label": "V0 d=1.50 a=+0deg",
+      "x": 10.29,
+      "y": -0.0,
+      "yaw": 0.0,
+      "distance": 1.5,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 1,
+      "label": "V1 d=1.50 a=-30deg",
+      "x": 10.491,
+      "y": 0.75,
+      "yaw": -0.5236,
+      "distance": 1.5,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 2,
+      "label": "V2 d=1.50 a=+30deg",
+      "x": 10.491,
+      "y": -0.75,
+      "yaw": 0.5236,
+      "distance": 1.5,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 3,
+      "label": "V3 d=1.50 a=-45deg",
+      "x": 10.729,
+      "y": 1.061,
+      "yaw": -0.7854,
+      "distance": 1.5,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 4,
+      "label": "V4 d=1.50 a=+45deg",
+      "x": 10.729,
+      "y": -1.061,
+      "yaw": 0.7854,
+      "distance": 1.5,
+      "angle_deg": 45.0
+    },
+    {
+      "index": 5,
+      "label": "V5 d=1.20 a=+0deg",
+      "x": 10.59,
+      "y": -0.0,
+      "yaw": 0.0,
+      "distance": 1.2,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 6,
+      "label": "V6 d=1.20 a=-30deg",
+      "x": 10.751,
+      "y": 0.6,
+      "yaw": -0.5236,
+      "distance": 1.2,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 7,
+      "label": "V7 d=1.20 a=+30deg",
+      "x": 10.751,
+      "y": -0.6,
+      "yaw": 0.5236,
+      "distance": 1.2,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 8,
+      "label": "V8 d=1.20 a=-45deg",
+      "x": 10.941,
+      "y": 0.849,
+      "yaw": -0.7854,
+      "distance": 1.2,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 9,
+      "label": "V9 d=1.20 a=+45deg",
+      "x": 10.941,
+      "y": -0.849,
+      "yaw": 0.7854,
+      "distance": 1.2,
+      "angle_deg": 45.0
+    },
+    {
+      "index": 10,
+      "label": "V10 d=1.90 a=+0deg",
+      "x": 9.89,
+      "y": -0.0,
+      "yaw": 0.0,
+      "distance": 1.9,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 11,
+      "label": "V11 d=1.90 a=-30deg",
+      "x": 10.145,
+      "y": 0.95,
+      "yaw": -0.5236,
+      "distance": 1.9,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 12,
+      "label": "V12 d=1.90 a=+30deg",
+      "x": 10.145,
+      "y": -0.95,
+      "yaw": 0.5236,
+      "distance": 1.9,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 13,
+      "label": "V13 d=1.90 a=-45deg",
+      "x": 10.446,
+      "y": 1.343,
+      "yaw": -0.7854,
+      "distance": 1.9,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 14,
+      "label": "V14 d=1.90 a=+45deg",
+      "x": 10.447,
+      "y": -1.344,
+      "yaw": 0.7854,
+      "distance": 1.9,
+      "angle_deg": 45.0
+    }
+  ],
+  "candidate_feasibility": "footprint-clear in the occupancy map; Nav2 path reachability not pre-checked",
+  "candidates_rejected": [],
+  "viewpoints": [
+    {
+      "viewpoint": {
+        "index": 0,
+        "label": "V0 d=1.50 a=+0deg",
+        "x": 10.29,
+        "y": -0.0,
+        "yaw": 0.0,
+        "distance": 1.5,
+        "angle_deg": 0.0
+      },
+      "navigation": {
+        "outcome": "SUCCEEDED",
+        "attempts": [
+          {
+            "result": "SUCCEEDED",
+            "duration_s": 20.95,
+            "recoveries": 0,
+            "attempt": 1
+          }
+        ],
+        "total_time_s": 20.95,
+        "final_pose": {
+          "x": 10.365,
+          "y": 0.027,
+          "yaw": -0.177
+        },
+        "position_error_m": 0.079,
+        "yaw_error_rad": 0.177
+      },
+      "observations": [
+        {
+          "viewpoint": "V0 d=1.50 a=+0deg",
+          "observation_id": "20261109_004411_d64d/PG-14/V0/1",
+          "mission_id": "20261109_004411_d64d",
+          "fault_class": "NONE",
+          "viewpoint_epoch": 7,
+          "settled_before_request": true,
+          "request_time_s": 158.463,
+          "first_frame_stamp_s": 159.1,
+          "last_frame_stamp_s": 159.8,
+          "stamp_s": 159.8,
+          "pose_known": true,
+          "acq_x": 10.379,
+          "acq_y": 0.026,
+          "acq_yaw": -0.15,
+          "pose_motion_m": 0.0,
+          "pose_motion_rad": 0.0,
+          "has_value": true,
+          "value": 8.7095,
+          "sigma": 0.0528,
+          "unit": "bar",
+          "frames_requested": 5,
+          "frames_received": 5,
+          "frames_tag_detected": 5,
+          "frames_valid": 5,
+          "frame_values": [
+            8.7095,
+            8.7095,
+            8.7095,
+            8.7095,
+            8.7095
+          ],
+          "frame_spread": 0.0,
+          "needle_confidence": 0.983,
+          "dial_visibility": 1.0,
+          "view_angle_deg": 21.3,
+          "distance_m": 1.255,
+          "dial_radius_px": 72.8,
+          "sharpness": 1048.8,
+          "processing_time_ms": 256.2,
+          "quality_flags": [],
+          "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo3/20261109_004411_d64d/images/PG-14_V0_t00159.10_raw.png",
+          "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo3/20261109_004411_d64d/images/PG-14_V0_t00159.10_annotated.png",
+          "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo3/20261109_004411_d64d/images/PG-14_V0_t00159.10_rectified.png",
+          "detail": "8.71 +/- 0.05 bar from 5/5 frames",
+          "consumed_time_s": 160.263,
+          "result_age_s": 0.463,
+          "clock_epoch_request": 0,
+          "clock_epoch_consumed": 0,
+          "decision": "ACCEPT",
+          "reason": "5 valid frames, sigma 0.053 <= 0.15",
+          "index": 1
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "t": 23.3,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "event": "OBSERVATION #1",
+      "value": 8.7095,
+      "sigma": 0.0528,
+      "flags": [],
+      "decision": "ACCEPT",
+      "reason": "5 valid frames, sigma 0.053 <= 0.15"
+    }
+  ],
+  "result": null
+}

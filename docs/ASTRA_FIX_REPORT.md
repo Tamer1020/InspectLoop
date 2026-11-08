@@ -1,5 +1,12 @@
 # Astra Engineering Audit — Fix Report (F1–F6)
 
+> **Superseded in parts by V3** — the independent review of V2 rejected it for two remaining HIGH
+> defects (F3 forward-sector blindness, F4 goal ownership before acceptance). See
+> [ASTRA_V3_REMEDIATION_REPORT.md](ASTRA_V3_REMEDIATION_REPORT.md). Errata to this file: the
+> statement below that fault-test launch exit codes were 1 "because bridges are killed" is wrong
+> (harness bug, see the V3 report); the V2 hand-over message's "13 new + 3 updated test files" is
+> wrong (9 added + 2 modified; the file list at the end of this report is correct).
+
 Scope: the six HIGH findings of the independent review. Baseline = git tag `v1.0-final`
 (= `InspectLoop_Portfolio_Final.zip`, SHA-256 `f4ae5d4c…4d693`, kept unchanged).
 For every finding a regression test was written first and run against the unfixed code; the

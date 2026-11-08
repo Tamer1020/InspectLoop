@@ -1,0 +1,1 @@
+[INFO] [1794180887.588668671] [fault_scan_live_bridge]: Creating GZ->ROS Bridge: [/inspectloop/scan (gz.msgs.LaserScan) -> /inspectloop/scan (sensor_msgs/msg/LaserScan)] (Lazy 0)

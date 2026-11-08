@@ -1,0 +1,2 @@
+[fault_test] 00:41:12.505 injecting image_future fault: killing gz_camera_bridge (pid 187250)
+[fault_test] launch exit code 0

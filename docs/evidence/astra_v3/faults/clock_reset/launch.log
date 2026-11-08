@@ -1,0 +1,860 @@
+[INFO] [launch]: All log files can be found below /home/tamer/.ros/log/2026-11-09-00-35-11-767971-DESKTOP-U7KLUGD-183203
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [gazebo-1]: process started with pid [183212]
+[INFO] [robot_state_publisher-2]: process started with pid [183213]
+[INFO] [create-3]: process started with pid [183214]
+[INFO] [parameter_bridge-4]: process started with pid [183215]
+[INFO] [parameter_bridge-5]: process started with pid [183216]
+[INFO] [parameter_bridge-6]: process started with pid [183217]
+[INFO] [cmd_vel_gate-7]: process started with pid [183219]
+[INFO] [health_monitor-8]: process started with pid [183220]
+[INFO] [gauge_reader_node-9]: process started with pid [183221]
+[robot_state_publisher-2] [INFO] [1794180911.989372767] [robot_state_publisher]: Robot initialized
+[cmd_vel_gate-7] [INFO] [1794180911.994854049] [cmd_vel_gate]: cmd_vel_gate ready: v<=0.45 w<=1.30 stop<0.20m; sectors fwd +-60.9 deg rear +-37.6 deg, coverage>=0.95 gap<=2.0 deg (fail-closed)
+[create-3] [INFO] [1794180912.000367103] [spawn_inspectloop]: Requesting list of world names.
+[health_monitor-8] [INFO] [1794180912.001112626] [health_monitor]: monitoring 5 streams and 4 TF links
+[cmd_vel_gate-7] [WARN] [1794180912.045118733] [cmd_vel_gate]: gate -> STOPPED_SCAN_FAULT (no scan) (front clearance nan m, fwd coverage 0.00 gap inf deg)
+[create-3] [INFO] [1794180912.706483279] [spawn_inspectloop]: Waiting messages on topic [robot_description].
+[create-3] [INFO] [1794180912.718652960] [spawn_inspectloop]: Entity creation successful.
+[INFO] [create-3]: process has finished cleanly [pid 183214]
+[parameter_bridge-4] [INFO] [1794180913.011253844] [gz_bridge]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-5] [INFO] [1794180913.013413688] [gz_lidar_bridge]: Creating GZ->ROS Bridge: [/inspectloop/scan (gz.msgs.LaserScan) -> /scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1794180913.013513795] [gz_bridge]: Creating ROS->GZ Bridge: [/cmd_vel_safe (geometry_msgs/msg/Twist) -> /inspectloop/cmd_vel (gz.msgs.Twist)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1794180913.016085003] [gz_bridge]: Creating GZ->ROS Bridge: [/inspectloop/odom (gz.msgs.Odometry) -> /odom (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1794180913.018595631] [gz_bridge]: Creating GZ->ROS Bridge: [/inspectloop/tf (gz.msgs.Pose_V) -> /tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-6] [INFO] [1794180913.018735580] [gz_camera_bridge]: Creating GZ->ROS Bridge: [/inspectloop/camera/image (gz.msgs.Image) -> /camera/image_raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1794180913.021643135] [gz_bridge]: Creating GZ->ROS Bridge: [/inspectloop/joint_states (gz.msgs.Model) -> /joint_states (sensor_msgs/msg/JointState)] (Lazy 0)
+[parameter_bridge-6] [INFO] [1794180913.022910511] [gz_camera_bridge]: Creating GZ->ROS Bridge: [/inspectloop/camera/camera_info (gz.msgs.CameraInfo) -> /camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-4] [INFO] [1794180913.045223489] [gz_bridge]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)
+[gauge_reader_node-9] [INFO] [1794180913.370918825] [gauge_reader]: gauge reading service ready on /gauge/read
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="inspectloop"]/link[@name="base_footprint"]/sensor[@name="inspection_camera"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="inspectloop"]/link[@name="base_footprint"]/sensor[@name="lidar"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;33m[Wrn] [Ogre2Camera.cc:423] [0m[1;33mOgre2Camera::SetVisibilityMask: Mask bits [0m[1;33mc0000000[0m[1;33m are set but will be ignored as they conflict with the [0m[1;33mreserved bits used internally by the ogre2 backend.[0m[1;33m[0m
+[cmd_vel_gate-7] [INFO] [1794180914.695026929] [cmd_vel_gate]: gate -> STOPPED_NO_COMMAND
+[health_monitor-8] [INFO] [1794180915.703491629] [health_monitor]: /scan: OK
+[health_monitor-8] [INFO] [1794180915.703570005] [health_monitor]: /odom: OK
+[health_monitor-8] [INFO] [1794180915.703591429] [health_monitor]: /camera/image_raw: OK
+[health_monitor-8] [INFO] [1794180915.703604665] [health_monitor]: /camera/camera_info: OK
+[health_monitor-8] [INFO] [1794180915.703615337] [health_monitor]: /joint_states: OK
+[health_monitor-8] [INFO] [1794180915.703722505] [health_monitor]: TF odom -> base_footprint: OK
+[health_monitor-8] [INFO] [1794180915.703741733] [health_monitor]: TF base_link -> lidar_link: OK
+[health_monitor-8] [INFO] [1794180915.703749294] [health_monitor]: TF base_link -> camera_optical_link: OK
+[INFO] [component_container_isolated-10]: process started with pid [183509]
+[component_container_isolated-10] [INFO] [1794180920.949474665] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libamcl_core.so
+[component_container_isolated-10] [INFO] [1794180920.958266612] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_amcl::AmclNode>
+[component_container_isolated-10] [INFO] [1794180920.958326548] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_amcl::AmclNode>
+[component_container_isolated-10] [INFO] [1794180920.982325929] [amcl]: 
+[component_container_isolated-10] 	amcl lifecycle node launched. 
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-10] [INFO] [1794180920.982779910] [amcl]: Creating
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/amcl' in container '/nav2_container'
+[component_container_isolated-10] [INFO] [1794180920.990862843] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libnav2_lifecycle_manager_core.so
+[component_container_isolated-10] [INFO] [1794180920.991771426] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_lifecycle_manager::LifecycleManager>
+[component_container_isolated-10] [INFO] [1794180920.991805219] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_lifecycle_manager::LifecycleManager>
+[component_container_isolated-10] [INFO] [1794180921.012853076] [lifecycle_manager_localization]: Creating
+[component_container_isolated-10] [INFO] [1794180921.019304027] [lifecycle_manager_localization]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/lifecycle_manager_localization' in container '/nav2_container'
+[component_container_isolated-10] [INFO] [1794180921.019485425] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libmap_server_core.so
+[component_container_isolated-10] [INFO] [1794180921.029272002] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_map_server::CostmapFilterInfoServer>
+[component_container_isolated-10] [INFO] [1794180921.029319864] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_map_server::MapSaver>
+[component_container_isolated-10] [INFO] [1794180921.029324281] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_map_server::MapServer>
+[component_container_isolated-10] [INFO] [1794180921.029326782] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_map_server::MapServer>
+[component_container_isolated-10] [INFO] [1794180921.053927693] [lifecycle_manager_localization]: [34m[1mStarting managed nodes bringup...[0m[0m
+[component_container_isolated-10] [INFO] [1794180921.054000181] [lifecycle_manager_localization]: [34m[1mConfiguring map_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180921.056858616] [map_server]: 
+[component_container_isolated-10] 	map_server lifecycle node launched. 
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-10] [INFO] [1794180921.056913199] [map_server]: Creating
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/map_server' in container '/nav2_container'
+[component_container_isolated-10] [INFO] [1794180921.057831878] [map_server]: Configuring
+[component_container_isolated-10] [INFO] [1794180921.057922225] [map_io]: Loading yaml file: /home/tamer/InspectLoop/install/inspectloop_navigation/share/inspectloop_navigation/maps/warehouse.yaml
+[component_container_isolated-10] [INFO] [1794180921.058168791] [map_io]: resolution: 0.05
+[component_container_isolated-10] [INFO] [1794180921.058180565] [map_io]: origin[0]: -12.5
+[component_container_isolated-10] [INFO] [1794180921.058206523] [map_io]: origin[1]: -8.5
+[component_container_isolated-10] [INFO] [1794180921.058212389] [map_io]: origin[2]: 0
+[component_container_isolated-10] [INFO] [1794180921.058215673] [map_io]: free_thresh: 0.25
+[component_container_isolated-10] [INFO] [1794180921.058218384] [map_io]: occupied_thresh: 0.65
+[component_container_isolated-10] [INFO] [1794180921.058222789] [map_io]: mode: trinary
+[component_container_isolated-10] [INFO] [1794180921.058226084] [map_io]: negate: 0
+[component_container_isolated-10] [INFO] [1794180921.058375240] [map_io]: Loading image_file: /home/tamer/InspectLoop/install/inspectloop_navigation/share/inspectloop_navigation/maps/warehouse.pgm
+[component_container_isolated-10] [INFO] [1794180921.060697828] [map_io]: Read map /home/tamer/InspectLoop/install/inspectloop_navigation/share/inspectloop_navigation/maps/warehouse.pgm: 500 X 340 map @ 0.05 m/cell
+[component_container_isolated-10] [INFO] [1794180921.066706490] [lifecycle_manager_localization]: [34m[1mConfiguring amcl[0m[0m
+[component_container_isolated-10] [INFO] [1794180921.066863552] [amcl]: Configuring
+[component_container_isolated-10] [INFO] [1794180921.066979202] [amcl]: initTransforms
+[component_container_isolated-10] [INFO] [1794180921.074077462] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libcontroller_server_core.so
+[component_container_isolated-10] [INFO] [1794180921.076673854] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_controller::ControllerServer>
+[component_container_isolated-10] [INFO] [1794180921.076713740] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_controller::ControllerServer>
+[component_container_isolated-10] [INFO] [1794180921.078646904] [amcl]: initPubSub
+[component_container_isolated-10] [INFO] [1794180921.090301956] [amcl]: Subscribed to map topic.
+[component_container_isolated-10] [INFO] [1794180921.099017424] [lifecycle_manager_localization]: [34m[1mActivating map_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180921.099236033] [map_server]: Activating
+[component_container_isolated-10] [INFO] [1794180921.099808179] [map_server]: Creating bond (map_server) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180921.100854552] [amcl]: Received a 500 X 340 map @ 0.050 m/pix
+[component_container_isolated-10] [INFO] [1794180921.118172246] [controller_server]: 
+[component_container_isolated-10] 	controller_server lifecycle node launched. 
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-10] [INFO] [1794180921.122064051] [controller_server]: Creating controller server
+[component_container_isolated-10] [INFO] [1794180921.151718645] [local_costmap.local_costmap]: 
+[component_container_isolated-10] 	local_costmap lifecycle node launched. 
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-10] [INFO] [1794180921.152424445] [local_costmap.local_costmap]: Creating Costmap
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/controller_server' in container '/nav2_container'
+[component_container_isolated-10] [INFO] [1794180921.159153820] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libsmoother_server_core.so
+[component_container_isolated-10] [INFO] [1794180921.161007340] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_smoother::SmootherServer>
+[component_container_isolated-10] [INFO] [1794180921.161051088] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_smoother::SmootherServer>
+[component_container_isolated-10] [INFO] [1794180921.188880856] [smoother_server]: 
+[component_container_isolated-10] 	smoother_server lifecycle node launched. 
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-10] [INFO] [1794180921.190267799] [smoother_server]: Creating smoother server
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/smoother_server' in container '/nav2_container'
+[component_container_isolated-10] [INFO] [1794180921.193907935] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libplanner_server_core.so
+[component_container_isolated-10] [INFO] [1794180921.195336438] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_planner::PlannerServer>
+[component_container_isolated-10] [INFO] [1794180921.195397942] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_planner::PlannerServer>
+[component_container_isolated-10] [INFO] [1794180921.210518755] [lifecycle_manager_localization]: Server map_server connected with bond.
+[component_container_isolated-10] [INFO] [1794180921.210692289] [lifecycle_manager_localization]: [34m[1mActivating amcl[0m[0m
+[component_container_isolated-10] [INFO] [1794180921.210945887] [amcl]: Activating
+[component_container_isolated-10] [INFO] [1794180921.210986676] [amcl]: initialPoseReceived
+[component_container_isolated-10] [INFO] [1794180921.211107596] [amcl]: Setting pose (6.421000): -10.000 0.000 0.000
+[component_container_isolated-10] [INFO] [1794180921.211923443] [amcl]: Creating bond (amcl) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180921.222999494] [amcl]: createLaserObject
+[component_container_isolated-10] [INFO] [1794180921.229599509] [planner_server]: 
+[component_container_isolated-10] 	planner_server lifecycle node launched. 
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-10] [INFO] [1794180921.231252028] [planner_server]: Creating
+[component_container_isolated-10] [INFO] [1794180921.259097236] [global_costmap.global_costmap]: 
+[component_container_isolated-10] 	global_costmap lifecycle node launched. 
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-10] [INFO] [1794180921.259773168] [global_costmap.global_costmap]: Creating Costmap
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/planner_server' in container '/nav2_container'
+[component_container_isolated-10] [INFO] [1794180921.267813964] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libroute_server_core.so
+[component_container_isolated-10] [INFO] [1794180921.269555744] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_route::RouteServer>
+[component_container_isolated-10] [INFO] [1794180921.269607955] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_route::RouteServer>
+[component_container_isolated-10] [INFO] [1794180921.299656187] [route_server]: 
+[component_container_isolated-10] 	route_server lifecycle node launched. 
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/route_server' in container '/nav2_container'
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-10] [INFO] [1794180921.303458967] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libbehavior_server_core.so
+[component_container_isolated-10] [INFO] [1794180921.304866663] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<behavior_server::BehaviorServer>
+[component_container_isolated-10] [INFO] [1794180921.304900077] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<behavior_server::BehaviorServer>
+[component_container_isolated-10] [INFO] [1794180921.321932390] [lifecycle_manager_localization]: Server amcl connected with bond.
+[component_container_isolated-10] [INFO] [1794180921.322029435] [lifecycle_manager_localization]: [34m[1mManaged nodes are active[0m[0m
+[component_container_isolated-10] [INFO] [1794180921.322049117] [lifecycle_manager_localization]: [34m[1mCreating bond timer...[0m[0m
+[component_container_isolated-10] [INFO] [1794180921.335914355] [behavior_server]: 
+[component_container_isolated-10] 	behavior_server lifecycle node launched. 
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/behavior_server' in container '/nav2_container'
+[component_container_isolated-10] [INFO] [1794180921.341987464] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libbt_navigator_core.so
+[component_container_isolated-10] [INFO] [1794180921.345537521] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_bt_navigator::BtNavigator>
+[component_container_isolated-10] [INFO] [1794180921.345608268] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_bt_navigator::BtNavigator>
+[component_container_isolated-10] [INFO] [1794180921.383421318] [bt_navigator]: 
+[component_container_isolated-10] 	bt_navigator lifecycle node launched. 
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-10] [INFO] [1794180921.384762322] [bt_navigator]: Creating
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/bt_navigator' in container '/nav2_container'
+[component_container_isolated-10] [INFO] [1794180921.387432610] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libwaypoint_follower_core.so
+[component_container_isolated-10] [INFO] [1794180921.388559480] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_waypoint_follower::WaypointFollower>
+[component_container_isolated-10] [INFO] [1794180921.388606510] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_waypoint_follower::WaypointFollower>
+[component_container_isolated-10] [INFO] [1794180921.422586384] [waypoint_follower]: 
+[component_container_isolated-10] 	waypoint_follower lifecycle node launched. 
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-10] [INFO] [1794180921.423099642] [waypoint_follower]: Creating
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/waypoint_follower' in container '/nav2_container'
+[component_container_isolated-10] [INFO] [1794180921.427478005] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libvelocity_smoother_core.so
+[component_container_isolated-10] [INFO] [1794180921.428368733] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_velocity_smoother::VelocitySmoother>
+[component_container_isolated-10] [INFO] [1794180921.428411344] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_velocity_smoother::VelocitySmoother>
+[component_container_isolated-10] [INFO] [1794180921.462435726] [velocity_smoother]: 
+[component_container_isolated-10] 	velocity_smoother lifecycle node launched. 
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/velocity_smoother' in container '/nav2_container'
+[component_container_isolated-10] [INFO] [1794180921.464906657] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libcollision_monitor_core.so
+[component_container_isolated-10] [INFO] [1794180921.467652667] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_collision_monitor::CollisionMonitor>
+[component_container_isolated-10] [INFO] [1794180921.467703580] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_collision_monitor::CollisionMonitor>
+[component_container_isolated-10] [INFO] [1794180921.503785688] [collision_monitor]: 
+[component_container_isolated-10] 	collision_monitor lifecycle node launched. 
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/collision_monitor' in container '/nav2_container'
+[component_container_isolated-10] [INFO] [1794180921.509286054] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libopennav_docking_core.so
+[component_container_isolated-10] [INFO] [1794180921.511531222] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<opennav_docking::DockingServer>
+[component_container_isolated-10] [INFO] [1794180921.511585830] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<opennav_docking::DockingServer>
+[component_container_isolated-10] [INFO] [1794180921.549489733] [docking_server]: 
+[component_container_isolated-10] 	docking_server lifecycle node launched. 
+[component_container_isolated-10] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-10] [INFO] [1794180921.549584929] [docking_server]: Creating docking_server
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/docking_server' in container '/nav2_container'
+[component_container_isolated-10] [INFO] [1794180921.556012957] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_lifecycle_manager::LifecycleManager>
+[component_container_isolated-10] [INFO] [1794180921.556048324] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_lifecycle_manager::LifecycleManager>
+[component_container_isolated-10] [INFO] [1794180921.585469680] [lifecycle_manager_navigation]: Creating
+[component_container_isolated-10] [INFO] [1794180921.591907127] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/lifecycle_manager_navigation' in container '/nav2_container'
+[component_container_isolated-10] [INFO] [1794180921.636732184] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[component_container_isolated-10] [INFO] [1794180921.636813127] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180921.637056591] [controller_server]: Configuring controller interface
+[component_container_isolated-10] [INFO] [1794180921.637086012] [controller_server]: getting progress checker plugins..
+[component_container_isolated-10] [INFO] [1794180921.637652425] [controller_server]: getting goal checker plugins..
+[component_container_isolated-10] [INFO] [1794180921.638176001] [controller_server]: Controller frequency set to 20.0000Hz
+[component_container_isolated-10] [INFO] [1794180921.638268356] [local_costmap.local_costmap]: Configuring
+[component_container_isolated-10] [INFO] [1794180921.650474669] [local_costmap.local_costmap]: Using plugin "voxel_layer"
+[component_container_isolated-10] [INFO] [1794180921.655646540] [local_costmap.local_costmap]: Subscribed to Topics: scan
+[component_container_isolated-10] [INFO] [1794180921.672587446] [local_costmap.local_costmap]: Initialized plugin "voxel_layer"
+[component_container_isolated-10] [INFO] [1794180921.672639592] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[component_container_isolated-10] [INFO] [1794180921.674951661] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[component_container_isolated-10] [INFO] [1794180921.702844700] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[component_container_isolated-10] [INFO] [1794180921.703993909] [controller_server]: Controller Server has progress_checker  progress checkers available.
+[component_container_isolated-10] [INFO] [1794180921.705025632] [controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[component_container_isolated-10] [INFO] [1794180921.707082088] [controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[component_container_isolated-10] [INFO] [1794180921.708466702] [controller_server]: Created controller : FollowPath of type nav2_mppi_controller::MPPIController
+[component_container_isolated-10] [INFO] [1794180921.716941305] [controller_server]: Controller period is equal to model dt. Control sequence shifting is ON
+[component_container_isolated-10] [INFO] [1794180921.720977098] [controller_server]: ConstraintCritic instantiated with 1 power and 4.000000 weight.
+[component_container_isolated-10] [INFO] [1794180921.721045689] [controller_server]: Critic loaded : mppi::critics::ConstraintCritic
+[component_container_isolated-10] [INFO] [1794180921.725911169] [controller_server]: InflationCostCritic instantiated with 1 power and 300.000000 / 0.015000 weights. Critic will collision check based on circular cost.
+[component_container_isolated-10] [INFO] [1794180921.725980311] [controller_server]: Critic loaded : mppi::critics::CostCritic
+[component_container_isolated-10] [INFO] [1794180921.727907468] [controller_server]: GoalCritic instantiated with 1 power and 5.000000 weight.
+[component_container_isolated-10] [INFO] [1794180921.727962633] [controller_server]: Critic loaded : mppi::critics::GoalCritic
+[component_container_isolated-10] [INFO] [1794180921.730470155] [controller_server]: GoalAngleCritic instantiated with 1 power, 3.000000 weight, 0.500000 angular threshold and symmetric_yaw_tolerance disabled
+[component_container_isolated-10] [INFO] [1794180921.730528786] [controller_server]: Critic loaded : mppi::critics::GoalAngleCritic
+[component_container_isolated-10] [INFO] [1794180921.734283670] [controller_server]: ReferenceTrajectoryCritic instantiated with 1 power and 14.000000 weight
+[component_container_isolated-10] [INFO] [1794180921.734327481] [controller_server]: Critic loaded : mppi::critics::PathAlignCritic
+[component_container_isolated-10] [INFO] [1794180921.736878060] [controller_server]: Critic loaded : mppi::critics::PathFollowCritic
+[component_container_isolated-10] [INFO] [1794180921.740632746] [controller_server]: PathAngleCritic instantiated with 1 power and 2.000000 weight. Mode set to: Forward Preference
+[component_container_isolated-10] [INFO] [1794180921.740696182] [controller_server]: Critic loaded : mppi::critics::PathAngleCritic
+[component_container_isolated-10] [INFO] [1794180921.742582741] [controller_server]: PreferForwardCritic instantiated with 1 power and 5.000000 weight.
+[component_container_isolated-10] [INFO] [1794180921.742636672] [controller_server]: Critic loaded : mppi::critics::PreferForwardCritic
+[component_container_isolated-10] [INFO] [1794180921.744945209] [controller_server]: Optimizer reset
+[component_container_isolated-10] [INFO] [1794180921.752967988] [MPPIController]: Configured MPPI Controller: FollowPath
+[component_container_isolated-10] [INFO] [1794180921.753016105] [controller_server]: Controller Server has FollowPath  controllers available.
+[component_container_isolated-10] [INFO] [1794180921.768418224] [lifecycle_manager_navigation]: [34m[1mConfiguring smoother_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180921.768702091] [smoother_server]: Configuring smoother server
+[component_container_isolated-10] [INFO] [1794180921.780379328] [smoother_server]: Created smoother : simple_smoother of type nav2_smoother::SimpleSmoother
+[component_container_isolated-10] [INFO] [1794180921.783659778] [smoother_server]: Smoother Server has simple_smoother  smoothers available.
+[component_container_isolated-10] [INFO] [1794180921.793792998] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180921.793992283] [planner_server]: Configuring
+[component_container_isolated-10] [INFO] [1794180921.794031896] [global_costmap.global_costmap]: Configuring
+[component_container_isolated-10] [INFO] [1794180921.805758082] [global_costmap.global_costmap]: Using plugin "static_layer"
+[health_monitor-8] [INFO] [1794180921.806489780] [health_monitor]: TF map -> odom: OK
+[component_container_isolated-10] [INFO] [1794180921.809259689] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[component_container_isolated-10] [INFO] [1794180921.811271519] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[component_container_isolated-10] [INFO] [1794180921.811330932] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[component_container_isolated-10] [INFO] [1794180921.815047357] [global_costmap.global_costmap]: Subscribed to Topics: scan
+[component_container_isolated-10] [INFO] [1794180921.823988716] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[component_container_isolated-10] [INFO] [1794180921.824060121] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[component_container_isolated-10] [INFO] [1794180921.826612390] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[component_container_isolated-10] [INFO] [1794180921.862169176] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[component_container_isolated-10] [INFO] [1794180921.862237131] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[component_container_isolated-10] [INFO] [1794180921.864312530] [planner_server]: Planner Server has GridBased  planners available.
+[component_container_isolated-10] [INFO] [1794180921.880666045] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 500 X 340 at 0.050000 m/pix
+[component_container_isolated-10] [INFO] [1794180921.883232634] [lifecycle_manager_navigation]: [34m[1mConfiguring route_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180921.883440859] [route_server]: Configuring
+[component_container_isolated-10] [INFO] [1794180921.921749771] [route_server]: Created GraphFileLoader GeoJsonGraphFileLoader of type nav2_route::GeoJsonGraphFileLoader
+[component_container_isolated-10] [INFO] [1794180921.921822226] [route_server]: Configuring geojson graph file loader
+[component_container_isolated-10] [INFO] [1794180921.921831461] [route_server]: No graph file provided to load yet.
+[component_container_isolated-10] [INFO] [1794180921.926654990] [route_server]: Created edge cost function plugin DistanceScorer of type nav2_route::DistanceScorer
+[component_container_isolated-10] [INFO] [1794180921.926733876] [route_server]: Configuring distance scorer.
+[component_container_isolated-10] [INFO] [1794180921.928540168] [route_server]: Created edge cost function plugin CostmapScorer of type nav2_route::CostmapScorer
+[component_container_isolated-10] [INFO] [1794180921.928595251] [route_server]: Configuring costmap scorer.
+[component_container_isolated-10] [INFO] [1794180921.937296438] [route_server]: Created route operation AdjustSpeedLimit of type nav2_route::AdjustSpeedLimit
+[component_container_isolated-10] [INFO] [1794180921.937358390] [route_server]: Configuring Adjust speed limit operation.
+[component_container_isolated-10] [INFO] [1794180921.940324841] [route_server]: Created route operation ReroutingService of type nav2_route::ReroutingService
+[component_container_isolated-10] [INFO] [1794180921.940362631] [route_server]: Configuring Rerouting service operation.
+[component_container_isolated-10] [INFO] [1794180921.943469893] [route_server]: Created route operation CollisionMonitor of type nav2_route::CollisionMonitor
+[INFO] [mission_manager-11]: process started with pid [183583]
+[component_container_isolated-10] [INFO] [1794180921.944020782] [route_server]: Using costmap topic: local_costmap/costmap_raw instead of server costmap topic: global_costmap/costmap_raw for CollisionMonitor.
+[component_container_isolated-10] [INFO] [1794180921.952488903] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180921.952780627] [behavior_server]: Configuring
+[component_container_isolated-10] [INFO] [1794180921.960405140] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors::Spin
+[component_container_isolated-10] [INFO] [1794180921.961940142] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors::BackUp
+[component_container_isolated-10] [INFO] [1794180921.963392395] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors::DriveOnHeading
+[component_container_isolated-10] [INFO] [1794180921.965199141] [behavior_server]: Creating behavior plugin assisted_teleop of type nav2_behaviors::AssistedTeleop
+[component_container_isolated-10] [INFO] [1794180921.967532001] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors::Wait
+[component_container_isolated-10] [INFO] [1794180921.972709620] [behavior_server]: Configuring spin
+[component_container_isolated-10] [INFO] [1794180921.988474025] [behavior_server]: Configuring backup
+[component_container_isolated-10] [INFO] [1794180922.001862123] [behavior_server]: Configuring drive_on_heading
+[component_container_isolated-10] [INFO] [1794180922.016032524] [behavior_server]: Configuring assisted_teleop
+[component_container_isolated-10] [INFO] [1794180922.037129421] [behavior_server]: Configuring wait
+[component_container_isolated-10] [INFO] [1794180922.054335742] [lifecycle_manager_navigation]: [34m[1mConfiguring velocity_smoother[0m[0m
+[component_container_isolated-10] [INFO] [1794180922.054613663] [velocity_smoother]: Configuring velocity smoother
+[component_container_isolated-10] [INFO] [1794180922.066234200] [lifecycle_manager_navigation]: [34m[1mConfiguring collision_monitor[0m[0m
+[component_container_isolated-10] [INFO] [1794180922.066499852] [collision_monitor]: Configuring
+[component_container_isolated-10] [INFO] [1794180922.080444388] [collision_monitor]: [scan]: Creating Scan
+[component_container_isolated-10] [INFO] [1794180922.085463656] [collision_monitor]: [FootprintApproach]: Creating Polygon
+[component_container_isolated-10] [INFO] [1794180922.086161278] [collision_monitor]: [FootprintApproach]: Polygon points are not defined. Using dynamic subscription instead.
+[component_container_isolated-10] [INFO] [1794180922.091853608] [collision_monitor]: [FootprintApproach]: Making footprint subscriber on /local_costmap/published_footprint topic
+[component_container_isolated-10] [INFO] [1794180922.104438011] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[component_container_isolated-10] [INFO] [1794180922.104702040] [bt_navigator]: Configuring
+[component_container_isolated-10] [INFO] [1794180922.113617867] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[component_container_isolated-10] [INFO] [1794180922.233209924] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[component_container_isolated-10] [INFO] [1794180922.304156140] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[component_container_isolated-10] [INFO] [1794180922.304369026] [waypoint_follower]: Configuring
+[component_container_isolated-10] [INFO] [1794180922.351013041] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[component_container_isolated-10] [INFO] [1794180922.353019805] [lifecycle_manager_navigation]: [34m[1mConfiguring docking_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180922.353338599] [docking_server]: Configuring docking_server
+[component_container_isolated-10] [INFO] [1794180922.353418498] [docking_server]: Controller frequency set to 50.0000Hz
+[component_container_isolated-10] [INFO] [1794180922.399762787] [docking_server]: Created charging dock plugin simple_charging_dock of type opennav_docking::SimpleChargingDock
+[component_container_isolated-10] [WARN] [1794180922.415916903] [docking_server]: Dock database filepath nor dock parameters set. Docking actions can only be executed specifying the dock pose via the action request. Or update the dock database via the reload_database service.
+[component_container_isolated-10] [INFO] [1794180922.416001203] [docking_server]: Docking Server has 1 dock types and 0 dock instances available.
+[component_container_isolated-10] [INFO] [1794180922.419318369] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180922.419676120] [controller_server]: Activating
+[component_container_isolated-10] [INFO] [1794180922.419712173] [local_costmap.local_costmap]: Activating
+[component_container_isolated-10] [INFO] [1794180922.419718565] [local_costmap.local_costmap]: Checking transform
+[component_container_isolated-10] [INFO] [1794180922.419942680] [local_costmap.local_costmap]: start
+[component_container_isolated-10] [WARN] [1794180922.621861065] [controller_server]: Parameter controller_server.verbose not found
+[component_container_isolated-10] [INFO] [1794180922.624536021] [controller_server]: Optimizer reset
+[component_container_isolated-10] [INFO] [1794180922.625257780] [MPPIController]: Activated MPPI Controller: FollowPath
+[component_container_isolated-10] [INFO] [1794180922.625501515] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180922.734969379] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[component_container_isolated-10] [INFO] [1794180922.735031059] [lifecycle_manager_navigation]: [34m[1mActivating smoother_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180922.735410872] [smoother_server]: Activating
+[component_container_isolated-10] [INFO] [1794180922.735461268] [smoother_server]: Creating bond (smoother_server) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180922.849337930] [lifecycle_manager_navigation]: Server smoother_server connected with bond.
+[component_container_isolated-10] [INFO] [1794180922.849421984] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180922.849937342] [planner_server]: Activating
+[component_container_isolated-10] [INFO] [1794180922.849987915] [global_costmap.global_costmap]: Activating
+[component_container_isolated-10] [INFO] [1794180922.849996047] [global_costmap.global_costmap]: Checking transform
+[component_container_isolated-10] [INFO] [1794180922.850023150] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 7.990000 but the earliest data is at time 8.000000, when looking up transform from frame [base_link] to frame [map]
+[mission_manager-11] [0m[INFO] [1794180923.068692962] [mission_manager]: mission 20261109_003523_0308 "fault_injection_single_gauge": 1 gauges -> /home/tamer/InspectLoop/docs/evidence/astra_v3/faults/clock_reset/20261109_003523_0308[0m
+[component_container_isolated-10] [INFO] [1794180923.350290826] [global_costmap.global_costmap]: start
+[component_container_isolated-10] [INFO] [1794180924.403414265] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[component_container_isolated-10] [INFO] [1794180924.406337879] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180924.517347614] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[component_container_isolated-10] [INFO] [1794180924.517406637] [lifecycle_manager_navigation]: [34m[1mActivating route_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180924.517731195] [route_server]: Activating
+[component_container_isolated-10] [INFO] [1794180924.517881327] [route_server]: Creating bond (route_server) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180924.629485764] [lifecycle_manager_navigation]: Server route_server connected with bond.
+[component_container_isolated-10] [INFO] [1794180924.629549632] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180924.629883096] [behavior_server]: Activating
+[component_container_isolated-10] [INFO] [1794180924.629902191] [behavior_server]: Activating spin
+[component_container_isolated-10] [INFO] [1794180924.629921323] [behavior_server]: Activating backup
+[component_container_isolated-10] [INFO] [1794180924.629928306] [behavior_server]: Activating drive_on_heading
+[component_container_isolated-10] [INFO] [1794180924.629935270] [behavior_server]: Activating assisted_teleop
+[component_container_isolated-10] [INFO] [1794180924.629942489] [behavior_server]: Activating wait
+[component_container_isolated-10] [INFO] [1794180924.629958192] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180924.741574236] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[component_container_isolated-10] [INFO] [1794180924.741628748] [lifecycle_manager_navigation]: [34m[1mActivating velocity_smoother[0m[0m
+[component_container_isolated-10] [INFO] [1794180924.741956619] [velocity_smoother]: Activating
+[component_container_isolated-10] [INFO] [1794180924.742006268] [velocity_smoother]: Creating bond (velocity_smoother) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180924.853597183] [lifecycle_manager_navigation]: Server velocity_smoother connected with bond.
+[component_container_isolated-10] [INFO] [1794180924.853661975] [lifecycle_manager_navigation]: [34m[1mActivating collision_monitor[0m[0m
+[component_container_isolated-10] [INFO] [1794180924.854024377] [collision_monitor]: Activating
+[component_container_isolated-10] [INFO] [1794180924.854095069] [collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180925.047769647] [lifecycle_manager_navigation]: Server collision_monitor connected with bond.
+[component_container_isolated-10] [INFO] [1794180925.047837959] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[component_container_isolated-10] [INFO] [1794180925.048223114] [bt_navigator]: Activating
+[component_container_isolated-10] [INFO] [1794180925.245641035] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180925.361212333] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[component_container_isolated-10] [INFO] [1794180925.361268322] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[component_container_isolated-10] [INFO] [1794180925.361836991] [waypoint_follower]: Activating
+[component_container_isolated-10] [INFO] [1794180925.361896553] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180925.479691188] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[component_container_isolated-10] [INFO] [1794180925.479758335] [lifecycle_manager_navigation]: [34m[1mActivating docking_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180925.480150189] [docking_server]: Activating docking_server
+[component_container_isolated-10] [INFO] [1794180925.504287250] [docking_server]: Creating bond (docking_server) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180925.624042647] [lifecycle_manager_navigation]: Server docking_server connected with bond.
+[component_container_isolated-10] [INFO] [1794180925.624125230] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[component_container_isolated-10] [INFO] [1794180925.624132284] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[mission_manager-11] [0m[INFO] [1794180926.101978723] [mission_manager]: system ready[0m
+[mission_manager-11] [0m[INFO] [1794180926.117239474] [mission_manager]: === PG-11 (tag 11) Rack N1 - compressed-air header[0m
+[mission_manager-11] [0m[INFO] [1794180926.234447385] [mission_manager]: [PG-11] -> viewpoint V0 d=1.50 a=+0deg (-7.00, 2.49)[0m
+[component_container_isolated-10] [INFO] [1794180926.235807138] [bt_navigator]: Begin navigating from current location (-10.00, -0.00) to (-7.00, 2.49)
+[component_container_isolated-10] [INFO] [1794180926.256988860] [controller_server]: Received a goal, begin computing control effort.
+[component_container_isolated-10] [WARN] [1794180926.257068503] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded general_goal_checker . This warning will appear once.
+[component_container_isolated-10] [WARN] [1794180926.257085773] [controller_server]: No progress checker was specified in parameter 'current_progress_checker'. Server will use only plugin loaded progress_checker . This warning will appear once.
+[mission_manager-11] [0m[INFO] [1794180926.275581047] [mission_manager]: [nav goal PG-11/V0 d=1.50 a=+0deg] SENT [0m
+[mission_manager-11] [0m[INFO] [1794180926.312221960] [mission_manager]: [nav goal PG-11/V0 d=1.50 a=+0deg] ACCEPTED [0m
+[cmd_vel_gate-7] [INFO] [1794180926.345068279] [cmd_vel_gate]: gate -> PASS
+[component_container_isolated-10] [INFO] [1794180927.307235891] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180928.357238943] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180929.357235307] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180930.407221912] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180931.407214730] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180932.407256999] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180933.457232618] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180934.507242386] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180935.507231939] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180936.557224409] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180937.559607544] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180938.607241020] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180939.607258774] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180940.657231666] [controller_server]: Passing new path to controller.
+[component_container_isolated-10] [INFO] [1794180940.907481043] [controller_server]: Reached the goal!
+[component_container_isolated-10] [INFO] [1794180940.908229997] [controller_server]: Optimizer reset
+[component_container_isolated-10] [INFO] [1794180940.936573067] [bt_navigator]: Goal succeeded
+[mission_manager-11] [0m[INFO] [1794180940.989955993] [mission_manager]: [nav goal PG-11/V0 d=1.50 a=+0deg] TERMINAL SUCCEEDED[0m
+[health_monitor-8] [WARN] [1794180942.422608474] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+[component_container_isolated-10] [WARN] [1794180942.422789909] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+[component_container_isolated-10] [WARN] [1794180942.422847255] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+[component_container_isolated-10] [WARN] [1794180942.422925842] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+[component_container_isolated-10] [WARN] [1794180942.422975065] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+[component_container_isolated-10] [WARN] [1794180942.423081963] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+[component_container_isolated-10] [WARN] [1794180942.423114646] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+[component_container_isolated-10] [WARN] [1794180942.423096653] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+[component_container_isolated-10] [WARN] [1794180942.423190790] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+[component_container_isolated-10] [WARN] [1794180942.423220357] [tf2_buffer]: Detected jump back in time. Clearing TF buffer.
+[gazebo-1] [1;33m[Wrn] [Physics.cc:3218] [0m[1;33mFailed to find link [[0m[1;33m274[0m[1;33m].[0m[1;33m[0m
+[gazebo-1] [1;33m[Wrn] [Physics.cc:3218] [0m[1;33mFailed to find link [[0m[1;33m288[0m[1;33m].[0m[1;33m[0m
+[gazebo-1] [1;33m[Wrn] [Physics.cc:3218] [0m[1;33mFailed to find link [[0m[1;33m291[0m[1;33m].[0m[1;33m[0m
+[gazebo-1] [1;33m[Wrn] [Physics.cc:3289] [0m[1;33mFailed to find joint [[0m[1;33m294[0m[1;33m].[0m[1;33m[0m
+[gazebo-1] [1;33m[Wrn] [Physics.cc:3289] [0m[1;33mFailed to find joint [[0m[1;33m295[0m[1;33m].[0m[1;33m[0m
+[mission_manager-11] [33m[WARN] [1794180942.431080487] [mission_manager]: ROS clock discontinuity (ROS_TIME_NO_CHANGE, -26.747 s): clock epoch 1, pending observations invalidated[0m
+[cmd_vel_gate-7] [WARN] [1794180942.445011654] [cmd_vel_gate]: ROS clock jumped backwards: scan state invalidated
+[cmd_vel_gate-7] [WARN] [1794180942.445180921] [cmd_vel_gate]: gate -> STOPPED_SCAN_FAULT (clock jumped backwards) (front clearance nan m, fwd coverage 0.00 gap inf deg)
+[gauge_reader_node-9] [WARN] [1794180942.529957525] [gauge_reader]: ROS clock discontinuity (ROS_TIME_NO_CHANGE, -26.747 s): frame buffer cleared
+[gauge_reader_node-9] [WARN] [1794180942.563151195] [gauge_reader]: [PG-11] V0 d=1.50 a=+0deg: observation invalidated: CLOCK_RESET | no reading: NO_IMAGE (no fresh frame within 5.0s; frames received so far: 195)
+[cmd_vel_gate-7] [INFO] [1794180942.595068699] [cmd_vel_gate]: gate -> STOPPED_NO_COMMAND
+[mission_manager-11] [0m[INFO] [1794180942.662902582] [mission_manager]: [PG-11] obs #1 @ V0 d=1.50 a=+0deg: no value flags=['INVALID_FRAMES', 'CLOCK_RESET', 'STALE_OBSERVATION'] -> RETRY_SAME (possibly transient (CLOCK_RESET, INVALID_FRAMES): observe again from the same pose)[0m
+[component_container_isolated-10] [ERROR] [1794180942.678534044] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [WARN] [1794180942.678641928] [collision_monitor]: Robot to stop due to invalid source. Either due to data not published yet, or to lack of new data received within the sensor timeout, or if impossible to transform data to base frame
+[cmd_vel_gate-7] [INFO] [1794180942.695069342] [cmd_vel_gate]: gate -> PASS
+[component_container_isolated-10] [ERROR] [1794180942.893699613] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180942.934372860] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180943.107473194] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180943.248487083] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180943.321844947] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180943.529789901] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180943.562915713] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180943.664197870] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180943.736701782] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180943.950068361] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180943.962241860] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180944.165118751] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180944.276938415] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180944.378536645] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180944.591617459] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180944.601016152] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180944.667917736] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180944.801927928] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180944.996683004] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180945.015425888] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [INFO] [1794180945.093414398] [amcl]: Message Filter dropping message: frame 'lidar_link' at time 1.500 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[component_container_isolated-10] [INFO] [1794180945.095268780] [local_costmap.local_costmap]: Message Filter dropping message: frame 'lidar_link' at time 2.200 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[component_container_isolated-10] [ERROR] [1794180945.228648908] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180945.311605358] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180945.443255087] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180945.635430833] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180945.656418119] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180945.665044061] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180945.869859295] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180946.035804819] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180946.083208363] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180946.286679691] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180946.349499521] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180946.501045297] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180946.657030708] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180946.664246659] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180946.704370321] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180946.917551215] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180947.063469332] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180947.130728921] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180947.345725329] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180947.379181139] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180947.558678476] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180947.665711745] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [INFO] [1794180947.682977802] [amcl]: Message Filter dropping message: frame 'lidar_link' at time 4.000 for reason 'discarding message because the queue is full'
+[component_container_isolated-10] [ERROR] [1794180947.695384311] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180947.775329585] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [INFO] [1794180947.789229983] [local_costmap.local_costmap]: Message Filter dropping message: frame 'lidar_link' at time 4.800 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[component_container_isolated-10] [ERROR] [1794180947.988931757] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180948.093498132] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180948.202182484] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180948.405302440] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180948.407107622] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180948.615038084] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180948.664223351] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180948.723609957] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180948.828542840] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180949.042025175] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180949.121214634] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180949.255567873] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180949.435887647] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180949.460663379] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180949.669630209] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180949.679743640] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180949.750121515] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180949.884715651] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180950.097975533] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180950.149779124] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [INFO] [1794180950.260484925] [amcl]: Message Filter dropping message: frame 'lidar_link' at time 6.500 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[component_container_isolated-10] [ERROR] [1794180950.311556471] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180950.463501219] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [INFO] [1794180950.470266021] [local_costmap.local_costmap]: Message Filter dropping message: frame 'lidar_link' at time 7.400 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[component_container_isolated-10] [ERROR] [1794180950.524225010] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180950.667362423] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180950.737220745] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180950.778809949] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180950.950660259] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180951.164256435] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180951.178208735] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180951.381041641] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180951.494817516] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180951.599118578] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180951.677264928] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180951.819767585] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180951.822367461] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180952.035828747] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180952.208978933] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180952.249552025] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180952.462520397] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180952.522757482] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180952.664062676] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180952.675385258] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[health_monitor-8] [INFO] [1794180952.833328296] [health_monitor]: TF map -> odom: UNAVAILABLE
+[health_monitor-8] [INFO] [1794180952.833451948] [health_monitor]: TF odom -> base_footprint: UNAVAILABLE
+[component_container_isolated-10] [ERROR] [1794180952.834816700] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [INFO] [1794180952.871370335] [amcl]: Message Filter dropping message: frame 'lidar_link' at time 9.000 for reason 'discarding message because the queue is full'
+[component_container_isolated-10] [ERROR] [1794180952.888792523] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180953.102428191] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [INFO] [1794180953.179923965] [local_costmap.local_costmap]: Message Filter dropping message: frame 'lidar_link' at time 10.000 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[component_container_isolated-10] [ERROR] [1794180953.236740952] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180953.319334882] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180953.528678941] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180953.549048568] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180953.670458867] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180953.742222753] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180953.867030806] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180953.955688576] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180954.169178775] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180954.263125876] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180954.383193437] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180954.581757563] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180954.596794367] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180954.666349021] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180954.810058747] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180954.896209046] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180955.013078458] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180955.216941698] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180955.287809873] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180955.432698778] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [INFO] [1794180955.557625986] [amcl]: Message Filter dropping message: frame 'lidar_link' at time 11.600 for reason 'discarding message because the queue is full'
+[component_container_isolated-10] [ERROR] [1794180955.601762781] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180955.646606818] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180955.674306267] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [INFO] [1794180955.771755063] [local_costmap.local_costmap]: Message Filter dropping message: frame 'lidar_link' at time 12.500 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[component_container_isolated-10] [ERROR] [1794180955.861439013] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180955.916502884] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180956.074820181] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180956.288033218] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180956.316675020] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180956.501518818] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180956.630641584] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180956.664425695] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180956.714739387] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180956.928310177] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180956.945274295] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180957.137531876] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180957.350798311] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180957.355278728] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[gauge_reader_node-9] [WARN] [1794180957.402407807] [gauge_reader]: [PG-11] V0 d=1.50 a=+0deg: observation invalidated: WRONG_VIEWPOINT | 4.21 +/- 0.05 bar from 5/5 frames
+[mission_manager-11] [0m[INFO] [1794180957.537316005] [mission_manager]: [PG-11] obs #2 @ V0 d=1.50 a=+0deg: no value flags=['WRONG_VIEWPOINT', 'STALE_OBSERVATION'] -> MOVE_NEW (STALE_OBSERVATION, WRONG_VIEWPOINT persisted after 1 retry(ies))[0m
+[component_container_isolated-10] [ERROR] [1794180957.564330893] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[mission_manager-11] [0m[INFO] [1794180957.636753848] [mission_manager]: [PG-11] -> viewpoint V5 d=1.20 a=+0deg (-7.00, 2.79)[0m
+[component_container_isolated-10] [ERROR] [1794180957.669507388] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180957.670382475] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[mission_manager-11] [0m[INFO] [1794180957.690883247] [mission_manager]: [nav goal PG-11/V5 d=1.20 a=+0deg] SENT [0m
+[mission_manager-11] [0m[INFO] [1794180957.720617777] [mission_manager]: [nav goal PG-11/V5 d=1.20 a=+0deg] ACCEPTED [0m
+[component_container_isolated-10] [ERROR] [1794180957.750057701] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180957.750135877] [bt_navigator]: Initial robot pose is not available.
+[component_container_isolated-10] [WARN] [1794180957.750190485] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[component_container_isolated-10] [ERROR] [1794180957.778022223] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[mission_manager-11] [0m[INFO] [1794180957.814623962] [mission_manager]: [nav goal PG-11/V5 d=1.20 a=+0deg] TERMINAL ABORTED[0m
+[mission_manager-11] [33m[WARN] [1794180957.827241710] [mission_manager]: [PG-11/V5 d=1.20 a=+0deg] nav attempt 1 failed: ABORTED nav2 error_code=0[0m
+[component_container_isolated-10] [INFO] [1794180957.829415676] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[component_container_isolated-10] [INFO] [1794180957.878959977] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[component_container_isolated-10] [ERROR] [1794180957.984606251] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180957.991575576] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180958.204760532] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [INFO] [1794180958.266667713] [amcl]: Message Filter dropping message: frame 'lidar_link' at time 14.200 for reason 'discarding message because the queue is full'
+[component_container_isolated-10] [ERROR] [1794180958.386116526] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180958.418743872] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [INFO] [1794180958.473052042] [local_costmap.local_costmap]: Message Filter dropping message: frame 'lidar_link' at time 15.100 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[component_container_isolated-10] [ERROR] [1794180958.635302374] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180958.675176739] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180958.700399947] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180958.848663391] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180959.015102882] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180959.062182302] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180959.275412691] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180959.414484772] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180959.489081042] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180959.674590662] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180959.702240518] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180959.738415580] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180959.916374161] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[mission_manager-11] [0m[INFO] [1794180960.038161387] [mission_manager]: [nav goal PG-11/V5 d=1.20 a=+0deg] SENT [0m
+[component_container_isolated-10] [ERROR] [1794180960.052550098] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180960.129926981] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[mission_manager-11] [0m[INFO] [1794180960.132800810] [mission_manager]: [nav goal PG-11/V5 d=1.20 a=+0deg] ACCEPTED [0m
+[component_container_isolated-10] [ERROR] [1794180960.135769234] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180960.135899468] [bt_navigator]: Initial robot pose is not available.
+[component_container_isolated-10] [WARN] [1794180960.135933530] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[mission_manager-11] [0m[INFO] [1794180960.224655272] [mission_manager]: [nav goal PG-11/V5 d=1.20 a=+0deg] TERMINAL ABORTED[0m
+[mission_manager-11] [33m[WARN] [1794180960.225346522] [mission_manager]: [PG-11/V5 d=1.20 a=+0deg] nav attempt 2 failed: ABORTED nav2 error_code=0[0m
+[mission_manager-11] [0m[INFO] [1794180960.227598227] [mission_manager]: [PG-11] -> viewpoint V10 d=1.90 a=+0deg (-7.00, 2.09)[0m
+[mission_manager-11] [0m[INFO] [1794180960.246384723] [mission_manager]: [nav goal PG-11/V10 d=1.90 a=+0deg] SENT [0m
+[mission_manager-11] [0m[INFO] [1794180960.253465114] [mission_manager]: [nav goal PG-11/V10 d=1.90 a=+0deg] ACCEPTED [0m
+[component_container_isolated-10] [ERROR] [1794180960.340896350] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180960.341004328] [bt_navigator]: Initial robot pose is not available.
+[component_container_isolated-10] [WARN] [1794180960.341042337] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[component_container_isolated-10] [ERROR] [1794180960.344303729] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[mission_manager-11] [0m[INFO] [1794180960.423640238] [mission_manager]: [nav goal PG-11/V10 d=1.90 a=+0deg] TERMINAL ABORTED[0m
+[mission_manager-11] [33m[WARN] [1794180960.424367906] [mission_manager]: [PG-11/V10 d=1.90 a=+0deg] nav attempt 1 failed: ABORTED nav2 error_code=0[0m
+[component_container_isolated-10] [INFO] [1794180960.424905028] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[component_container_isolated-10] [ERROR] [1794180960.458376662] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [INFO] [1794180960.481395428] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[component_container_isolated-10] [ERROR] [1794180960.557747801] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180960.664237890] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180960.761032609] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180960.765303410] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [INFO] [1794180960.863937390] [amcl]: Message Filter dropping message: frame 'lidar_link' at time 16.700 for reason 'discarding message because the queue is full'
+[component_container_isolated-10] [ERROR] [1794180960.977270288] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [INFO] [1794180961.065673199] [local_costmap.local_costmap]: Message Filter dropping message: frame 'lidar_link' at time 17.600 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[component_container_isolated-10] [ERROR] [1794180961.079174061] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180961.195681720] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180961.410106654] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180961.480861561] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180961.613729597] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180961.654306575] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180961.794992876] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180961.827168915] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180962.041341150] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180962.109308398] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180962.254897538] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180962.468368681] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180962.508871261] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180962.664093423] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180962.681678251] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180962.716235739] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180962.716325720] [bt_navigator]: Initial robot pose is not available.
+[component_container_isolated-10] [WARN] [1794180962.716362364] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[mission_manager-11] [0m[INFO] [1794180962.729039232] [mission_manager]: [nav goal PG-11/V10 d=1.90 a=+0deg] SENT [0m
+[mission_manager-11] [0m[INFO] [1794180962.812332976] [mission_manager]: [nav goal PG-11/V10 d=1.90 a=+0deg] ACCEPTED [0m
+[mission_manager-11] [0m[INFO] [1794180962.812936485] [mission_manager]: [nav goal PG-11/V10 d=1.90 a=+0deg] TERMINAL ABORTED[0m
+[mission_manager-11] [33m[WARN] [1794180962.813474991] [mission_manager]: [PG-11/V10 d=1.90 a=+0deg] nav attempt 2 failed: ABORTED nav2 error_code=0[0m
+[mission_manager-11] [33m[WARN] [1794180962.816446364] [mission_manager]: [PG-11] UNRESOLVED: viewpoint unreachable and no viewpoint left[0m
+[component_container_isolated-10] [ERROR] [1794180962.833609807] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180962.894811980] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[mission_manager-11] [0m[INFO] [1794180962.900622013] [mission_manager]: [nav goal HOME] SENT [0m
+[mission_manager-11] [0m[INFO] [1794180962.913347535] [mission_manager]: [nav goal HOME] ACCEPTED [0m
+[component_container_isolated-10] [ERROR] [1794180962.933482974] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180962.933580034] [bt_navigator]: Initial robot pose is not available.
+[component_container_isolated-10] [WARN] [1794180962.933616086] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[mission_manager-11] [0m[INFO] [1794180963.015176436] [mission_manager]: [nav goal HOME] TERMINAL ABORTED[0m
+[mission_manager-11] [33m[WARN] [1794180963.015899852] [mission_manager]: [HOME] nav attempt 1 failed: ABORTED nav2 error_code=0[0m
+[component_container_isolated-10] [INFO] [1794180963.016703042] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[component_container_isolated-10] [INFO] [1794180963.072333880] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[component_container_isolated-10] [ERROR] [1794180963.108160429] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180963.147491316] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180963.324402258] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180963.538478289] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [INFO] [1794180963.547629794] [amcl]: Message Filter dropping message: frame 'lidar_link' at time 19.300 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[component_container_isolated-10] [ERROR] [1794180963.547854912] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180963.664540004] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180963.744209734] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [INFO] [1794180963.753220175] [local_costmap.local_costmap]: Message Filter dropping message: frame 'lidar_link' at time 20.200 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[component_container_isolated-10] [ERROR] [1794180963.862017067] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180963.957526284] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180964.171690888] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180964.182031789] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180964.385027738] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180964.579931819] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180964.602675158] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180964.675068749] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180964.815858763] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180964.893775783] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180965.029223191] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180965.214550606] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180965.242490780] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[mission_manager-11] [0m[INFO] [1794180965.283467562] [mission_manager]: [nav goal HOME] SENT [0m
+[mission_manager-11] [0m[INFO] [1794180965.302974965] [mission_manager]: [nav goal HOME] ACCEPTED [0m
+[component_container_isolated-10] [ERROR] [1794180965.370159077] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180965.370252932] [bt_navigator]: Initial robot pose is not available.
+[component_container_isolated-10] [WARN] [1794180965.370294752] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[mission_manager-11] [0m[INFO] [1794180965.455374134] [mission_manager]: [nav goal HOME] TERMINAL ABORTED[0m
+[component_container_isolated-10] [ERROR] [1794180965.456940253] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[mission_manager-11] [33m[WARN] [1794180965.501721022] [mission_manager]: [HOME] nav attempt 2 failed: ABORTED nav2 error_code=0[0m
+[mission_manager-11] [0m[INFO] [1794180965.551012988] [mission_manager]: mission COMPLETED. Report: /home/tamer/InspectLoop/docs/evidence/astra_v3/faults/clock_reset/20261109_003523_0308/mission_report.md[0m
+[component_container_isolated-10] [ERROR] [1794180965.599939321] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180965.657017668] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'map' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180965.662891011] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[INFO] [mission_manager-11]: process has finished cleanly [pid 183583]
+[INFO] [launch.user]: Mission finished - report written. Shutting down (exit_on_mission_end).
+[INFO] [component_container_isolated-10]: sending signal 'SIGINT' to process[component_container_isolated-10]
+[INFO] [gauge_reader_node-9]: sending signal 'SIGINT' to process[gauge_reader_node-9]
+[INFO] [health_monitor-8]: sending signal 'SIGINT' to process[health_monitor-8]
+[INFO] [cmd_vel_gate-7]: sending signal 'SIGINT' to process[cmd_vel_gate-7]
+[INFO] [parameter_bridge-6]: sending signal 'SIGINT' to process[parameter_bridge-6]
+[INFO] [parameter_bridge-5]: sending signal 'SIGINT' to process[parameter_bridge-5]
+[INFO] [parameter_bridge-4]: sending signal 'SIGINT' to process[parameter_bridge-4]
+[INFO] [robot_state_publisher-2]: sending signal 'SIGINT' to process[robot_state_publisher-2]
+[INFO] [gazebo-1]: sending signal 'SIGINT' to process[gazebo-1]
+[component_container_isolated-10] [ERROR] [1794180965.877683668] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180965.918186083] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180966.083130754] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [INFO] [1794180966.146151195] [amcl]: Message Filter dropping message: frame 'lidar_link' at time 21.800 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[component_container_isolated-10] [ERROR] [1794180966.226106987] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [ERROR] [1794180966.296445276] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [INFO] [1794180966.347116461] [local_costmap.local_costmap]: Message Filter dropping message: frame 'lidar_link' at time 22.700 for reason 'the timestamp on the message is earlier than all the data in the transform cache'
+[component_container_isolated-10] [ERROR] [1794180966.509761679] [getTransform]: Failed to get "lidar_link"->"base_footprint" frame transform: , when looking up transform from frame [lidar_link] to frame [odom]
+[component_container_isolated-10] [ERROR] [1794180966.632093631] [transformPoseInTargetFrame]: Connectivity Error looking up target frame: Could not find a connection between 'odom' and 'base_link' because they are not part of the same tree.Tf has two or more unconnected trees.
+[component_container_isolated-10] 
+[component_container_isolated-10] [INFO] [1794180966.632333971] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[component_container_isolated-10] [INFO] [1794180966.632407717] [amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)
+[component_container_isolated-10] [INFO] [1794180966.632478158] [amcl]: Deactivating
+[component_container_isolated-10] [INFO] [1794180966.632508276] [amcl]: Destroying bond (amcl) to lifecycle manager.
+[health_monitor-8] [INFO] [1794180966.635357053] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-6] [INFO] [1794180966.638388493] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[cmd_vel_gate-7] [INFO] [1794180966.638694166] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-5] [INFO] [1794180966.639968728] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[robot_state_publisher-2] [INFO] [1794180966.643464824] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[component_container_isolated-10] [INFO] [1794180966.643516886] [amcl]: Cleaning up
+[parameter_bridge-4] [INFO] [1794180966.645034730] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[component_container_isolated-10] [INFO] [1794180966.702081468] [amcl]: Destroying bond (amcl) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180966.702135360] [lifecycle_manager_localization]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_localization)
+[component_container_isolated-10] [INFO] [1794180966.702177441] [lifecycle_manager_localization]: [34m[1mTerminating bond timer...[0m[0m
+[component_container_isolated-10] [INFO] [1794180966.736173743] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[component_container_isolated-10] [INFO] [1794180966.736896725] [map_server]: Deactivating
+[component_container_isolated-10] [INFO] [1794180966.736935521] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180966.747097970] [map_server]: Cleaning up
+[component_container_isolated-10] [INFO] [1794180966.747169800] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180966.747179429] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[component_container_isolated-10] [INFO] [1794180966.747221176] [controller_server]: Deactivating
+[component_container_isolated-10] [INFO] [1794180966.747257697] [MPPIController]: Deactivated MPPI Controller: FollowPath
+[component_container_isolated-10] [INFO] [1794180966.747274375] [local_costmap.local_costmap]: Deactivating
+[INFO] [parameter_bridge-6]: process has finished cleanly [pid 183217]
+[INFO] [parameter_bridge-5]: process has finished cleanly [pid 183216]
+[INFO] [cmd_vel_gate-7]: process has finished cleanly [pid 183219]
+[INFO] [parameter_bridge-4]: process has finished cleanly [pid 183215]
+[INFO] [robot_state_publisher-2]: process has finished cleanly [pid 183213]
+[INFO] [health_monitor-8]: process has finished cleanly [pid 183220]
+[INFO] [gauge_reader_node-9]: process has finished cleanly [pid 183221]
+[component_container_isolated-10] [INFO] [1794180970.624272777] [lifecycle_manager_navigation]: [34m[1mHave not received a heartbeat from collision_monitor.[0m[0m
+[component_container_isolated-10] [ERROR] [1794180970.624340667] [lifecycle_manager_navigation]: CRITICAL FAILURE: SERVER collision_monitor IS DOWN after not receiving a heartbeat for 4000 ms. Shutting down related nodes.
+[component_container_isolated-10] [INFO] [1794180970.624387704] [lifecycle_manager_navigation]: [34m[1mTerminating bond timer...[0m[0m
+[component_container_isolated-10] [INFO] [1794180970.624394486] [lifecycle_manager_navigation]: [34m[1mResetting managed nodes...[0m[0m
+[component_container_isolated-10] [INFO] [1794180970.624398450] [lifecycle_manager_navigation]: [34m[1mDeactivating docking_server[0m[0m
+[component_container_isolated-10] [INFO] [1794180970.624726920] [docking_server]: Deactivating docking_server
+[component_container_isolated-10] [INFO] [1794180970.634457418] [docking_server]: Destroying bond (docking_server) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180970.748258588] [lifecycle_manager_navigation]: [34m[1mDeactivating waypoint_follower[0m[0m
+[component_container_isolated-10] [INFO] [1794180970.748562628] [waypoint_follower]: Deactivating
+[component_container_isolated-10] [INFO] [1794180970.748618032] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180970.862188675] [lifecycle_manager_navigation]: [34m[1mDeactivating bt_navigator[0m[0m
+[component_container_isolated-10] [INFO] [1794180970.862536784] [bt_navigator]: Deactivating
+[component_container_isolated-10] [INFO] [1794180970.862575089] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[component_container_isolated-10] [INFO] [1794180970.981032519] [lifecycle_manager_navigation]: [34m[1mDeactivating collision_monitor[0m[0m
+[ERROR] [component_container_isolated-10]: process[component_container_isolated-10] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [component_container_isolated-10]: sending signal 'SIGTERM' to process[component_container_isolated-10]
+[ERROR] [gazebo-1]: process[gazebo-1] failed to terminate '8' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [gazebo-1]: sending signal 'SIGTERM' to process[gazebo-1]
+[INFO] [gazebo-1]: process has finished cleanly [pid 183212]
+[ERROR] [component_container_isolated-10]: process[component_container_isolated-10] failed to terminate '10.0' seconds after receiving 'SIGTERM', escalating to 'SIGKILL'
+[INFO] [component_container_isolated-10]: sending signal 'SIGKILL' to process[component_container_isolated-10]
+[ERROR] [component_container_isolated-10]: process has died [pid 183509, exit code -9, cmd '/opt/ros/jazzy/lib/rclcpp_components/component_container_isolated --ros-args --log-level info --ros-args -r __node:=nav2_container --params-file /tmp/launch_params_euxp4ley --params-file /tmp/launch_params_sn3r0tnv -r /tf:=tf -r /tf_static:=tf_static'].

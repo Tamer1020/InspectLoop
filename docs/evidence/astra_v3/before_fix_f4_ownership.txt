@@ -1,0 +1,13 @@
+# V3 F4 ownership tests run against V2 nav_goal.py (git f38d7dc), 2026-11-08T23:47:06+01:00
+FAILED test_v3_nav_goal_ownership.py::test_interrupt_during_acceptance_then_late_acceptance_is_owned_and_cancelled[exc0]
+FAILED test_v3_nav_goal_ownership.py::test_interrupt_during_acceptance_then_late_acceptance_is_owned_and_cancelled[exc1]
+FAILED test_v3_nav_goal_ownership.py::test_interrupt_during_acceptance_acceptance_within_cleanup_window_is_cancelled[exc0]
+FAILED test_v3_nav_goal_ownership.py::test_interrupt_during_acceptance_acceptance_within_cleanup_window_is_cancelled[exc1]
+FAILED test_v3_nav_goal_ownership.py::test_interrupt_during_acceptance_never_answered_cannot_report_clean_shutdown
+FAILED test_v3_nav_goal_ownership.py::test_interrupt_during_acceptance_late_goal_whose_cancel_fails_stays_inhibited
+FAILED test_v3_nav_goal_ownership.py::test_no_new_goal_is_dispatched_while_the_interrupted_goal_is_unresolved
+FAILED test_v3_nav_goal_ownership.py::test_exception_thrown_by_cleanup_itself_keeps_motion_inhibited
+8 failed in 0.23s
+test_second_interrupt_during_cleanup_does_not_escape_cancel_all: on V2 the KeyboardInterrupt
+raised inside the cancel wait escaped NavGoalRunner.run() and terminated the pytest session
+itself (remaining tests not executed) - i.e. cleanup was not exception safe.

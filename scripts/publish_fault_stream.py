@@ -3,6 +3,9 @@
 
   scan_nan      /scan at 10 Hz, every range NaN          (data arrives, rate looks healthy)
   scan_empty    /scan at 10 Hz with an empty ranges array
+  scan_front_nan  relays the LIVE scan from /scan_live to /scan with every beam inside +-35 deg
+                set to NaN (V3, Astra V2 review F3: the rest of the scan stays valid, the rate
+                stays healthy - only the forward stopping corridor is blind)
   image_frozen  /camera/image_raw at 10 Hz: one captured frame re-stamped with the current time
   image_future  /camera/image_raw at 10 Hz: live content but stamped 5 s in the future
 
@@ -16,6 +19,7 @@ import sys
 import time
 
 import rclpy
+import rclpy.clock
 from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import Image, LaserScan
 
@@ -26,13 +30,35 @@ def main():
     node = rclpy.create_node('fault_stream_' + mode,
                              parameter_overrides=[rclpy.parameter.Parameter(
                                  'use_sim_time', rclpy.Parameter.Type.BOOL, True)])
-    first = {'done': False}
+    first = {'done': False, 'n': 0}
 
     def announce():
+        first['n'] += 1
         if not first['done']:
             first['done'] = True
             print('FIRST_PUBLISH', flush=True)
+        elif first['n'] % 50 == 0:
+            print(f"PUBLISHED {first['n']}", flush=True)
 
+    if mode == 'scan_front_nan':
+        pub = node.create_publisher(LaserScan, '/scan', qos_profile_sensor_data)
+        half = math.radians(35.0)
+
+        def on_live(msg):
+            m = copy.deepcopy(msg)
+            r = list(m.ranges)
+            for i in range(len(r)):
+                if abs(m.angle_min + i * m.angle_increment) <= half:
+                    r[i] = float('nan')
+            m.ranges = r
+            pub.publish(m)
+            announce()
+        node.create_subscription(LaserScan, '/scan_live', on_live, qos_profile_sensor_data)
+        try:
+            rclpy.spin(node)
+        except KeyboardInterrupt:
+            pass
+        return
     if mode.startswith('scan'):
         pub = node.create_publisher(LaserScan, '/scan', qos_profile_sensor_data)
 
@@ -69,7 +95,10 @@ def main():
             m.header.stamp = now.to_msg()
             pub.publish(m)
             announce()
-    node.create_timer(0.1, tick)
+    # V3: publish on a WALL-clock timer (stamps still come from the sim clock). A sim-time timer
+    # in this Python process stalled once in the V3 batch (scan_nan run 1: the gate saw a scan
+    # timeout instead of invalid scans), so the fault would not have been exercised.
+    node.create_timer(0.1, tick, clock=rclpy.clock.Clock(clock_type=rclpy.clock.ClockType.STEADY_TIME))
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:

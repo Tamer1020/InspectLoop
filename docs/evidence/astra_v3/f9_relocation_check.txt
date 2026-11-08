@@ -1,0 +1,5 @@
+# V3 F9 live check (2026-11-09): docs/evidence/demo_run_v3 copied to <scratch>/relocated/some/deeper/place/run
+copied mission_report.html 10 links, broken 0
+copied mission_report.md 10 links, broken 0
+regenerated (ros2 run inspectloop_mission generate_report <copy>) mission_report.html 10 links, broken 0
+regenerated mission_report.md 10 links, broken 0   e.g. images/PG-11_V0_t00026.40_annotated.png

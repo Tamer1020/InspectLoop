@@ -53,11 +53,32 @@ def summarize(record: Dict) -> Dict:
     }
 
 
-def _rel(path: str, run_dir: str) -> str:
+def _rel(path: str, run_dir: str, original_run_dir: str = '') -> str:
+    """Link to an evidence file, relative to the run directory the report is written into.
+
+    V3 (Astra V2 review F9): records store absolute paths from the ORIGINAL run directory.
+    After a run directory is moved/copied those paths point to the old place, and a relative
+    path must never be resolved against the current working directory. Resolution order:
+      1. already relative -> it is relative to the run directory: keep it (normalised);
+      2. absolute under the original run directory -> its path inside the run directory;
+      3. absolute under the current run directory -> relative to it;
+      4. otherwise, if a file with that name exists under run_dir/images -> link that;
+      5. last resort: relative path from run_dir (may be outside the run directory)."""
     if not path:
         return ''
+    if not os.path.isabs(path):
+        return os.path.normpath(path)
+    norm = os.path.normpath(path)
+    for base in (original_run_dir, run_dir):
+        if base and os.path.isabs(base):
+            b = os.path.normpath(base)
+            if norm.startswith(b + os.sep):
+                return os.path.relpath(norm, b)
+    candidate = os.path.join('images', os.path.basename(norm))
+    if os.path.isfile(os.path.join(run_dir, candidate)):
+        return candidate
     try:
-        return os.path.relpath(path, run_dir)
+        return os.path.relpath(norm, run_dir)
     except ValueError:
         return path
 
@@ -76,7 +97,8 @@ def result_text(g: Dict) -> str:
         return (f"{r['value']:.2f} {g.get('unit', '')} (heuristic σ {_sigma(r):.2f}), "
                 f"alarm {r['alarm']}")
     if r.get('status') == 'UNRESOLVED':
-        return f"UNRESOLVED — {r.get('reason', '')}"
+        oc = r.get('outcome_class')
+        return f"UNRESOLVED{f' [{oc}]' if oc else ''} — {r.get('reason', '')}"
     return 'not inspected'
 
 
@@ -129,8 +151,9 @@ def render_markdown(record: Dict, run_dir: str) -> str:
         L.append(f"## {g['id']} — {g.get('description', '')}")
         L.append('')
         L.append(f"**{result_text(g)}**  ")
-        L.append(f"Feasible viewpoint candidates: {len(g.get('candidates_feasible', []))}, "
-                 f"rejected by the map (collision/clearance): {len(g.get('candidates_rejected', []))}.")
+        L.append(f"Footprint-clear viewpoint candidates: {len(g.get('candidates_feasible', []))} "
+                 f"(Nav2 path reachability not pre-checked), rejected by the map "
+                 f"(collision/clearance): {len(g.get('candidates_rejected', []))}.")
         L.append('')
         L.append('| t (s) | Viewpoint | Event | Value | σ (heuristic) | Quality flags | Decision | '
                  'Reason |')
@@ -157,7 +180,7 @@ def render_markdown(record: Dict, run_dir: str) -> str:
                 if o.get('annotated_image_path'):
                     L.append('')
                     L.append(f"    ![{g['id']} obs {o.get('index')}]"
-                             f"({_rel(o['annotated_image_path'], run_dir)})")
+                             f"({_rel(o['annotated_image_path'], run_dir, record.get('run_dir', ''))})")
                     L.append('')
         L.append('')
     home = record.get('home_return')
@@ -208,7 +231,8 @@ def render_html(record: Dict, run_dir: str) -> str:
                     f"{e(val)} · flags: {e(', '.join(o.get('quality_flags') or []) or 'none')}<br>"
                     f"<span class='{o.get('decision')}'>{o.get('decision')}</span> — "
                     f"{e(o.get('reason', ''))}"
-                    + (f"<img src='{e(_rel(img, run_dir))}'>" if img else '') + '</div>')
+                    + (f"<img src='{e(_rel(img, run_dir, record.get('run_dir', '')))}'>" if img else '')
+                    + '</div>')
             if v['navigation']['outcome'] != 'SUCCEEDED':
                 cards.append(f"<div class='card'><b>{e(v['viewpoint']['label'])}</b><br>"
                              f"navigation {e(v['navigation']['outcome'])} - viewpoint unreachable</div>")

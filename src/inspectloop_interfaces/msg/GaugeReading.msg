@@ -41,8 +41,20 @@ float32 processing_time_ms
 # Quality flags (any subset): NO_IMAGE, TAG_NOT_VISIBLE, TAG_INTERMITTENT, OCCLUDED,
 # OBLIQUE_VIEW, TOO_FAR, LOW_NEEDLE_CONTRAST, AMBIGUOUS_NEEDLE, NEEDLE_PARTIAL,
 # INCONSISTENT_FRAMES, BLURRED, OUT_OF_SCALE, FROZEN_FRAMES, CLOCK_RESET, ROBOT_MOVING,
-# WRONG_VIEWPOINT, STALE_OBSERVATION
+# WRONG_VIEWPOINT, STALE_OBSERVATION, INVALID_FRAMES, PROCESSING_ERROR, SERVICE_FAILURE
 string[] quality_flags
+
+# Typed outcome of the observation (V3, Astra V2 review F7) - system faults are never reported
+# as visual occlusion:
+#   NONE                  a value was measured
+#   CAMERA_UNAVAILABLE    no camera frame at all arrived while waiting
+#   IMAGE_INVALID         frames arrived but were stale / future-dated / frozen / across a clock
+#                         reset, or were captured away from (or while leaving) the viewpoint
+#   PROCESSING_ERROR      the reader raised an exception (software fault)
+#   SERVICE_FAILURE       (mission side) the reading service was unavailable / timed out
+#   INSUFFICIENT_EVIDENCE valid frames, but the image evidence did not support a reading
+#                         (occlusion, oblique view, ambiguous needle, ...)
+string fault_class
 
 string raw_image_path
 string annotated_image_path

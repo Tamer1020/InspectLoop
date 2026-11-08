@@ -1,0 +1,2 @@
+[fault_test] 00:39:59.582 injecting image_frozen fault: killing gz_camera_bridge (pid 186529)
+[fault_test] launch exit code 0

@@ -23,6 +23,11 @@ GateInputs nominal(double v, double w)
   in.command_age_s = 0.05;
   in.scan_healthy = true;
   in.min_front_range_m = 5.0;
+  // V3: coverage is explicit (fail-closed defaults); these tests assume a fully observed scan
+  in.forward_observed = true;
+  in.min_rear_range_m = 5.0;
+  in.rear_observed = true;
+  in.rotation_observed = true;
   return in;
 }
 }  // namespace

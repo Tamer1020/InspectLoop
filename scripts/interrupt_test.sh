@@ -25,4 +25,4 @@ kill -INT "$mpid"
 wait $sampler
 tee -a "$out/interrupt.log" < "$out/odom_speed.txt"
 wait $launch_pid
-echo "[interrupt_test] launch exit code $?" | tee -a "$out/interrupt.log"
+rc=$?; echo "[interrupt_test] launch exit code $rc" | tee -a "$out/interrupt.log"

@@ -1,0 +1,94 @@
+{
+  "mission_id": "20261109_003441_1940",
+  "mission_name": "fault_injection_single_gauge",
+  "mission_file": "/home/tamer/InspectLoop/install/inspectloop_mission/share/inspectloop_mission/config/fault_single_gauge.yaml",
+  "run_dir": "/home/tamer/InspectLoop/docs/evidence/astra_v3/faults/scan_front_nan/20261109_003441_1940",
+  "state": "ABORTED",
+  "abort_reason": "LiDAR does not observe the motion corridor (cmd_vel_gate BLOCKED_UNOBSERVED) - stopping for safety",
+  "started_wall": "2026-11-09T00:34:41",
+  "parameters": {
+    "max_sigma": 0.15,
+    "min_valid_frames": 3,
+    "max_retries_same": 1,
+    "max_viewpoints": 3,
+    "max_observations": 8,
+    "frames_per_observation": 5,
+    "viewpoint_distances": [
+      1.5,
+      1.2,
+      1.9
+    ],
+    "viewpoint_angles_deg": [
+      0.0,
+      -30.0,
+      30.0,
+      -45.0,
+      45.0
+    ],
+    "viewpoint_clearance_m": 0.45,
+    "nav_timeout_s": 180.0,
+    "nav_attempts_per_viewpoint": 2,
+    "max_result_age_s": 8.0,
+    "odom_max_age_s": 0.3
+  },
+  "gauges": [],
+  "home_return": null,
+  "nav_cleanup_confirmed": true,
+  "duration_wall_s": 12.8,
+  "duration_sim_s": 11.3,
+  "health_events": [
+    {
+      "t": 16.0,
+      "name": "inspectloop/stream/camera/image_raw",
+      "level": "WARN",
+      "message": "DEGRADED"
+    },
+    {
+      "t": 17.01,
+      "name": "inspectloop/stream/camera/image_raw",
+      "level": "OK",
+      "message": "OK"
+    }
+  ],
+  "clock_discontinuities": [],
+  "nav_goal_events": [
+    {
+      "t": 10.362,
+      "event": "SENT",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": ""
+    },
+    {
+      "t": 10.393,
+      "event": "ACCEPTED",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": ""
+    },
+    {
+      "t": 21.565,
+      "event": "CANCEL_CONFIRMED",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": "MissionAborted: LiDAR does not observe the motion corridor (cmd_vel_gate BLOCKED_UNOBSERVED) - stopping for safety: cancel ERROR_NONE, terminal CANCELED"
+    },
+    {
+      "t": 21.601,
+      "event": "TERMINAL",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": "CANCELED (after cancel request)"
+    }
+  ],
+  "uncertainty_note": "sigma is a HEURISTIC model (frame spread + pixel resolution + floor); bands are diagnostic, not calibrated confidence intervals",
+  "summary": {
+    "gauges_total": 0,
+    "gauges_accepted": 0,
+    "gauges_unresolved": 0,
+    "alarms": [],
+    "recovered_by_viewpoint_change": [],
+    "decision_counts": {},
+    "observations_total": 0,
+    "viewpoints_total": 0,
+    "navigation_succeeded": 0,
+    "mean_position_error_m": null,
+    "uncertainty_note": "sigma is a HEURISTIC uncertainty model (frame spread + pixel resolution + floor). It is a diagnostic, not a calibrated probability: no confidence level or coverage is claimed for value +/- k*sigma."
+  }
+}

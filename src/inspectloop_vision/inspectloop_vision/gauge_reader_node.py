@@ -20,9 +20,12 @@ Freshness and provenance (Astra F5):
 * The reply echoes observation_id / viewpoint_epoch and carries the frame stamps, so the
   mission can re-validate it (observation_guard.py).
 """
+from concurrent.futures import ProcessPoolExecutor
 import json
 import math
+import multiprocessing
 import os
+import sys
 import threading
 import time
 import zlib
@@ -34,6 +37,7 @@ from inspectloop_interfaces.srv import ReadGauge
 import numpy as np
 import rclpy
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallbackGroup
+from rclpy.clock import JumpThreshold
 from rclpy.duration import Duration
 from rclpy.executors import ExternalShutdownException, MultiThreadedExecutor
 from rclpy.node import Node
@@ -43,9 +47,27 @@ from sensor_msgs.msg import CameraInfo, Image
 import tf2_ros
 
 from inspectloop_vision import gauge_reader as gr
+from inspectloop_vision import reader_worker
 from inspectloop_vision.frame_buffer import FrameBuffer, select_burst
 
 INVALIDATING_FLAGS = ('FROZEN_FRAMES', 'CLOCK_RESET', 'WRONG_VIEWPOINT', 'ROBOT_MOVING')
+# flags that mean the image data itself is not admissible evidence (F7 fault class IMAGE_INVALID)
+IMAGE_INVALID_FLAGS = ('INVALID_FRAMES', 'FROZEN_FRAMES', 'CLOCK_RESET', 'WRONG_VIEWPOINT',
+                       'ROBOT_MOVING')
+
+
+def fault_class_for(has_value: bool, flags) -> str:
+    """Typed outcome (V3, Astra V2 review F7)."""
+    flags = set(flags)
+    if 'PROCESSING_ERROR' in flags:
+        return 'PROCESSING_ERROR'
+    if 'NO_IMAGE' in flags:
+        return 'CAMERA_UNAVAILABLE'
+    if flags & set(IMAGE_INVALID_FLAGS):
+        return 'IMAGE_INVALID'
+    if has_value:
+        return 'NONE'
+    return 'INSUFFICIENT_EVIDENCE'
 
 
 def _nan_to_num(x: float) -> float:
@@ -68,7 +90,7 @@ class GaugeReaderNode(Node):
         p('frame_timeout_s', 5.0)
         p('wall_timeout_factor', 3.0)
         p('max_frame_future_s', 0.2)
-        p('clock_reset_threshold_s', 1.0)
+        p('clock_jump_tolerance_s', 0.001)   # V3: any larger backward step = clock reset
         p('max_pose_error_m', 0.35)
         p('max_pose_error_rad', 0.40)
         p('max_motion_m', 0.02)
@@ -81,15 +103,26 @@ class GaugeReaderNode(Node):
         p('max_frame_spread', 0.20)
         p('min_sharpness', 15.0)
         p('sigma_floor', 0.03)
+        p('reader_worker_process', True)     # V3: read frames outside the node's GIL
+        p('reader_worker_timeout_s', 20.0)
 
         self._bridge = CvBridge()
         self._reader = gr.GaugeReader()
+        self._pool = None
+        if self.get_parameter('reader_worker_process').value:
+            self._start_pool()
         self._lock = threading.Lock()
         to_ns = lambda s: int(float(self.get_parameter(s).value) * 1e9)  # noqa: E731
-        self._buf = FrameBuffer(maxlen=30, reset_threshold_ns=to_ns('clock_reset_threshold_s'),
+        self._buf = FrameBuffer(maxlen=30, reset_threshold_ns=to_ns('clock_jump_tolerance_s'),
                                 max_future_ns=to_ns('max_frame_future_s'))
         self._total_frames = 0
+        self._clock_jumps = 0
         self._epoch = None
+        # V3 (F5): every backward ROS-clock step (sim reset/replay), however small, is reported
+        # by rcl; the buffer and any burst in progress are invalidated
+        self._jump_handle = self.get_clock().create_jump_callback(
+            JumpThreshold(min_forward=None, min_backward=Duration(nanoseconds=-1),
+                          on_clock_change=True), post_callback=self._on_clock_jump)
         self._K = None
         self._tf = tf2_ros.Buffer()
         self._tf_listener = tf2_ros.TransformListener(self._tf, self)
@@ -117,6 +150,37 @@ class GaugeReaderNode(Node):
                 self.get_logger().warning('camera/clock time jumped backwards: frame buffer cleared')
             self._total_frames += 1
 
+    def _start_pool(self):
+        ctx = multiprocessing.get_context('spawn')     # never fork a process with ROS threads
+        self._pool = ProcessPoolExecutor(max_workers=1, mp_context=ctx)
+        self._pool.submit(reader_worker.warm_up).result(timeout=60.0)
+
+    def _read_frames(self, images, tag_id):
+        """Per-frame reading, in the worker process if enabled. Raises on worker failure (the
+        service then reports PROCESSING_ERROR) and restarts the worker for the next request."""
+        if self._pool is None:
+            return [self._reader.read_frame(img, int(tag_id), self._K) for img in images]
+        try:
+            fut = self._pool.submit(reader_worker.read_frames, images, int(tag_id), self._K)
+            return fut.result(timeout=float(self.get_parameter('reader_worker_timeout_s').value))
+        except Exception:
+            self._pool.shutdown(wait=False, cancel_futures=True)
+            self._start_pool()
+            raise
+
+    def destroy_node(self):
+        if self._pool is not None:
+            self._pool.shutdown(wait=False, cancel_futures=True)
+        return super().destroy_node()
+
+    def _on_clock_jump(self, jump):
+        with self._lock:
+            self._clock_jumps += 1
+            self._buf.notify_clock_jump()
+        self.get_logger().warning(
+            f'ROS clock discontinuity ({jump.clock_change.name}, '
+            f'{jump.delta.nanoseconds * 1e-9:+.3f} s): frame buffer cleared')
+
     def _on_info(self, msg: CameraInfo):
         if msg.k[0] > 0:
             self._K = np.array(msg.k, np.float64).reshape(3, 3)
@@ -131,14 +195,17 @@ class GaugeReaderNode(Node):
     def _collect_burst(self, not_before_ns: int, n: int, timeout_s: float):
         """Up to n fresh frames. Returns (messages, stats, clock_reset)."""
         t0 = self._now_ns()
-        epoch0 = self._buf.time_epoch
+        with self._lock:
+            epoch0 = self._buf.time_epoch
+            jumps0 = self._clock_jumps
         wall_end = time.monotonic() + timeout_s * self.get_parameter('wall_timeout_factor').value
         max_future = int(float(self.get_parameter('max_frame_future_s').value) * 1e9)
         stats = {}
         while rclpy.ok():
             now = self._now_ns()
             with self._lock:
-                reset = self._buf.check_clock(now) or self._buf.time_epoch != epoch0
+                reset = (self._buf.check_clock(now) or self._buf.time_epoch != epoch0 or
+                         self._clock_jumps != jumps0)
                 sel, stats = select_burst(self._buf.frames(), not_before_ns, now, max_future, n)
             if reset:
                 return [], stats, True
@@ -169,7 +236,9 @@ class GaugeReaderNode(Node):
             r.gauge_id, r.tag_id, r.viewpoint_label = req.gauge_id, req.tag_id, req.viewpoint_label
             r.observation_id, r.viewpoint_epoch = req.observation_id, req.viewpoint_epoch
             r.has_value, r.value, r.sigma = False, float('nan'), float('nan')
-            r.quality_flags = ['NO_IMAGE']
+            # V3 (F7): a software fault, NOT a missing image / occlusion
+            r.quality_flags = ['PROCESSING_ERROR']
+            r.fault_class = 'PROCESSING_ERROR'
             r.detail = f'internal error: {type(e).__name__}: {e}'
             resp.success, resp.reading = False, r
             return resp
@@ -184,6 +253,8 @@ class GaugeReaderNode(Node):
 
         request_time = self.get_clock().now()
         with self._lock:
+            frames_before = self._total_frames
+            jumps_before = self._clock_jumps
             if self._epoch != req.viewpoint_epoch:
                 # new viewpoint: nothing captured before it may serve as evidence
                 self._buf.invalidate()
@@ -193,12 +264,13 @@ class GaugeReaderNode(Node):
         msgs, stats, clock_reset = self._collect_burst(not_before, n,
                                                        timeout + settle.nanoseconds * 1e-9)
 
+        # provenance FIRST: pose at capture time from TF, before the (slower) image processing,
+        # while the frame stamps are certainly still inside the TF buffer
+        poses = [self._pose_at(m.header.stamp) for m in msgs]
+
         t0 = time.perf_counter()
-        frames, images = [], []
-        for m in msgs:
-            bgr = self._bridge.imgmsg_to_cv2(m, desired_encoding='bgr8')
-            images.append(bgr)
-            frames.append(self._reader.read_frame(bgr, int(req.tag_id), self._K))
+        images = [self._bridge.imgmsg_to_cv2(m, desired_encoding='bgr8') for m in msgs]
+        frames = self._read_frames(images, req.tag_id) if images else []
         obs = gr.fuse(frames, n, self.fuse_params())
         proc_ms = (time.perf_counter() - t0) * 1000.0
         flags = list(obs.flags)
@@ -210,7 +282,6 @@ class GaugeReaderNode(Node):
             r.first_frame_stamp = msgs[0].header.stamp
 
         # provenance: pose at capture time, motion during the burst
-        poses = [self._pose_at(m.header.stamp) for m in msgs]
         r.pose_known = bool(poses) and all(p is not None for p in poses)
         if r.pose_known:
             x0, y0, a0 = poses[0]
@@ -220,8 +291,14 @@ class GaugeReaderNode(Node):
                                           for p in poses))
         else:
             r.acq_x = r.acq_y = r.acq_yaw = float('nan')
-        if clock_reset:
-            flags.append('CLOCK_RESET')
+        with self._lock:
+            frames_seen = self._total_frames - frames_before
+            jumped = self._clock_jumps != jumps_before
+        if not msgs and frames_seen > 0 and 'NO_IMAGE' in flags:
+            # frames DID arrive but none was admissible (old / future-dated / clock reset)
+            flags = [f for f in flags if f != 'NO_IMAGE'] + ['INVALID_FRAMES']
+        if (clock_reset or jumped) and 'CLOCK_RESET' not in flags:
+            flags.append('CLOCK_RESET')     # also a jump during processing invalidates the result
         if stats.get('frozen'):
             flags.append('FROZEN_FRAMES')
         if req.check_pose and msgs:
@@ -259,6 +336,7 @@ class GaugeReaderNode(Node):
         r.sharpness = float(obs.sharpness)
         r.processing_time_ms = float(proc_ms)
         r.quality_flags = flags
+        r.fault_class = fault_class_for(r.has_value, flags)
         r.detail = obs.detail
         if invalid:
             r.detail = 'observation invalidated: ' + ', '.join(
@@ -315,7 +393,7 @@ def reading_to_dict(r: GaugeReading) -> dict:
     return {
         'gauge_id': r.gauge_id, 'tag_id': r.tag_id, 'viewpoint': r.viewpoint_label,
         'observation_id': r.observation_id, 'viewpoint_epoch': r.viewpoint_epoch,
-        'stamp_s': _t(r.stamp), 'request_stamp_s': _t(r.request_stamp),
+        'fault_class': r.fault_class, 'stamp_s': _t(r.stamp), 'request_stamp_s': _t(r.request_stamp),
         'first_frame_stamp_s': _t(r.first_frame_stamp), 'last_frame_stamp_s': _t(r.stamp),
         'pose_known': r.pose_known, 'acq_x': _f(r.acq_x, 3), 'acq_y': _f(r.acq_y, 3),
         'acq_yaw': _f(r.acq_yaw, 3), 'pose_motion_m': _f(r.pose_motion_m, 4),
@@ -335,6 +413,8 @@ def reading_to_dict(r: GaugeReading) -> dict:
 
 
 def main(args=None):
+    # shorter GIL switch interval for the work that stays in this process (V3, see reader_worker)
+    sys.setswitchinterval(0.001)
     rclpy.init(args=args)
     node = GaugeReaderNode()
     executor = MultiThreadedExecutor(num_threads=4)

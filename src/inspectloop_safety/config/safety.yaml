@@ -13,6 +13,18 @@ cmd_vel_gate:
     slow_distance_m: 0.45
     corridor_half_width_m: 0.27 # half robot width incl. wheels + 2 cm
     lidar_to_front_m: 0.15      # lidar at x=0.10, front edge at x=0.25
+    lidar_to_rear_m: 0.35       # rear edge at x=-0.25 (Nav2 MPPI may reverse: vx_min -0.2)
+    lidar_x_m: 0.10             # lidar position in base_link (rotation centre at x=0)
+    # --- V3 motion-sector coverage (Astra V2 review F3) -----------------------------------
+    # A direction may only be driven if the sector its corridor occupies is OBSERVED: a beam
+    # observes its ray if finite in [range_min, range_max] or +/-inf (REP-117). NaN,
+    # out-of-range values and unsampled directions are unknown, never free space.
+    forward_sector_half_angle_deg: 0.0   # 0 = from geometry: atan2(0.27, 0.15) = 60.9 deg
+    rear_sector_half_angle_deg: 0.0      # 0 = from geometry: atan2(0.27, 0.35) = 37.6 deg
+    sector_min_coverage: 0.95            # observed fraction of the sector's sample directions
+    sector_max_gap_deg: 2.0              # widest tolerated contiguous unobserved wedge
+    scan_max_angle_increment_deg: 1.0    # coarser scans cannot protect the corridor at all
+    rotation_radius_m: 0.35              # footprint corner radius: obstacles inside block turning
     publish_rate_hz: 20.0
 
 health_monitor:

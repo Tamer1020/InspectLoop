@@ -3,6 +3,12 @@
 Candidates are robot poses on arcs in front of the gauge: standoff distances x view angles
 measured from the dial normal, each facing the dial. A candidate is *feasible* when the
 robot footprint (+ clearance) lies entirely in known free space of the occupancy map.
+
+"Feasible" means FOOTPRINT-CLEAR ONLY (V3, Astra V2 review F8): no Nav2 path is planned to the
+candidate beforehand, so a feasible candidate may still be unreachable (enclosed free space,
+narrow passage, costmap inflation, dynamic obstacles). Reachability is established by actually
+navigating: a failed navigation is recorded as NAV_FAILED and the mission moves on to the next
+candidate (MOVE_NEW) or reports UNRESOLVED / NAVIGATION_FAILURE.
 Visibility is NOT predicted from the 2D map (it has no heights, and overhanging occluders
 are invisible to the 2D LiDAR); it is established by actually observing.
 

@@ -1,0 +1,173 @@
+{
+  "mission_id": "20261109_004411_d64d",
+  "accepted": 3,
+  "unresolved": 1,
+  "max_abs_error": 0.0135,
+  "mean_abs_error": 0.0103,
+  "within_2sigma": 3,
+  "incorrect_acceptances": 0,
+  "incorrect_tolerance_bar": 0.1,
+  "gauges": 4,
+  "observations_total": 10,
+  "observations_accepted": 3,
+  "rejected_observations_with_value": 0,
+  "rows": [
+    {
+      "gauge": "PG-11",
+      "truth": 4.2,
+      "status": "ACCEPTED",
+      "value": 4.192,
+      "sigma": 0.0508,
+      "error": -0.008,
+      "abs_error": 0.008,
+      "within_2sigma": true,
+      "incorrect": false
+    },
+    {
+      "gauge": "PG-12",
+      "truth": 6.8,
+      "status": "ACCEPTED",
+      "value": 6.7865,
+      "sigma": 0.0759,
+      "error": -0.0135,
+      "abs_error": 0.0135,
+      "within_2sigma": true,
+      "incorrect": false
+    },
+    {
+      "gauge": "PG-13",
+      "truth": 3.1,
+      "status": "UNRESOLVED"
+    },
+    {
+      "gauge": "PG-14",
+      "truth": 8.7,
+      "status": "ACCEPTED",
+      "value": 8.7095,
+      "sigma": 0.0528,
+      "error": 0.0095,
+      "abs_error": 0.0095,
+      "within_2sigma": true,
+      "incorrect": false
+    }
+  ],
+  "observations": [
+    {
+      "gauge": "PG-11",
+      "index": 1,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "value": 4.192,
+      "sigma": 0.0508,
+      "error": -0.008,
+      "flags": [],
+      "decision": "ACCEPT"
+    },
+    {
+      "gauge": "PG-12",
+      "index": 1,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "OCCLUDED",
+        "LOW_NEEDLE_CONTRAST",
+        "AMBIGUOUS_NEEDLE",
+        "NEEDLE_PARTIAL"
+      ],
+      "decision": "MOVE_NEW"
+    },
+    {
+      "gauge": "PG-12",
+      "index": 2,
+      "viewpoint": "V3 d=1.50 a=-45deg",
+      "value": 6.7865,
+      "sigma": 0.0759,
+      "error": -0.0135,
+      "flags": [],
+      "decision": "ACCEPT"
+    },
+    {
+      "gauge": "PG-13",
+      "index": 1,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "RETRY_SAME"
+    },
+    {
+      "gauge": "PG-13",
+      "index": 2,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "MOVE_NEW"
+    },
+    {
+      "gauge": "PG-13",
+      "index": 3,
+      "viewpoint": "V1 d=1.50 a=-30deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "RETRY_SAME"
+    },
+    {
+      "gauge": "PG-13",
+      "index": 4,
+      "viewpoint": "V1 d=1.50 a=-30deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "MOVE_NEW"
+    },
+    {
+      "gauge": "PG-13",
+      "index": 5,
+      "viewpoint": "V2 d=1.50 a=+30deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "RETRY_SAME"
+    },
+    {
+      "gauge": "PG-13",
+      "index": 6,
+      "viewpoint": "V2 d=1.50 a=+30deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "UNRESOLVED"
+    },
+    {
+      "gauge": "PG-14",
+      "index": 1,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "value": 8.7095,
+      "sigma": 0.0528,
+      "error": 0.0095,
+      "flags": [],
+      "decision": "ACCEPT"
+    }
+  ]
+}

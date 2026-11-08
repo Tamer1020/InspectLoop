@@ -36,7 +36,7 @@ def _record():
            'timeline': [{'decision': 'RETRY_SAME'}, {'decision': 'UNRESOLVED'}],
            'result': {'status': 'UNRESOLVED', 'reason': 'no viewpoint left', 'observations': 2,
                       'viewpoints_used': 1}}
-    return {'mission_id': 't1', 'mission_name': 'unit', 'state': 'COMPLETED',
+    return {'mission_id': 't1', 'mission_name': 'unit', 'state': 'COMPLETED', 'run_dir': '/run',
             'parameters': {'max_sigma': 0.15}, 'gauges': [g11, g12, g13], 'health_events': []}
 
 
@@ -51,9 +51,13 @@ def test_write_reports(tmp_path):
     paths = report.write_reports(_record(), str(tmp_path))
     md = open(paths['markdown']).read()
     assert 'UNRESOLVED' in md and 'MOVE_NEW' in md and '6.78 bar (heuristic σ 0.06)' in md
-    assert 'images/o2.png' not in md or True
+    # V3 (F9): the former `assert ... or True` checked nothing. Images recorded under the
+    # original run dir '/run' must be linked relative to the report's run directory.
+    assert '(images/o2.png)' in md
+    assert '/run/images' not in md
     html = open(paths['html']).read()
     assert '<table>' in html and 'RETRY_SAME' in html
+    assert "src='images/o2.png'" in html
     assert json.load(open(paths['json']))['summary']['gauges_total'] == 3
 
 

@@ -1,0 +1,4 @@
+[fault_test] 00:35:42.024 injecting clock_reset: world time reset
+data: true
+
+[fault_test] launch exit code 0

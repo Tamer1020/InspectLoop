@@ -1,0 +1,4 @@
+# V3 F9 tests against V2 report.py: 1 passed (original location), 3 failed
+E               AssertionError: markdown: broken link ../../../orig/20261108_101010_ab12/images/PG-11_V0_t0012.00_annotated.png
+E               AssertionError: markdown: broken link ../../images/PG-11_V0_t0012.00_annotated.png
+E       AssertionError: assert '../../../../.../images/a.png' == 'images/a.png'

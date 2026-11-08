@@ -3,8 +3,11 @@
 * Only frames stamped in [not_before, now + max_future] are eligible: frames taken before the
   observation request (e.g. at a previous viewpoint) are never used, and implausibly
   future-dated frames are rejected.
-* A backward jump of the frame stamps by more than `reset_threshold_ns` is treated as a
-  simulation/clock reset: the buffer is cleared and `time_epoch` increments.
+* ANY backward step of the node clock or of the (plausible) frame stamps is treated as a
+  simulation/clock reset: the buffer is cleared and `time_epoch` increments. V3 (Astra V2 review
+  F5): V2 ignored rollbacks smaller than 1 s, so a 0.8 s rollback kept frames from the old
+  timeline eligible; now only a 1 ms tolerance for float rounding remains, and the node also
+  forwards rclpy clock-jump callbacks through `notify_clock_jump()`.
 * `invalidate()` drops every buffered frame (called when a new viewpoint epoch starts).
 * A burst whose frames all have identical pixel digests is reported as frozen (a stuck camera
   re-publishing the same image with new stamps).
@@ -22,7 +25,7 @@ class BufferedFrame:
 
 
 class FrameBuffer:
-    def __init__(self, maxlen: int = 30, reset_threshold_ns: int = 1_000_000_000,
+    def __init__(self, maxlen: int = 30, reset_threshold_ns: int = 1_000_000,
                  max_future_ns: int = 200_000_000):
         self._frames = deque(maxlen=maxlen)
         self._reset_threshold_ns = reset_threshold_ns
@@ -66,6 +69,11 @@ class FrameBuffer:
             self._last_good_stamp_ns = (stamp_ns if self._last_good_stamp_ns is None
                                         else max(self._last_good_stamp_ns, stamp_ns))
         return reset
+
+    def notify_clock_jump(self):
+        """Clock discontinuity reported by the ROS clock (jump callback)."""
+        self._reset()
+        self._last_now_ns = None
 
     def invalidate(self):
         self._frames.clear()

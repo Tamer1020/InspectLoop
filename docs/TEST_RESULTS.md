@@ -1,10 +1,40 @@
 # Test results
 
+> **V3 (after the independent review of V2, 2026-11-09)** — §V3 below; full detail in
+> `docs/ASTRA_V3_REMEDIATION_REPORT.md`. §0 (V2) and §1–7 (V1) are kept for traceability.
+
+## V3 results
+
+**Build / tests.** `colcon build` 8 packages, no warnings; `colcon test` → **460 results, 0 errors,
+0 failures, 0 skipped** (450 test cases: C++ GoogleTest 59, vision pytest 208, mission pytest 157,
+other packages 26; + 10 CTest wrappers), `ROS_DOMAIN_ID=87`. Each V3 regression test was run
+against the V2 code first: `docs/evidence/astra_v3/before_fix_*.txt`.
+
+**Synthetic CV evaluation** (`tools/heldout_uncertainty_eval.py`, tolerance 0.10 bar; final set
+frozen and committed before any reader change):
+
+| Set | V2 accepted / incorrect | V3 accepted / incorrect | V3 clean · difficult · out-of-scale |
+|---|---|---|---|
+| dev 20261108 (n=400) | 210 / 1 (#183) | 209 / 0 | 185/208 · 24/156 · 0/36 |
+| Astra 20261109 (n=200) | 97 / 1 (#94, clean, 0.1013) | 97 / 1 (same) | 89/95 · 8/90 · 0/15 |
+| frozen final 20261201 (n=400) | 208 / 0 | 208 / 0 | 189/204 · 19/158 · 0/38 |
+
+**Gazebo / Nav2 (developer-reported, `docs/evidence/demo_run_v3*`).** Two full four-gauge runs:
+PG-11 4.215 / 4.192 (4.20), PG-12 MOVE_NEW → ACCEPT 6.837 / 6.787 (6.80), PG-13 UNRESOLVED,
+PG-14 8.679 / 8.710 (8.70, alarm HIGH); max |error| 0.037 / 0.014 bar; 0 incorrect acceptances.
+
+**Fault injection (V3, `docs/evidence/astra_v3/faults/`).** Front-sector NaN (±35°) →
+`BLOCKED_UNOBSERVED`, stop ≤ 1.2 s, ABORTED; LiDAR kill / all-NaN / empty scans → stop ≤ 1.5 s,
+ABORTED; camera loss → UNRESOLVED `CAMERA_UNAVAILABLE`; frozen / future frames → UNRESOLVED
+`IMAGE_INVALID`; world-time reset → observation invalidated (clock epoch), Nav2 does not recover →
+`NAVIGATION_FAILURE`, no value accepted; SIGINT → goal cancel confirmed, report ABORTED. One
+scan_nan run was invalid (injector stalled) and was repeated.
+
 > **v2 (after the Astra audit fixes, 2026-11-08)** — see §0 below and `docs/ASTRA_FIX_REPORT.md`.
 > Sections 1–7 document the v1 baseline (tag `v1.0-final`) and are kept for traceability; where v1
 > wording used "95 %" for `value ± 2σ`, that claim has been withdrawn (Astra F6).
 
-## 0. v2 results
+## 0. v2 results (superseded by V3)
 
 ### 0.1 Automated tests
 `colcon build` (8 packages, no warnings) and `colcon test` → **260 results, 0 errors, 0 failures**

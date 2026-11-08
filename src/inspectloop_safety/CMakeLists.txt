@@ -21,6 +21,7 @@ find_package(tf2_ros REQUIRED)
 
 # ROS-independent safety logic (unit tested)
 add_library(${PROJECT_NAME}_core
+  src/gate_supervisor.cpp
   src/topic_monitor.cpp
   src/velocity_gate.cpp)
 target_include_directories(${PROJECT_NAME}_core PUBLIC
@@ -53,6 +54,10 @@ if(BUILD_TESTING)
   target_link_libraries(test_astra_safety_existing_api ${PROJECT_NAME}_core)
   ament_add_gtest(test_scan_validation test/test_scan_validation.cpp)
   target_link_libraries(test_scan_validation ${PROJECT_NAME}_core)
+  ament_add_gtest(test_v3_sector_blindness_existing_api test/test_v3_sector_blindness_existing_api.cpp)
+  target_link_libraries(test_v3_sector_blindness_existing_api ${PROJECT_NAME}_core)
+  ament_add_gtest(test_v3_motion_coverage test/test_v3_motion_coverage.cpp)
+  target_link_libraries(test_v3_motion_coverage ${PROJECT_NAME}_core)
 endif()
 
 ament_export_targets(export_${PROJECT_NAME})

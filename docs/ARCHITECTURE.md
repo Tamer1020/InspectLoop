@@ -54,7 +54,10 @@ The policy returns a **hint** for the planner: `different_side` (occlusion, hidd
 * Candidates: standoff d ∈ {1.5, 1.2, 1.9} m × view angle ∈ {0, ±30, ±45}° from the dial normal, each
   facing the dial.
 * **Feasibility** on the `/map` occupancy grid: the robot disc (0.45 m = radius 0.33 + margin) must be in
-  known free space. (At PG-13 the crate removes 7 of 15 candidates.)
+  known free space. (At PG-13 the crate removes 7 of 15 candidates.) *Feasible means footprint-clear
+  only* (V3, Astra F8): no Nav2 path is planned beforehand, so a feasible candidate can still be
+  unreachable. That is discovered by navigating: a failed goal is recorded as `NAV_FAILED`, the
+  mission moves on (MOVE_NEW) or ends with outcome class `NAVIGATION_FAILURE`.
 * **Visibility is not predicted** from the 2-D map (no heights; the overhanging conduit box is invisible
   to the 2-D LiDAR). It is discovered by observing — that is the point of the closed loop.
 * Selection: prior (frontal, 1.5 m) + hint bonus. After an occlusion-type failure the whole angular
@@ -162,22 +165,48 @@ Sensor headers carry URDF frame names (`<gz_frame_id>`). The simulation world fr
 | `/mission/status` | MissionStatus | 2 Hz |
 | `/mission/markers` | MarkerArray | transient local: candidates, visited viewpoints coloured by decision, results |
 
-## 6.1 Observation freshness and provenance (Astra F5)
+## 6.1 Observation freshness and provenance (Astra F5, extended in V3)
 
 * The mission increments a **viewpoint epoch** before every new viewpoint; each request carries a
-  unique `observation_id`, the epoch and the viewpoint pose.
-* Before requesting, the mission waits until `/odom` shows the robot at rest for 0.5 s.
+  unique `observation_id` (`<mission_id>/<gauge>/<viewpoint>/<n>`), the epoch and the viewpoint pose.
+* Before requesting, the mission waits until `/odom` shows the robot at rest for 0.5 s — judged on
+  the odometry **message stamps**, and only if the newest sample is ≤ 0.3 s old and the window
+  holds ≥ 3 samples (V3: a stalled odometry stream can no longer "prove" rest).
+* **Clock epochs (V3):** the mission and the reader register an rclpy clock-jump callback; *every*
+  backward ROS-clock step (no size threshold, only 1 ms float tolerance in the frame buffer)
+  increments the clock epoch / clears the frame buffer. A result whose request and consumption fall
+  into different clock epochs is rejected, as is a burst during which the reader saw a jump.
 * The reader node clears its buffer on a new epoch and on a backward clock jump, accepts only
   frames stamped in [request + 0.5 s, now + 0.2 s], flags pixel-identical bursts
   (`FROZEN_FRAMES`), and looks up the robot pose at each frame's stamp in TF
   (`WRONG_VIEWPOINT` > 0.35 m / 0.40 rad, `ROBOT_MOVING` > 2 cm / 0.02 rad during the burst).
-* The mission re-validates every reply (`observation_guard.py`): matching id and epoch, stamps
-  after the request and not in the future, no clock regression, capture pose at the viewpoint.
-  Otherwise the observation becomes `STALE_OBSERVATION` without a value.
+* The mission re-validates every reply when it **consumes** it (`observation_guard.py`): matching
+  id, mission and epoch, same clock epoch, request ≤ first frame ≤ last frame ≤ now + 0.2 s,
+  result age (now − last frame) ≤ 8 s sim time (V3; measured ages in the demo 0.2–0.8 s), a known
+  capture pose at the viewpoint, and no value without frames. Otherwise the observation becomes
+  `STALE_OBSERVATION` without a value. The record keeps request, frame, consumption times, result
+  age and both clock epochs.
+* **Typed outcomes (V3, F7):** each reading carries `fault_class` (`NONE`, `CAMERA_UNAVAILABLE`,
+  `IMAGE_INVALID`, `PROCESSING_ERROR`, mission-side `SERVICE_FAILURE`, `INSUFFICIENT_EVIDENCE`);
+  a reader exception is `PROCESSING_ERROR` (V2 reported it as `NO_IMAGE`), frames that arrived but
+  were all inadmissible are `INVALID_FRAMES`. Each gauge result has an `outcome_class`
+  (`MEASURED`, `INSUFFICIENT_VISUAL_EVIDENCE`, `CAMERA_UNAVAILABLE`, `IMAGE_INVALID`,
+  `SYSTEM_FAULT`, `NAVIGATION_FAILURE`). System/sensor faults retry once and then end UNRESOLVED;
+  they never trigger MOVE_NEW.
+* **Reader process (V3):** frames are read in a dedicated `spawn` worker process
+  (`reader_worker.py`). Inside the node, GIL contention with rclpy callbacks (/clock at ~1 kHz,
+  /tf, images) had stretched a 0.1 s burst to 8–12 s (found in the V3 demo, see
+  `ASTRA_V3_REMEDIATION_REPORT.md`); the TF poses are now looked up before processing.
 
 ## 6.2 Nav2 goal lifecycle (Astra F4)
 
-`nav_goal.NavGoalRunner` tracks every goal until a terminal result is observed. Late acceptances
+`nav_goal.NavGoalRunner` tracks every goal until a terminal result is observed. **Ownership starts
+when `send_goal_async` returns** (V3, Astra F4): the send future is registered as pending before
+the acceptance wait, and the whole send → acceptance → result lifecycle runs inside an exception
+handler that cancels whatever it owns, so an interrupt during acceptance can no longer orphan a
+late-accepted goal. If `send_goal_async` itself raises, ownership is unknown and motion stays
+inhibited permanently (e-stop). Cleanup never raises and never reports success while anything is
+unresolved; at mission end any failure of the cleanup itself latches the e-stop. Late acceptances
 are cancelled; a cancel is confirmed only by an `ERROR_NONE`/`GOAL_TERMINATED` reply listing the goal
 **and** a terminal result. While any goal is unresolved no new goal is sent; after a 30 s grace the
 mission latches the gate e-stop and aborts. Exceptions and SIGINT cancel and confirm the active
@@ -186,9 +215,23 @@ executor can still talk to Nav2 during the interrupt).
 
 ## 7. Safety layer (C++) — a simulated safety/health guard, not a certified safety function
 
-`cmd_vel_gate` runs its loop on a wall timer and judges liveness on the **steady clock**.
+`cmd_vel_gate` runs its loop on a wall timer and judges liveness on the **steady clock**. The
+decision logic lives in the ROS-independent `GateSupervisor` (unit tested exactly as it runs);
+the node only forwards messages and clock readings.
 Priority: e-stop (`~/set_estop`) > LiDAR fault > command stale 0.5 s / negative / non-finite age >
-obstacle < 0.20 m ahead in the robot-width corridor (unknown clearance = obstacle) > clamping.
+**per-direction coverage** > obstacle in the swept corridor > clamping.
+
+**Motion-sector coverage (V3, Astra F3).** Each motion component needs positive evidence that the
+region it sweeps is observed. A beam observes its ray if it is finite in [range_min, range_max]
+or ±inf (REP-117); NaN, out-of-range values and directions the scanner does not sample are
+*unknown*, never free space. Sectors: forward corridor ±atan2(0.27, 0.15) = ±60.9° (forward
+motion), rear corridor ±atan2(0.27, 0.35) = ±37.6° around 180° (reverse motion — Nav2's MPPI may
+reverse at up to 0.2 m/s), the full circle (in-place rotation). A sector is observed if ≥ 95 % of
+its sample directions are observed, the widest unobserved wedge is ≤ 2°, and the angular
+resolution is ≤ 1°. An unobserved direction zeroes only that motion component
+(`BLOCKED_UNOBSERVED`); an obstacle inside the 0.35 m turning radius blocks rotation; an obstacle
+< 0.20 m behind the rear edge blocks reverse motion (all parameters in `safety.yaml`). The mission
+aborts if `BLOCKED_UNOBSERVED` persists for 3 s.
 A LiDAR fault is: no scan for 0.5 s (steady), a structurally invalid scan (empty, bad metadata,
 size inconsistent with the angular span, < 50 % usable beams overall or in the forward half;
 REP-117: +inf = clear, −inf = obstacle at the sensor, NaN = unusable), a header stamp that is zero,

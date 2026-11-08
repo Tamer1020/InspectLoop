@@ -1,0 +1,87 @@
+{
+  "mission_id": "20261109_003754_69a2",
+  "mission_name": "fault_injection_single_gauge",
+  "mission_file": "/home/tamer/InspectLoop/install/inspectloop_mission/share/inspectloop_mission/config/fault_single_gauge.yaml",
+  "run_dir": "/home/tamer/InspectLoop/docs/evidence/astra_v3/faults/lidar/20261109_003754_69a2",
+  "state": "ABORTED",
+  "abort_reason": "LiDAR stream failed (health_monitor ERROR) - stopping for safety",
+  "started_wall": "2026-11-09T00:37:54",
+  "parameters": {
+    "max_sigma": 0.15,
+    "min_valid_frames": 3,
+    "max_retries_same": 1,
+    "max_viewpoints": 3,
+    "max_observations": 8,
+    "frames_per_observation": 5,
+    "viewpoint_distances": [
+      1.5,
+      1.2,
+      1.9
+    ],
+    "viewpoint_angles_deg": [
+      0.0,
+      -30.0,
+      30.0,
+      -45.0,
+      45.0
+    ],
+    "viewpoint_clearance_m": 0.45,
+    "nav_timeout_s": 180.0,
+    "nav_attempts_per_viewpoint": 2,
+    "max_result_age_s": 8.0,
+    "odom_max_age_s": 0.3
+  },
+  "gauges": [],
+  "home_return": null,
+  "nav_cleanup_confirmed": true,
+  "duration_wall_s": 8.8,
+  "duration_sim_s": 5.9,
+  "health_events": [
+    {
+      "t": 13.0,
+      "name": "inspectloop/stream/camera/image_raw",
+      "level": "WARN",
+      "message": "DEGRADED"
+    },
+    {
+      "t": 15.0,
+      "name": "inspectloop/stream/camera/image_raw",
+      "level": "OK",
+      "message": "OK"
+    },
+    {
+      "t": 17.0,
+      "name": "inspectloop/stream/scan",
+      "level": "ERROR",
+      "message": "STALE"
+    }
+  ],
+  "clock_discontinuities": [],
+  "nav_goal_events": [
+    {
+      "t": 11.299,
+      "event": "SENT",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": ""
+    },
+    {
+      "t": 11.328,
+      "event": "ACCEPTED",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": ""
+    },
+    {
+      "t": 17.071,
+      "event": "CANCEL_CONFIRMED",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": "MissionAborted: LiDAR stream failed (health_monitor ERROR) - stopping for safety: cancel ERROR_NONE, terminal CANCELED"
+    },
+    {
+      "t": 17.081,
+      "event": "TERMINAL",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": "CANCELED (after cancel request)"
+    }
+  ],
+  "uncertainty_note": "sigma is a HEURISTIC model (frame spread + pixel resolution + floor); bands are diagnostic, not calibrated confidence intervals"
+}
