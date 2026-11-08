@@ -50,7 +50,7 @@ def test_summary():
 def test_write_reports(tmp_path):
     paths = report.write_reports(_record(), str(tmp_path))
     md = open(paths['markdown']).read()
-    assert 'UNRESOLVED' in md and 'MOVE_NEW' in md and '6.78 ± 0.12' in md
+    assert 'UNRESOLVED' in md and 'MOVE_NEW' in md and '6.78 bar (heuristic σ 0.06)' in md
     assert 'images/o2.png' not in md or True
     html = open(paths['html']).read()
     assert '<table>' in html and 'RETRY_SAME' in html

@@ -11,7 +11,9 @@ namespace inspectloop_safety
 {
 
 /// Health level of a monitored data stream.
-enum class StreamHealth { kOk, kDegraded, kStale, kNeverReceived };
+/// kClockJump: the evaluation time lies before the last message (simulation reset / backward
+/// clock jump) - the stream must deliver a new message before it is trusted again.
+enum class StreamHealth { kOk, kDegraded, kStale, kNeverReceived, kClockJump };
 
 std::string toString(StreamHealth h);
 

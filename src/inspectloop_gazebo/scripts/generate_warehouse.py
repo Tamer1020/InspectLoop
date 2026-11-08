@@ -247,9 +247,14 @@ def collect_obstacles(layout: Dict) -> Tuple[List[Box], List[Dict]]:
         boxes.append(Box(o['name'], o['xy'][0], o['xy'][1], zb + sz / 2, sx, sy, sz,
                          color=tuple(o.get('color', (0.4, 0.4, 0.4))),
                          in_map=zb < LIDAR_SCAN_Z))
-        if 'bracket_to_y' in o:   # horizontal support arm above the scan plane
-            y0, y1 = o['xy'][1], o['bracket_to_y']
-            boxes.append(Box(o['name'] + '_bracket', o['xy'][0], (y0 + y1) / 2, zb + sz - 0.02,
+        if 'hanger' in o:         # thin rod beside the panel + overhead arm (never in the map)
+            hg = o['hanger']
+            rx = o['xy'][0] + hg['x_offset']
+            ztop = zb + sz
+            boxes.append(Box(o['name'] + '_rod', rx, o['xy'][1], (ztop + hg['top_z']) / 2,
+                             0.03, 0.03, hg['top_z'] - ztop, color=(0.2, 0.2, 0.2), in_map=False))
+            y0, y1 = o['xy'][1], hg['to_y']
+            boxes.append(Box(o['name'] + '_arm', rx, (y0 + y1) / 2, hg['top_z'],
                              0.03, abs(y1 - y0), 0.03, color=(0.2, 0.2, 0.2), in_map=False))
     return boxes, layout['gauges']['items']
 

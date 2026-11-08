@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 #include "inspectloop_safety/topic_monitor.hpp"
 
+#include <cmath>
 #include <stdexcept>
 
 namespace inspectloop_safety
@@ -14,6 +15,7 @@ std::string toString(StreamHealth h)
     case StreamHealth::kDegraded: return "DEGRADED";
     case StreamHealth::kStale: return "STALE";
     case StreamHealth::kNeverReceived: return "NEVER_RECEIVED";
+    case StreamHealth::kClockJump: return "CLOCK_JUMP";
   }
   return "UNKNOWN";
 }
@@ -70,6 +72,9 @@ StreamHealth TopicMonitor::evaluate(double now_s) const
 {
   if (!last_) {
     return StreamHealth::kNeverReceived;
+  }
+  if (!std::isfinite(now_s) || now_s < *last_ - 1e-6) {
+    return StreamHealth::kClockJump;               // fail closed until fresh data arrives
   }
   if (now_s - *last_ > timeout_s_) {
     return StreamHealth::kStale;

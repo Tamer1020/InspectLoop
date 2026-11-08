@@ -1,0 +1,5 @@
+FAILED test/test_astra_uncertainty_labels.py::test_reports_make_no_95_percent_or_confidence_claims
+FAILED test/test_astra_uncertainty_labels.py::test_result_text_labels_sigma_as_heuristic
+FAILED test/test_astra_uncertainty_labels.py::test_legacy_records_with_sigma_key_still_render
+FAILED test/test_astra_uncertainty_labels.py::test_json_report_carries_uncertainty_note
+4 failed in 0.05s

@@ -134,6 +134,7 @@ private:
       switch (h) {
         case StreamHealth::kOk: st.level = DiagnosticStatus::OK; break;
         case StreamHealth::kDegraded: st.level = DiagnosticStatus::WARN; break;
+        case StreamHealth::kClockJump: st.level = DiagnosticStatus::ERROR; break;
         default: st.level = in_grace ? DiagnosticStatus::WARN : DiagnosticStatus::ERROR; break;
       }
       st.message = toString(h);

@@ -4,9 +4,10 @@ The mission and vision nodes never read the world layout; this tool does, *after
 
     ros2 run inspectloop_mission evaluate_run <run_dir> [--layout warehouse_layout.yaml]
 
-For every gauge it reports the true value, the accepted value, the error, whether the error
-lies within the reported 2-sigma interval (uncertainty calibration), and - for every individual
-observation - the error, so rejected observations can be checked too (were they really bad?).
+For every gauge it reports the true value, the accepted value, the error and whether the error
+lies within +-2 heuristic sigma, and - for every individual observation - the error, so rejected
+observations can be checked too. All rates are reported with their denominators; with a handful
+of gauges they are anecdotal, not statistics (sigma is a heuristic, see report.UNCERTAINTY_NOTE).
 """
 import argparse
 import json
@@ -15,6 +16,8 @@ import sys
 from typing import Dict
 
 import yaml
+
+INCORRECT_TOL = 0.10        # bar (1 % of full scale): accepted reading this far off = incorrect
 
 
 def truth_table(layout: Dict) -> Dict[str, float]:
@@ -30,9 +33,11 @@ def evaluate(record: Dict, layout: Dict) -> Dict:
         row = {'gauge': g['id'], 'truth': t, 'status': r.get('status')}
         if r.get('status') == 'ACCEPTED' and t is not None:
             err = r['value'] - t
-            row.update(value=r['value'], sigma=r['sigma'], error=round(err, 4),
+            sig = r.get('sigma_heuristic', r.get('sigma'))
+            row.update(value=r['value'], sigma=sig, error=round(err, 4),
                        abs_error=round(abs(err), 4),
-                       within_2sigma=abs(err) <= 2 * r['sigma'])
+                       within_2sigma=abs(err) <= 2 * sig,
+                       incorrect=abs(err) > INCORRECT_TOL)
         rows.append(row)
         for v in g.get('viewpoints', []):
             for o in v.get('observations', []):
@@ -50,6 +55,11 @@ def evaluate(record: Dict, layout: Dict) -> Dict:
         'max_abs_error': max((r['abs_error'] for r in acc), default=None),
         'mean_abs_error': (round(sum(r['abs_error'] for r in acc) / len(acc), 4) if acc else None),
         'within_2sigma': sum(1 for r in acc if r['within_2sigma']),
+        'incorrect_acceptances': sum(1 for r in acc if r['incorrect']),
+        'incorrect_tolerance_bar': INCORRECT_TOL,
+        'gauges': len(rows),
+        'observations_total': len(obs_rows),
+        'observations_accepted': sum(1 for o in obs_rows if o['decision'] == 'ACCEPT'),
         'rejected_observations_with_value': len(rejected_with_value),
         'rows': rows, 'observations': obs_rows,
     }
@@ -74,7 +84,7 @@ def main(argv=None) -> int:
     res = evaluate(record, layout)
     with open(os.path.join(args.run_dir, 'evaluation.json'), 'w') as f:
         json.dump(res, f, indent=2)
-    print(f"{'gauge':<7} {'truth':>6} {'status':<11} {'value':>7} {'2sigma':>7} {'error':>7} in2s")
+    print(f"{'gauge':<7} {'truth':>6} {'status':<11} {'value':>7} {'2sig_h':>7} {'error':>7} in2s")
     for r in res['rows']:
         if 'error' in r:
             print(f"{r['gauge']:<7} {r['truth']:>6.2f} {r['status']:<11} {r['value']:>7.3f} "
@@ -86,9 +96,12 @@ def main(argv=None) -> int:
         err = '-' if o['error'] is None else f"{o['error']:+.3f}"
         print(f"  {o['gauge']} #{o['index']} {o['viewpoint']:<22} value={o['value']} err={err} "
               f"flags={o['flags']} -> {o['decision']}")
-    print(f"accepted {res['accepted']}, unresolved {res['unresolved']}, mean |err| "
-          f"{res['mean_abs_error']}, max |err| {res['max_abs_error']}, within 2 sigma "
-          f"{res['within_2sigma']}/{res['accepted']}")
+    print(f"accepted {res['accepted']}/{res['gauges']} gauges, unresolved {res['unresolved']}; "
+          f"accepted observations {res['observations_accepted']}/{res['observations_total']}; "
+          f"mean |err| {res['mean_abs_error']}, max |err| {res['max_abs_error']}; "
+          f"within +-2 heuristic sigma {res['within_2sigma']}/{res['accepted']}; "
+          f"incorrect acceptances (|err| > {INCORRECT_TOL} bar) "
+          f"{res['incorrect_acceptances']}/{res['accepted']}")
     return 0
 
 

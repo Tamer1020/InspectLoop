@@ -29,7 +29,7 @@ flowchart TD
   U1 -- no --> UNR
   N -- SUCCEEDED --> O[ReadGauge: burst of 5 fresh frames<br/>value, sigma, quality flags]
   O --> D{decision_policy}
-  D -- ACCEPT --> A([record value ± 2σ, alarm state])
+  D -- ACCEPT --> A([record value + heuristic σ, alarm state])
   D -- RETRY_SAME --> W[wait 1 s] --> O
   D -- MOVE_NEW --> B[block failed direction<br/>if occlusion] --> NX[viewpoint_planner.next hint]
   NX -- candidate --> N
@@ -41,10 +41,10 @@ flowchart TD
 
 | Decision | When | Rationale |
 |---|---|---|
-| **ACCEPT** | value present, ≥ 3/5 valid frames, no blocking flag, σ ≤ 0.15 bar | reading is reliable |
+| **ACCEPT** | measurement contract holds (finite value inside the printed scale ±0.05 bar, finite σ_h > 0 and ≤ 0.15 bar, integer ≥ 3/5 valid frames, flag list well-formed) and no blocking flag | reading is supported by adequate evidence |
 | **RETRY_SAME** | *transient-looking* problem: `NO_IMAGE`, `TAG_NOT_VISIBLE`, `TAG_INTERMITTENT`, `INCONSISTENT_FRAMES`, `BLURRED`, too few valid frames, or σ dominated by frame spread — at most 1 retry per viewpoint | a passer-by, a dropped frame or vibration goes away by itself; re-observing is cheaper than driving |
-| **MOVE_NEW** | *geometric* problem: `OCCLUDED`, `OBLIQUE_VIEW`, `TOO_FAR`, `LOW_NEEDLE_CONTRAST`, `OUT_OF_SCALE`, or σ too high from resolution; also a transient problem that persisted after the retry, or an unreachable viewpoint | the view itself is bad, so a different pose is needed |
-| **UNRESOLVED** | geometric/persistent problem with no viewpoint or observation budget left (≤ 3 viewpoints, ≤ 8 observations per gauge), or a camera fault (`NO_IMAGE` persists — moving cannot fix a sensor) | report honestly instead of guessing |
+| **MOVE_NEW** | *geometric* problem: `OCCLUDED`, `OBLIQUE_VIEW`, `TOO_FAR`, `LOW_NEEDLE_CONTRAST`, `AMBIGUOUS_NEEDLE`, `NEEDLE_PARTIAL`, `OUT_OF_SCALE`, or σ too high from resolution; also a transient problem that persisted after the retry, or an unreachable viewpoint | the view itself is bad, so a different pose is needed |
+| **UNRESOLVED** | geometric/persistent problem with no viewpoint or observation budget left (≤ 3 viewpoints, ≤ 8 observations per gauge), or a fault moving cannot fix (`NO_IMAGE`, `FROZEN_FRAMES`, `CLOCK_RESET`, malformed measurement) that persists after a retry | report honestly instead of guessing |
 
 The policy returns a **hint** for the planner: `different_side` (occlusion, hidden tag, poor contrast),
 `frontal` (too oblique), `closer` (too few pixels).
@@ -69,33 +69,37 @@ zone) above a 0–10 bar dial (270° sweep, red zone 8–10 bar).
 Per frame:
 1. Detect the tag; homography **H** panel-texture → image from its 4 corners.
 2. Rectify the image into the canonical panel frame (+ validity mask for pixels outside the image).
-3. **Dial refinement**: fit an ellipse to the outer edge of the dark bezel (rays searched inward from
-   1.06 R, top ±35° skipped next to the tag). This removes the bias caused by extrapolating H from a
-   small tag to the dial (measured: up to 0.6 bar before, ≤ 0.05 bar after; see TEST_RESULTS).
-4. **Needle**: darkness profile of rays 0.15–0.52 R around the refined centre, 0.5° steps; peak with
-   parabolic sub-step refinement → angle → value.
-5. **Evidence**: needle confidence (peak prominence, penalised by competing peaks > 12° away), dial
-   visibility (fraction of the face annulus that is bright, unsaturated and in-image), view angle and
-   distance (solvePnP with the real `camera_info`), apparent dial radius (mean and minor axis),
-   Laplacian sharpness.
+3. **Dial refinement**: ellipse fit to the outer edge of the dark bezel (removes the bias of
+   extrapolating H from a small tag to the dial).
+4. **Needle evidence (Astra F1)** on 16 rings between 0.15 R and 0.52 R:
+   * each ring must show the needle as one dark lobe; its darkness-weighted centroid gives the
+     ring's angle; rings must agree (`needle_support` = consistent rings / usable rings, ≥ 0.70);
+   * `needle_ambiguity` = strongest competing lobe / needle lobe (75th percentile over outer rings,
+     limit 0.45);
+   * **model residual**: a tapered, blurred needle model (known geometry) is fitted within ±20°
+     of the estimate; dark structure it cannot explain (second line, shadow, cable) relative to
+     the needle's own energy must stay ≤ 0.075;
+   * the sweep extends 20° beyond the scale so an out-of-scale needle is *measured and flagged*,
+     never clamped; a needle at the sweep edge is reported without a value.
+5. **Evidence**: needle confidence, dial visibility (the needle's *geometric footprint* is
+   excluded, not a fixed wedge), view angle/distance (solvePnP), dial radius (mean and minor axis;
+   ≥ 40 px required — below that the needle-model test cannot exclude nearby lines), sharpness.
 
-Per observation (burst of 5 frames stamped **after** the request + 0.5 s settle):
+Per observation (burst of 5 frames, see §6.1 for freshness):
 
 ```
-value  = median(valid frame readings)
-sigma² = (1.25·spread/√n)² + σ_res² + σ_floor²
-         spread  = 1.4826·MAD of frame readings                   (random error)
-         σ_res   = 0.5 px needle localisation at 0.35 R along the
-                   foreshortened (minor) dial axis, in bar           (resolution / obliqueness)
-         σ_floor = 0.03 bar                                        (calibration floor)
+value   = median(valid, finite frame readings)
+sigma_h = sqrt((1.25·spread/√n)² + σ_res² + σ_floor²)      HEURISTIC uncertainty indicator
 ```
 
-Quality flags: `NO_IMAGE, TAG_NOT_VISIBLE, TAG_INTERMITTENT, OCCLUDED (visibility < 0.85),
-OBLIQUE_VIEW (> 55°), TOO_FAR (minor radius < 28 px), LOW_NEEDLE_CONTRAST (< 0.35),
-INCONSISTENT_FRAMES (spread > 0.2 bar), BLURRED, OUT_OF_SCALE`.
+σ_h is **not** a calibrated probability, and value ± k·σ_h is not a confidence interval (Astra F6).
+It is used as a threshold quantity (σ_h ≤ 0.15 bar). Held-out error statistics are reported in
+docs/ASTRA_FIX_REPORT.md.
 
-The σ model is a documented heuristic; it is checked against ground truth in unit tests (synthetic
-views) and in the simulation runs (TEST_RESULTS.md). It is **conservative** on the tested conditions.
+Quality flags: `NO_IMAGE, TAG_NOT_VISIBLE, TAG_INTERMITTENT, OCCLUDED, OBLIQUE_VIEW, TOO_FAR,
+LOW_NEEDLE_CONTRAST, AMBIGUOUS_NEEDLE, NEEDLE_PARTIAL, INCONSISTENT_FRAMES, BLURRED, OUT_OF_SCALE`
+(reader), `FROZEN_FRAMES, CLOCK_RESET, WRONG_VIEWPOINT, ROBOT_MOVING` (reader node) and
+`STALE_OBSERVATION` (mission re-validation).
 
 ## 4. Node graph
 
@@ -158,11 +162,40 @@ Sensor headers carry URDF frame names (`<gz_frame_id>`). The simulation world fr
 | `/mission/status` | MissionStatus | 2 Hz |
 | `/mission/markers` | MarkerArray | transient local: candidates, visited viewpoints coloured by decision, results |
 
-## 7. Safety layer (C++)
+## 6.1 Observation freshness and provenance (Astra F5)
 
-`cmd_vel_gate` (20 Hz) priority: e-stop (`~/set_estop`) > LiDAR stale 0.5 s > command stale 0.5 s /
-non-finite > obstacle < 0.20 m ahead of the bumper in the robot-width corridor (forward blocked,
-rotation allowed; slow-down to 0.45 m) > clamp |v| ≤ 0.45 m/s, |ω| ≤ 1.3 rad/s.
+* The mission increments a **viewpoint epoch** before every new viewpoint; each request carries a
+  unique `observation_id`, the epoch and the viewpoint pose.
+* Before requesting, the mission waits until `/odom` shows the robot at rest for 0.5 s.
+* The reader node clears its buffer on a new epoch and on a backward clock jump, accepts only
+  frames stamped in [request + 0.5 s, now + 0.2 s], flags pixel-identical bursts
+  (`FROZEN_FRAMES`), and looks up the robot pose at each frame's stamp in TF
+  (`WRONG_VIEWPOINT` > 0.35 m / 0.40 rad, `ROBOT_MOVING` > 2 cm / 0.02 rad during the burst).
+* The mission re-validates every reply (`observation_guard.py`): matching id and epoch, stamps
+  after the request and not in the future, no clock regression, capture pose at the viewpoint.
+  Otherwise the observation becomes `STALE_OBSERVATION` without a value.
+
+## 6.2 Nav2 goal lifecycle (Astra F4)
+
+`nav_goal.NavGoalRunner` tracks every goal until a terminal result is observed. Late acceptances
+are cancelled; a cancel is confirmed only by an `ERROR_NONE`/`GOAL_TERMINATED` reply listing the goal
+**and** a terminal result. While any goal is unresolved no new goal is sent; after a 30 s grace the
+mission latches the gate e-stop and aborts. Exceptions and SIGINT cancel and confirm the active
+goal before the report is written (rclpy signal handling is disabled in the mission process so the
+executor can still talk to Nav2 during the interrupt).
+
+## 7. Safety layer (C++) — a simulated safety/health guard, not a certified safety function
+
+`cmd_vel_gate` runs its loop on a wall timer and judges liveness on the **steady clock**.
+Priority: e-stop (`~/set_estop`) > LiDAR fault > command stale 0.5 s / negative / non-finite age >
+obstacle < 0.20 m ahead in the robot-width corridor (unknown clearance = obstacle) > clamping.
+A LiDAR fault is: no scan for 0.5 s (steady), a structurally invalid scan (empty, bad metadata,
+size inconsistent with the angular span, < 50 % usable beams overall or in the forward half;
+REP-117: +inf = clear, −inf = obstacle at the sensor, NaN = unusable), a header stamp that is zero,
+> 0.2 s in the future or > 1 s old, or a backward ROS-clock jump since the last scan.
+`TopicMonitor` reports `CLOCK_JUMP` (→ ERROR) when evaluated at a time before its last message.
+The mission aborts when the gate stays in `STOPPED_SCAN_FAULT` for 2 s (scans may still arrive at
+full rate while being unusable, which a rate-only monitor would miss).
 `health_monitor` checks rate/age of `/scan`, `/odom`, `/camera/*`, `/joint_states` (type-agnostic
 `GenericSubscription`) and TF links, publishing `/diagnostics`. The mission aborts on LiDAR ERROR.
 

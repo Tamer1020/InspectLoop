@@ -7,12 +7,14 @@ Per frame
    (the tag and dial are printed on the same rigid plane).
 3. Rectify the image into the canonical, fronto-parallel panel frame (500 x 600 px).
    Pixels that fall outside the camera image are tracked with a validity mask.
-4. Needle angle: for every candidate angle in the scale sweep, average the *darkness*
-   along a ray between 0.15 R and 0.52 R (inside the numerals, outside the hub). The needle
-   is the dominant dark ray; sub-degree accuracy by parabolic peak interpolation.
+4. Needle (Astra F1): on each of 16 sampling rings (0.15-0.52 R) the needle must appear as ONE
+   dark lobe of the width predicted by the needle geometry, and the rings must agree on its
+   angle (support). A competing lobe anywhere on a ring (ambiguity) or dark structure near the
+   needle that a fitted tapered-needle model cannot explain (model residual) makes the reading
+   AMBIGUOUS_NEEDLE; rings that do not see the needle make it NEEDLE_PARTIAL. The search sweep
+   extends 20 deg beyond the scale so out-of-scale needles are measured and flagged, not clamped.
 5. Quality evidence
-   * needle_confidence: peak prominence over the median ray, penalised by the
-     strongest competing peak > 12 deg away (occluders and shadows create competitors);
+   * needle_confidence: contrast x support x (1 - ambiguity);
    * dial_visibility: fraction of the dial face annulus that looks like the white face
      (bright, unsaturated, inside the image) - occluders lower it;
    * view angle / distance from solvePnP on the tag (needs camera intrinsics);
@@ -29,9 +31,10 @@ Per observation (a burst of frames from one viewpoint)
               foreshortened (minor) axis of the projected dial -> resolution / obliqueness
   sigma_floor calibration floor (0.03 bar)
 
-and raises quality flags (OCCLUDED, OBLIQUE_VIEW, TOO_FAR, ...). The flags and sigma feed the
-mission's decision policy (ACCEPT / RETRY_SAME / MOVE_NEW / UNRESOLVED). This sigma model is a
-documented heuristic; docs/TEST_RESULTS.md compares it with the simulator ground truth.
+and raises quality flags (OCCLUDED, OBLIQUE_VIEW, TOO_FAR, AMBIGUOUS_NEEDLE, NEEDLE_PARTIAL, ...).
+The flags and sigma feed the mission's decision policy (ACCEPT / RETRY_SAME / MOVE_NEW /
+UNRESOLVED). sigma is a HEURISTIC: it is not a calibrated probability and value +/- k*sigma is not
+a confidence interval (Astra F6). docs/ASTRA_FIX_REPORT.md reports held-out error statistics.
 
 Texture constants mirror inspectloop_gazebo/scripts/generate_warehouse.py (checked by tests).
 """
@@ -59,20 +62,49 @@ VALUE_PER_DEG = (VALUE_MAX - VALUE_MIN) / (ANGLE_MAX_DEG - ANGLE_MIN_DEG)
 
 # ---------------------------------------------------------------- algorithm constants
 RAY_R0, RAY_R1, RAY_SAMPLES = 0.15, 0.52, 16
-SWEEP_MARGIN_DEG = 5.0
+# The needle search covers the scale plus a margin, so a needle *beyond* the scale is still
+# measured (and flagged OUT_OF_SCALE) instead of being forced onto the nearest scale end.
+SWEEP_MARGIN_DEG = 20.0
 ANGLE_STEP_DEG = 0.5
-COMPETITOR_EXCLUSION_DEG = 12.0
 MIN_RAY_VALID_FRACTION = 0.6
+# Needle geometry (generator): tapered polygon, half-width 0.035 R at the pivot, tip at 0.82 R.
+NEEDLE_BASE_HALFWIDTH = 0.035
+NEEDLE_TIP = 0.82
+# Per-ring needle analysis (Astra F1)
+RING_MIN_CONTRAST = 0.15          # darkness above the ring median for a ring to 'see' a line
+OUTER_RING_R = 0.28               # rings beyond this resolve lines a few degrees apart
+AMBIGUITY_LIMIT = 0.45            # competing line >= 45 % of the needle's contrast -> ambiguous
+# Needle-model residual: energy of the dark structure within +-20 deg of the needle that the
+# fitted (tapered, blurred) needle model does NOT explain, relative to the model's energy.
+# Measured on synthetic renders with a minor dial radius >= 40 px: clean needles <= 0.071,
+# any nearby distractor that moved the reading by > 0.1 bar >= 0.064 (only 3 deg offsets below
+# 0.075). Below 40 px clean and distractor residuals overlap -> TOO_FAR (min_dial_radius_px).
+RESIDUAL_WINDOW_DEG = 20.0
+MAX_MODEL_RESIDUAL = 0.075
+MIN_NEEDLE_SUPPORT = 0.70         # fraction of rings that see the needle at the consensus angle
+OUT_OF_SCALE_TOL = 0.05           # bar beyond the printed scale before flagging OUT_OF_SCALE
 VIS_R0, VIS_R1 = 0.15, 0.52
 VIS_EXCLUDE = [(150.0, 210.0)]        # 'bar' caption below the hub (degrees, clockwise from up)
 FRAME_MIN_CONFIDENCE = 0.20           # below: the frame does not produce a reading
 # Needle localisation accuracy in image pixels (perpendicular to the needle) used by the
 # resolution term of sigma. Averaging 16 ray samples per angle gives sub-pixel localisation;
-# the value is calibrated against ground truth in test_sigma_is_calibrated_on_synthetic_views.
+# the value was chosen on synthetic renders (test_heuristic_sigma_bounds_errors_on_synthetic_views);
+# it is a heuristic, not a statistically calibrated quantity.
 NEEDLE_LOCALISATION_PX = 0.5
 
 FLAGS = ('NO_IMAGE', 'TAG_NOT_VISIBLE', 'TAG_INTERMITTENT', 'OCCLUDED', 'OBLIQUE_VIEW', 'TOO_FAR',
-         'LOW_NEEDLE_CONTRAST', 'INCONSISTENT_FRAMES', 'BLURRED', 'OUT_OF_SCALE')
+         'LOW_NEEDLE_CONTRAST', 'AMBIGUOUS_NEEDLE', 'NEEDLE_PARTIAL', 'INCONSISTENT_FRAMES',
+         'BLURRED', 'OUT_OF_SCALE')
+
+
+_erf = np.vectorize(math.erf, otypes=[float])
+
+
+def needle_halfwidth_deg(r_frac):
+    """Angular half-width of the printed needle at radius r (fraction of R)."""
+    r = np.maximum(np.asarray(r_frac, float), 1e-3)
+    hw = NEEDLE_BASE_HALFWIDTH * np.clip(1.0 - r / NEEDLE_TIP, 0.0, 1.0)
+    return np.degrees(np.arctan2(hw, r))
 
 
 @dataclass
@@ -80,7 +112,7 @@ class FuseParams:
     min_valid_frames: int = 3
     min_visibility: float = 0.85
     max_view_angle_deg: float = 55.0
-    min_dial_radius_px: float = 28.0
+    min_dial_radius_px: float = 40.0     # below this the needle-model test lacks evidence (F1)
     min_needle_confidence: float = 0.35
     max_frame_spread: float = 0.20
     min_sharpness: float = 15.0
@@ -105,11 +137,17 @@ class FrameReading:
     profile: Optional[np.ndarray] = None
     dial_center_tex: Optional[tuple] = None
     center_refined: bool = False
+    needle_support: float = 0.0       # fraction of rings seeing the needle at the consensus angle
+    needle_ambiguity: float = 1.0     # strength of the best competing line / needle (0 = none)
+    needle_lobe_ratio: float = 0.0    # measured / predicted needle lobe width (diagnostic)
+    needle_residual: float = 1.0      # unexplained dark energy near the needle / needle energy
+    out_of_range: bool = False        # needle at the edge of the search sweep (beyond the scale)
     detail: str = ''
 
     @property
     def valid(self) -> bool:
-        return self.value is not None and self.needle_confidence >= FRAME_MIN_CONFIDENCE
+        return (self.value is not None and math.isfinite(self.value)
+                and self.needle_confidence >= FRAME_MIN_CONFIDENCE)
 
 
 @dataclass
@@ -132,6 +170,9 @@ class Observation:
     sharpness: float
     detail: str
     dial_radius_minor_px: float = 0.0
+    needle_support: float = 0.0
+    needle_ambiguity: float = 1.0
+    needle_residual: float = 1.0
 
 
 def value_to_angle(v: float) -> float:
@@ -241,12 +282,14 @@ class GaugeReader:
         lo, hi = ANGLE_MIN_DEG - SWEEP_MARGIN_DEG, ANGLE_MAX_DEG + SWEEP_MARGIN_DEG
         self._angles = np.arange(lo, hi + 1e-9, ANGLE_STEP_DEG)
         radii = np.linspace(RAY_R0, RAY_R1, RAY_SAMPLES)
+        self._radii = radii
         self._ray_aa, self._ray_rr = np.meshgrid(self._angles, radii, indexing='ij')
         # visibility annulus samples (full circle, 2 deg x 10 radii)
         va = np.arange(0.0, 360.0, 2.0)
         vr = np.linspace(VIS_R0, VIS_R1, 10)
         vaa, vrr = np.meshgrid(va, vr, indexing='ij')
         self._vis_ang = vaa
+        self._vis_r = vrr
         self._vis_x, self._vis_y = (v.astype(np.float32) for v in _polar_xy(vrr, vaa))
         # quiet zone around the tag (white reference)
         self._white_ref_box = (MARKER_BOX[0] - QUIET + 4, MARKER_BOX[1] - QUIET + 4,
@@ -336,8 +379,8 @@ class GaugeReader:
         ray_y = (cy + M[1, 0] * ux + M[1, 1] * uy).astype(np.float32)
         samples = cv2.remap(dark, ray_x, ray_y, cv2.INTER_LINEAR)
         valid = cv2.remap(maskf, ray_x, ray_y, cv2.INTER_NEAREST) > 0.5
+        prof = np.where(valid, samples, np.nan)          # angles x rings
         vfrac = valid.mean(axis=1)
-        prof = np.where(valid, samples, np.nan)
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', RuntimeWarning)   # all-NaN rays (off-image) are expected
             score = np.nanmean(prof, axis=1)
@@ -347,43 +390,160 @@ class GaugeReader:
             fr.detail = 'dial outside the image'
             fr.dial_visibility = 0.0
             return fr
-        k = int(np.nanargmax(score))
-        peak = float(score[k])
-        med = float(np.nanmedian(score))
-        far = np.abs(self._angles - self._angles[k]) > COMPETITOR_EXCLUSION_DEG
-        comp = float(np.nanmax(score[far])) if np.any(far & ~np.isnan(score)) else med
-        contrast = peak - med
-        if contrast <= 1e-6:
-            conf = 0.0
-        else:
-            conf = min(1.0, contrast / 0.5) * max(0.0, 1.0 - max(0.0, comp - med) / contrast)
-        # parabolic refinement
-        ang = float(self._angles[k])
-        if 0 < k < len(score) - 1 and not np.isnan(score[k - 1]) and not np.isnan(score[k + 1]):
-            a, b, c = score[k - 1], score[k], score[k + 1]
-            den = a - 2 * b + c
-            if abs(den) > 1e-9:
-                ang += float(np.clip(0.5 * (a - c) / den, -0.5, 0.5)) * ANGLE_STEP_DEG
+
+        # image pixel -> texture pixel scale (blur widens the needle lobe in the texture frame)
+        up = DIAL_R / max(fr.dial_radius_minor_px, 1.0)
+        res = self._analyse_needle(prof, up)
+        if res is None:
+            fr.detail = 'no needle-like line found'
+            fr.dial_visibility = self._visibility(rgrey, rsat, maskf, white, None, up)
+            fr.needle_support, fr.needle_ambiguity = 0.0, 1.0
+            return fr
+        ang, contrast, support, ambiguity, lobe_ratio = res
+        fr.needle_support, fr.needle_ambiguity, fr.needle_lobe_ratio = support, ambiguity, lobe_ratio
+        fr.needle_residual = self._model_residual(prof, ang, up)
+        conf = min(1.0, contrast / 0.5) * support * max(0.0, 1.0 - ambiguity)
         if not fr.center_refined:
             conf *= 0.5   # pivot not confirmed by the bezel fit -> angle may be biased
         fr.angle_deg = ang
         fr.needle_confidence = float(conf)
+        fr.dial_visibility = self._visibility(rgrey, rsat, maskf, white, ang, up)
 
-        # dial visibility (needle wedge and caption excluded)
+        edge = SWEEP_MARGIN_DEG - 1.0
+        if ang <= ANGLE_MIN_DEG - edge or ang >= ANGLE_MAX_DEG + edge:
+            # needle at the end of the search sweep: its true position may lie beyond it
+            fr.out_of_range = True
+        else:
+            fr.value = float(angle_to_value(ang))
+        fr.detail = (f'needle {ang:+.1f} deg conf {conf:.2f} support {support:.2f} '
+                     f'ambiguity {ambiguity:.2f} residual {fr.needle_residual:.3f} '
+                     f'vis {fr.dial_visibility:.2f}'
+                     + ('' if fr.center_refined else ' (bezel fit failed)'))
+        return fr
+
+    def _analyse_needle(self, prof: np.ndarray, up: float):
+        """Per-ring needle evidence (Astra F1).
+
+        A needle is ONE straight, tapered dark line through the pivot. On every sampling ring it
+        must appear as a single lobe whose width matches the needle geometry (+ image blur), and
+        all rings must agree on its angle. Returns (angle, contrast, support, ambiguity,
+        lobe_ratio) or None when no ring sees a line.
+          support    fraction of usable rings whose lobe lies at the consensus angle
+          ambiguity  75th percentile over outer rings of (best competing lobe / needle lobe)
+          lobe_ratio median over outer rings of measured / predicted lobe width
+        """
+        n_ang, n_ring = prof.shape
+        exp_hw = needle_halfwidth_deg(self._radii) + np.degrees(1.5 * up / (self._radii * DIAL_R))
+        rings = []      # (j, theta, contrast, ambiguity, lobe_ratio)
+        usable = 0
+        for j in range(n_ring):
+            p = prof[:, j]
+            ok = ~np.isnan(p)
+            if ok.mean() < 0.6:
+                continue
+            usable += 1
+            med = float(np.median(p[ok]))
+            k = int(np.nanargmax(p))
+            c = float(p[k]) - med
+            if c < RING_MIN_CONTRAST:
+                continue                                       # ring does not see a line
+            thr = med + 0.5 * c
+            lo, hi = k, k
+            while lo > 0 and ok[lo - 1] and p[lo - 1] > thr:
+                lo -= 1
+            while hi < n_ang - 1 and ok[hi + 1] and p[hi + 1] > thr:
+                hi += 1
+            width = (hi - lo + 1) * ANGLE_STEP_DEG
+            excl = exp_hw[j] + 2.0
+            outside = ok & ((self._angles < self._angles[lo] - excl) |
+                            (self._angles > self._angles[hi] + excl))
+            comp = float(np.max(p[outside])) if outside.any() else med
+            amb = max(0.0, comp - med) / c
+            # darkness-weighted centroid of the lobe (robust to the flat, anti-aliased top of a
+            # wide needle lobe, unlike arg-max + parabola)
+            wl = np.clip(p[lo:hi + 1] - med, 0.0, None)
+            theta = (float(np.sum(wl * self._angles[lo:hi + 1]) / np.sum(wl)) if wl.sum() > 0
+                     else float(self._angles[k]))
+            rings.append((j, theta, c, amb, width / (2.0 * exp_hw[j])))
+        if not rings or usable == 0:
+            return None
+        outer = [r for r in rings if self._radii[r[0]] >= OUTER_RING_R] or rings
+        th = np.array([r[1] for r in outer])
+        wt = np.array([r[2] for r in outer])
+        order = np.argsort(th)
+        cum = np.cumsum(wt[order])
+        consensus = float(th[order][np.searchsorted(cum, 0.5 * cum[-1])])   # weighted median
+        consistent = [r for r in rings
+                      if abs(r[1] - consensus) <= exp_hw[r[0]] + 1.5]
+        support = len(consistent) / usable
+        cons_outer = [r for r in consistent if self._radii[r[0]] >= OUTER_RING_R] or consistent
+        if not cons_outer:
+            return None
+        w = np.array([r[2] for r in cons_outer])
+        angle = float(np.sum(w * np.array([r[1] for r in cons_outer])) / np.sum(w))
+        contrast = float(np.mean([r[2] for r in consistent]))
+        ambiguity = float(np.percentile([r[3] for r in outer], 75))
+        lobe_ratio = float(np.median([r[4] for r in outer]))
+        return angle, contrast, support, ambiguity, lobe_ratio
+
+    def _model_residual(self, prof: np.ndarray, angle: float, up: float) -> float:
+        """Fit the physical needle model and return the unexplained dark energy (Astra F1).
+
+        Model per ring r: darkness(theta) = base_r + a * [box of the needle's angular half-width
+        hw(r)] convolved with a Gaussian blur (sigma = b image px), within +-20 deg of the needle.
+        The amplitude a is least-squares fitted, the blur b chosen from a small set. A second line,
+        a shadow or a cable next to the needle cannot be explained by one tapered needle and
+        leaves residual energy comparable to the needle's own."""
+        m_ang = np.abs(self._angles - angle) <= RESIDUAL_WINDOW_DEG
+        x = self._angles[m_ang] - angle
+        best = 1.0
+        for blur in (0.4, 0.7, 1.0, 1.4, 1.8):
+            tmpl, obs = [], []
+            for j, rad in enumerate(self._radii):
+                p = prof[m_ang, j]
+                ok = ~np.isnan(p)
+                if ok.sum() < 10:
+                    continue
+                full = prof[:, j]
+                base = float(np.median(full[~np.isnan(full)]))
+                hw = float(needle_halfwidth_deg(rad))
+                sb = max(math.degrees(blur * up / (rad * DIAL_R)), 1e-3)
+                t = 0.5 * (_erf((x[ok] + hw) / (math.sqrt(2.0) * sb)) -
+                           _erf((x[ok] - hw) / (math.sqrt(2.0) * sb)))
+                tmpl.append(t)
+                obs.append(p[ok] - base)
+            if not tmpl:
+                return 1.0
+            T = np.concatenate(tmpl)
+            O = np.concatenate(obs)
+            denom = float(T @ T)
+            if denom <= 1e-12:
+                continue
+            a = float(T @ O) / denom
+            if a <= 0:
+                continue
+            res = O - a * T
+            best = min(best, float(res @ res) / (a * a * denom))
+        return best
+
+    def _visibility(self, rgrey, rsat, maskf, white, needle_ang, up):
+        """Fraction of the dial face annulus that looks like unobstructed face.
+
+        Only the *geometric footprint* of the detected needle (its predicted angular width at
+        each radius + blur + 1 deg) is excluded - not a fixed wedge - so a dark object next
+        to the needle still lowers visibility (Astra F1)."""
         vis_ok = (cv2.remap(rgrey, self._vis_x, self._vis_y, cv2.INTER_LINEAR) >= 0.70 * white) & \
                  (cv2.remap(rsat, self._vis_x, self._vis_y, cv2.INTER_LINEAR) < 70) & \
                  (cv2.remap(maskf, self._vis_x, self._vis_y, cv2.INTER_NEAREST) > 0.5)
-        dang = np.abs((self._vis_ang - (ang % 360.0) + 180.0) % 360.0 - 180.0)
-        use = dang > 10.0
+        use = np.ones_like(vis_ok, bool)
+        if needle_ang is not None:
+            dang = np.abs((self._vis_ang - (needle_ang % 360.0) + 180.0) % 360.0 - 180.0)
+            foot = (needle_halfwidth_deg(self._vis_r) +
+                    np.degrees(1.5 * up / (self._vis_r * DIAL_R)) + 1.0)
+            use &= dang > foot
         for lo, hi in VIS_EXCLUDE:
             use &= ~((self._vis_ang >= lo) & (self._vis_ang <= hi))
-        fr.dial_visibility = float(vis_ok[use].mean()) if use.any() else 0.0
-
-        if ANGLE_MIN_DEG - SWEEP_MARGIN_DEG <= ang <= ANGLE_MAX_DEG + SWEEP_MARGIN_DEG:
-            fr.value = float(angle_to_value(ang))
-        fr.detail = (f'needle {ang:+.1f} deg conf {conf:.2f} vis {fr.dial_visibility:.2f}'
-                     + ('' if fr.center_refined else ' (bezel fit failed)'))
-        return fr
+        return float(vis_ok[use].mean()) if use.any() else 0.0
 
     # ------------------------------------------------------------------ rendering helpers
     @staticmethod
@@ -407,8 +567,8 @@ def fuse(frames: List[FrameReading], frames_requested: int,
     flags: List[str] = []
     received = len(frames)
     tagged = [f for f in frames if f.tag_found]
-    valid = [f for f in tagged if f.valid]
-    vals = [f.value for f in valid]
+    valid = [f for f in tagged if f.valid]           # finite value + minimum confidence
+    vals = [float(f.value) for f in valid]
     nan = float('nan')
 
     def med(xs, default=nan):
@@ -417,6 +577,10 @@ def fuse(frames: List[FrameReading], frames_requested: int,
 
     vis = med([f.dial_visibility for f in tagged], 0.0)
     conf = med([f.needle_confidence for f in tagged], 0.0)
+    support = med([f.needle_support for f in tagged], 0.0)
+    ambiguity = med([f.needle_ambiguity for f in tagged], 1.0)
+    residual = med([f.needle_residual for f in tagged], 1.0)
+    out_of_range = any(f.out_of_range for f in tagged)
     view = med([f.view_angle_deg for f in tagged])
     dist = med([f.distance_m for f in tagged])
     radius = med([f.dial_radius_px for f in tagged], 0.0)
@@ -439,6 +603,12 @@ def fuse(frames: List[FrameReading], frames_requested: int,
             flags.append('TOO_FAR')
         if conf < params.min_needle_confidence:
             flags.append('LOW_NEEDLE_CONTRAST')
+        if ambiguity >= AMBIGUITY_LIMIT or residual > MAX_MODEL_RESIDUAL:
+            flags.append('AMBIGUOUS_NEEDLE')
+        if support < MIN_NEEDLE_SUPPORT:
+            flags.append('NEEDLE_PARTIAL')
+        if out_of_range:
+            flags.append('OUT_OF_SCALE')
         if len(vals) >= 2 and spread > params.max_frame_spread:
             flags.append('INCONSISTENT_FRAMES')
         if sharp < params.min_sharpness:
@@ -448,7 +618,10 @@ def fuse(frames: List[FrameReading], frames_requested: int,
     value = float(np.median(vals)) if has_value else nan
     sigma = nan
     if has_value:
-        if value < VALUE_MIN - 0.3 or value > VALUE_MAX + 0.3:
+        # physical validity: the printed scale is [VALUE_MIN, VALUE_MAX]; report the measured
+        # value unchanged (never clamp) but flag it
+        if ((value < VALUE_MIN - OUT_OF_SCALE_TOL or value > VALUE_MAX + OUT_OF_SCALE_TOL)
+                and 'OUT_OF_SCALE' not in flags):
             flags.append('OUT_OF_SCALE')
         n = len(vals)
         rand = 1.25 * spread / math.sqrt(n) if n >= 2 else params.max_frame_spread
@@ -456,6 +629,8 @@ def fuse(frames: List[FrameReading], frames_requested: int,
         res_deg = math.degrees(NEEDLE_LOCALISATION_PX / max(0.35 * max(radius_minor, 1.0), 1e-6))
         sig_res = res_deg * VALUE_PER_DEG
         sigma = math.sqrt(rand ** 2 + sig_res ** 2 + params.sigma_floor ** 2)
+        if not (math.isfinite(value) and math.isfinite(sigma) and sigma > 0):
+            has_value, value, sigma = False, nan, nan    # defensive: never emit invalid numbers
 
     if not flags and has_value:
         detail = f'{value:.2f} +/- {sigma:.2f} {UNIT} from {len(vals)}/{received} frames'
@@ -465,7 +640,7 @@ def fuse(frames: List[FrameReading], frames_requested: int,
         detail = 'no reading: ' + (', '.join(flags) if flags else 'needle not found')
     return Observation(has_value, value, sigma, flags, frames_requested, received, len(tagged),
                        len(vals), [round(v, 4) for v in vals], spread, conf, vis, view, dist,
-                       radius, sharp, detail, radius_minor)
+                       radius, sharp, detail, radius_minor, support, ambiguity, residual)
 
 
 def annotate(bgr: np.ndarray, fr: FrameReading, obs: Optional[Observation], title: str) -> np.ndarray:

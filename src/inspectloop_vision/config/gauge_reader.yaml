@@ -7,11 +7,18 @@ gauge_reader:
     num_frames: 5               # burst size per observation
     frame_timeout_s: 5.0        # sim seconds to collect the burst
     wall_timeout_factor: 3.0    # wall-clock backstop if /clock stops
+    # freshness / provenance (Astra F5)
+    max_frame_future_s: 0.2     # frames stamped later than now + this are rejected
+    clock_reset_threshold_s: 1.0  # backward clock/stamp jump larger than this clears the buffer
+    max_pose_error_m: 0.35      # capture pose vs. requested viewpoint (check_pose)
+    max_pose_error_rad: 0.40
+    max_motion_m: 0.02          # robot motion during the burst -> ROBOT_MOVING
+    max_motion_rad: 0.02
     # quality thresholds -> quality_flags (consumed by the mission decision policy)
     min_valid_frames: 3
     min_visibility: 0.85        # fraction of dial face unobstructed
     max_view_angle_deg: 55.0
-    min_dial_radius_px: 28.0
+    min_dial_radius_px: 40.0     # minor dial radius; below this the needle-model test lacks evidence
     min_needle_confidence: 0.35
     max_frame_spread: 0.20      # bar
     min_sharpness: 15.0

@@ -17,6 +17,15 @@ def decisions_of(g: Dict) -> List[str]:
     return [e['decision'] for e in g.get('timeline', [])]
 
 
+UNCERTAINTY_NOTE = ('sigma is a HEURISTIC uncertainty model (frame spread + pixel resolution + '
+                    'floor). It is a diagnostic, not a calibrated probability: no confidence level '
+                    'or coverage is claimed for value +/- k*sigma.')
+
+
+def _sigma(r: Dict):
+    return r.get('sigma_heuristic', r.get('sigma'))
+
+
 def summarize(record: Dict) -> Dict:
     gs = record.get('gauges', [])
     acc = [g for g in gs if (g.get('result') or {}).get('status') == 'ACCEPTED']
@@ -40,6 +49,7 @@ def summarize(record: Dict) -> Dict:
         'viewpoints_total': len(navs),
         'navigation_succeeded': sum(1 for n in navs if n.get('outcome') == 'SUCCEEDED'),
         'mean_position_error_m': round(sum(errs) / len(errs), 3) if errs else None,
+        'uncertainty_note': UNCERTAINTY_NOTE,
     }
 
 
@@ -63,7 +73,7 @@ def _f(v, nd=2):
 def result_text(g: Dict) -> str:
     r = g.get('result') or {}
     if r.get('status') == 'ACCEPTED':
-        return (f"{r['value']:.2f} ± {2 * r['sigma']:.2f} {g.get('unit', '')} (95%), "
+        return (f"{r['value']:.2f} {g.get('unit', '')} (heuristic σ {_sigma(r):.2f}), "
                 f"alarm {r['alarm']}")
     if r.get('status') == 'UNRESOLVED':
         return f"UNRESOLVED — {r.get('reason', '')}"
@@ -85,7 +95,8 @@ def render_markdown(record: Dict, run_dir: str) -> str:
              'from simulated camera frames captured after the robot reached the viewpoint; the '
              'robot does not know the true gauge values.')
     p = record.get('parameters', {})
-    L.append(f"- **Acceptance rule:** sigma ≤ {p.get('max_sigma')} , ≥ {p.get('min_valid_frames')} "
+    L.append(f"- **Uncertainty:** {UNCERTAINTY_NOTE}")
+    L.append(f"- **Acceptance rule:** heuristic sigma ≤ {p.get('max_sigma')} , ≥ {p.get('min_valid_frames')} "
              f"valid frames of {p.get('frames_per_observation')}, no blocking quality flag; "
              f"≤ {p.get('max_retries_same')} RETRY_SAME per viewpoint, ≤ {p.get('max_viewpoints')} "
              f"viewpoints and ≤ {p.get('max_observations')} observations per gauge.")
@@ -121,7 +132,8 @@ def render_markdown(record: Dict, run_dir: str) -> str:
         L.append(f"Feasible viewpoint candidates: {len(g.get('candidates_feasible', []))}, "
                  f"rejected by the map (collision/clearance): {len(g.get('candidates_rejected', []))}.")
         L.append('')
-        L.append('| t (s) | Viewpoint | Event | Value | σ | Quality flags | Decision | Reason |')
+        L.append('| t (s) | Viewpoint | Event | Value | σ (heuristic) | Quality flags | Decision | '
+                 'Reason |')
         L.append('|---|---|---|---|---|---|---|---|')
         for e in g.get('timeline', []):
             L.append(f"| {_f(e.get('t'), 1)} | {e.get('viewpoint')} | {e.get('event')} | "
@@ -189,7 +201,7 @@ def render_html(record: Dict, run_dir: str) -> str:
         for v in g.get('viewpoints', []):
             for o in v.get('observations', []):
                 img = o.get('annotated_image_path')
-                val = (f"{o['value']:.2f} ± {o['sigma']:.2f}" if o.get('value') is not None
+                val = (f"{o['value']:.2f} (σ_h {o['sigma']:.2f})" if o.get('value') is not None
                        else 'no value')
                 cards.append(
                     f"<div class='card'><b>#{o.get('index')} {e(v['viewpoint']['label'])}</b><br>"

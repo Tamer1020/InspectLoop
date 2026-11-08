@@ -159,12 +159,13 @@ def test_angle_value_mapping_roundtrip():
     assert gr.value_to_angle(5.0) == 0.0
 
 
-def test_sigma_is_calibrated_on_synthetic_views(reader):
-    """Calibration of the uncertainty model against ground truth.
+def test_heuristic_sigma_bounds_errors_on_synthetic_views(reader):
+    """Consistency check of the HEURISTIC sigma against ground truth (not a calibration).
 
-    Over a grid of scales (dial radius ~35-110 px), perspective skews, noise and blur, every
-    observation that the reader reports *without quality flags* must have |error| <= 2 sigma in
-    at least 90 % of the cases (a Gaussian 2-sigma interval covers 95 %), and never > 4 sigma.
+    Over a fixed grid of scales, perspective skews, noise and blur (the same conditions used to
+    develop the model, so this is not held-out evidence - see tools/heldout_uncertainty_eval.py),
+    every unflagged observation must have |error| <= 2 sigma in at least 90 % of the cases and
+    never > 4 sigma. No probability/coverage claim follows from this test.
     """
     inside, total, worst = 0, 0, 0.0
     for tag, truth in TRUTH.items():
@@ -193,10 +194,13 @@ def _gz(name):
     return img
 
 
-def test_gazebo_frame_oblique_view_reads_truth(reader):
+def test_gazebo_frame_oblique_view_with_bracket_over_needle_is_not_accepted(reader):
+    """Real frame from the -45 deg viewpoint of PG-12 (truth 6.8). The conduit box's dark
+    bracket arm crosses the dial next to the needle and hides its outer half. The v1 reader
+    accepted 6.79 here by luck; since the Astra F1 fix such evidence is rejected."""
     fr = reader.read_frame(_gz('gz_pg12_oblique45_truth6.8.png'), 12)
-    assert fr.valid and fr.center_refined
-    assert abs(fr.value - 6.8) < 0.08
+    obs = gr.fuse([fr] * 3, 3)
+    assert obs.flags, obs.detail
     assert 35.0 < fr.view_angle_deg < 55.0          # robot stood at the -45 deg viewpoint
 
 

@@ -48,6 +48,7 @@ def generate_launch_description():
     mission_node = Node(
         package='inspectloop_mission', executable='mission_manager', name='mission_manager',
         output='screen', emulate_tty=True, condition=IfCondition(lc('mission')),
+        sigterm_timeout='40',      # allow goal cancellation to be confirmed on Ctrl-C (F4)
         parameters=[os.path.join(mission, 'config', 'mission_params.yaml'),
                     {'mission_file': lc('mission_file'), 'output_root': lc('output_root')}])
     mission_delayed = TimerAction(period=10.0, actions=[mission_node])

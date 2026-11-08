@@ -1,0 +1,11 @@
+[  FAILED  ] AstraF3.NegativeCommandAgeIsNotFresh (0 ms)
+[  FAILED  ] AstraF3.NonFiniteCommandAgeIsNotFresh (0 ms)
+[  FAILED  ] AstraF3.NonFiniteClearanceBlocksForwardMotion (0 ms)
+[  FAILED  ] AstraF3.ClockRollbackWithoutNewDataIsNotHealthy (0 ms)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 4 tests, listed below:
+[  FAILED  ] AstraF3.NegativeCommandAgeIsNotFresh
+[  FAILED  ] AstraF3.NonFiniteCommandAgeIsNotFresh
+[  FAILED  ] AstraF3.NonFiniteClearanceBlocksForwardMotion
+[  FAILED  ] AstraF3.ClockRollbackWithoutNewDataIsNotHealthy
+[  FAILED  ] AstraF3.EmptyOrAllNaNScanDoesNotReportFreeSpace (0 ms)

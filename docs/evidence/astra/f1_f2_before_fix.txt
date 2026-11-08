@@ -1,0 +1,30 @@
+E           AssertionError: clean reading 4.503 but truth 4.2 (sigma 0.059)
+E           assert 0.30278425520978036 <= 0.1
+E           AssertionError: clean reading 3.913 but truth 4.2 (sigma 0.059)
+E           assert 0.28703352271298543 <= 0.1
+E           AssertionError: clean reading 4.385 but truth 4.2 (sigma 0.059)
+E           assert 0.18469139638573218 <= 0.1
+E       assert []
+E       assert []
+E       assert 'OUT_OF_SCALE' in []
+E       assert 'OUT_OF_SCALE' in []
+E       assert 'OUT_OF_SCALE' in []
+E       assert 'OUT_OF_SCALE' in []
+E       TypeError: FrameReading.__init__() got an unexpected keyword argument 'needle_support'
+E       TypeError: FrameReading.__init__() got an unexpected keyword argument 'needle_support'
+E       TypeError: FrameReading.__init__() got an unexpected keyword argument 'needle_support'
+E       TypeError: FrameReading.__init__() got an unexpected keyword argument 'needle_support'
+FAILED test/test_astra_regressions.py::test_f1_radial_distractor_near_needle_is_never_silently_wrong[8.0]
+FAILED test/test_astra_regressions.py::test_f1_radial_distractor_near_needle_is_never_silently_wrong[-8.0]
+FAILED test/test_astra_regressions.py::test_f1_radial_distractor_near_needle_is_never_silently_wrong[5.0]
+FAILED test/test_astra_regressions.py::test_f1_equally_dark_second_line_is_flagged_ambiguous[8.0]
+FAILED test/test_astra_regressions.py::test_f1_equally_dark_second_line_is_flagged_ambiguous[-8.0]
+FAILED test/test_astra_regressions.py::test_f2_out_of_scale_needle_is_flagged_and_not_clamped[-0.1]
+FAILED test/test_astra_regressions.py::test_f2_out_of_scale_needle_is_flagged_and_not_clamped[-0.3]
+FAILED test/test_astra_regressions.py::test_f2_out_of_scale_needle_is_flagged_and_not_clamped[10.1]
+FAILED test/test_astra_regressions.py::test_f2_out_of_scale_needle_is_flagged_and_not_clamped[10.4]
+FAILED test/test_astra_regressions.py::test_f2_non_finite_frame_values_never_reach_the_estimate[nan]
+FAILED test/test_astra_regressions.py::test_f2_non_finite_frame_values_never_reach_the_estimate[inf]
+FAILED test/test_astra_regressions.py::test_f2_non_finite_frame_values_never_reach_the_estimate[-inf]
+FAILED test/test_astra_regressions.py::test_f2_all_frames_non_finite_gives_no_value
+13 failed, 21 passed in 4.48s

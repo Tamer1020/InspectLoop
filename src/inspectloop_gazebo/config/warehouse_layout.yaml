@@ -64,10 +64,14 @@ gauges:
 # Physical occluders. 'z_bottom' > LiDAR scan height (0.245 m) means the 2D LiDAR and the map
 # cannot see the object (an overhanging conduit box) - it can only be discovered visually.
 occluders:
-  # Conduit junction box hanging 0.30 m in front of PG-12's dial (bracket arm to rack S2).
-  # From the frontal viewpoint it hides the dial but not the tag above it.
+  # Conduit junction box hanging 0.30 m in front of PG-12's dial. From the frontal viewpoint it
+  # hides the dial but not the tag above it. It hangs from a thin rod beside the panel (x offset
+  # +0.095 m, clear of the tag and dial projections) up to an arm at 1.9 m back to rack S2.
+  # (v1 used a horizontal arm from the box straight back to the rack, which ran THROUGH the
+  # gauge face - physically impossible, and from every viewpoint a dark bar across the dial;
+  # found while verifying the Astra F1 fix, see docs/ASTRA_FIX_REPORT.md.)
   - {name: conduit_box_pg12, xy: [-1.0, -3.69], size: [0.16, 0.06, 0.16], z_bottom: 0.27,
-     bracket_to_y: -4.0, color: [0.30, 0.32, 0.34]}
+     hanger: {x_offset: 0.095, top_z: 1.9, to_y: -4.0}, color: [0.30, 0.32, 0.34]}
   # Stacked crates parked directly in front of PG-13 (floor-standing, in the map).
   - {name: crate_stack_pg13, xy: [5.0, 3.49], size: [1.6, 0.5, 1.0], z_bottom: 0.0,
      color: [0.62, 0.45, 0.25]}

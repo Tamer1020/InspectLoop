@@ -359,9 +359,19 @@
         </visual>
       </link>
     </model>
-    <model name="conduit_box_pg12_bracket">
+    <model name="conduit_box_pg12_rod">
       <static>true</static>
-      <pose>-1.0000 -3.8450 0.4100 0 0 0.000000</pose>
+      <pose>-0.9050 -3.6900 1.1650 0 0 0.000000</pose>
+      <link name="link">
+        <collision name="collision"><geometry><box><size>0.03 0.03 1.4699999999999998</size></box></geometry></collision>
+        <visual name="visual"><geometry><box><size>0.03 0.03 1.4699999999999998</size></box></geometry>
+          <material><ambient>0.2 0.2 0.2 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse><specular>0.1 0.1 0.1 1</specular></material>
+        </visual>
+      </link>
+    </model>
+    <model name="conduit_box_pg12_arm">
+      <static>true</static>
+      <pose>-0.9050 -3.8450 1.9000 0 0 0.000000</pose>
       <link name="link">
         <collision name="collision"><geometry><box><size>0.03 0.31000000000000005 0.03</size></box></geometry></collision>
         <visual name="visual"><geometry><box><size>0.03 0.31000000000000005 0.03</size></box></geometry>

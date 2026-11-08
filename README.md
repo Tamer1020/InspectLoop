@@ -10,33 +10,34 @@ Nav2, or honestly report that no valid reading is possible.**
 
 ```
 observe ──► value ± σ + quality flags ──► decision policy
-   ▲                                         ├─ ACCEPT      → record value ± 2σ, check alarm limits
+   ▲                                         ├─ ACCEPT      → record value (+ heuristic σ), check alarm limits
    │                                         ├─ RETRY_SAME  → transient problem: observe again
    └──────── Nav2 ◄── viewpoint planner ◄────┼─ MOVE_NEW    → geometric problem: new pose
                                              └─ UNRESOLVED  → no reliable reading within budget
 ```
 
-| Frontal view: dial hidden by a hanging conduit box → **MOVE_NEW** | Robot drove to −45° → **ACCEPT 6.79 ± 0.15 bar** (truth 6.80) |
+| Frontal view: dial hidden by a hanging conduit box → **MOVE_NEW** | Robot drove to −45° (v1 run) → reading 6.79 bar (truth 6.80) |
 |---|---|
 | ![occluded](docs/images/pg12_frontal_occluded.png) | ![accepted](docs/images/pg12_moved_accepted.png) |
 
 ![warehouse](docs/images/gazebo_warehouse.png)
 
-## Verified demo result (Gazebo Harmonic, headless run, archived in `docs/evidence/demo_run`)
+## Verified demo result (v2, after the Astra audit fixes; Gazebo Harmonic, headless)
 
-| Gauge | Situation | Decisions | Reported (95 %) | Truth |
+| Gauge | Situation | Decisions | Reported | Truth |
 |---|---|---|---|---|
-| PG-11 | clear | ACCEPT | 4.20 ± 0.11 bar | 4.20 |
-| PG-12 | conduit box in front of the dial (invisible to the 2-D LiDAR) | MOVE_NEW → ACCEPT | 6.79 ± 0.15 bar | 6.80 |
+| PG-11 | clear | ACCEPT | 4.19 bar (σ_h 0.05) | 4.20 |
+| PG-12 | conduit box in front of the dial (invisible to the 2-D LiDAR) | MOVE_NEW → (−45°: TOO_FAR) MOVE_NEW closer → ACCEPT | 6.77 bar (σ_h 0.07) | 6.80 |
 | PG-13 | crate stack in front of the gauge | RETRY_SAME → MOVE_NEW → … → **UNRESOLVED** | no value | 3.10 |
-| PG-14 | above alarm limit | ACCEPT, **alarm HIGH** | 8.70 ± 0.11 bar | 8.70 |
+| PG-14 | above alarm limit | ACCEPT, **alarm HIGH** | 8.69 bar (σ_h 0.05) | 8.70 |
 
-Max error of accepted readings 0.0085 bar (0.09 % FS); all within the reported 2σ. Same decisions in
-three independent full runs (two headless, one with Gazebo GUI + RViz). Camera and LiDAR fault
-injection tested: camera loss → UNRESOLVED (no stale frame reused); LiDAR loss → robot stopped from
-0.40 m/s within 1 s, mission aborted safely. 120 automated tests pass (C++ gtest + pytest), verified on a fresh clone.
-Details and limitations: [docs/TEST_RESULTS.md](docs/TEST_RESULTS.md),
-[docs/KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md).
+σ_h is a **heuristic** uncertainty indicator, not a calibrated probability — no confidence level is
+claimed. Max error of accepted readings 0.026 bar. Held-out synthetic evaluation (400 samples incl.
+distractors/occluders/out-of-scale needles): 1 incorrect acceptance in 210 accepted (v1 code on
+the same set: 21 in 324), 0 of 36 out-of-scale needles accepted (v1: 27). Fault injection
+(camera loss, LiDAR loss, NaN/empty scans, frozen and future-dated camera frames) re-verified.
+See [docs/ASTRA_FIX_REPORT.md](docs/ASTRA_FIX_REPORT.md), [docs/TEST_RESULTS.md](docs/TEST_RESULTS.md)
+and [docs/KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md).
 
 ## What is inside
 
@@ -74,12 +75,17 @@ More: [docs/RUN_DEMO.md](docs/RUN_DEMO.md) · [docs/TROUBLESHOOTING.md](docs/TRO
 
 ## How the robot decides
 
-* **Reading** – 5 frames stamped after arrival (+0.5 s settle) are read independently and fused:
-  value = median, σ² = (1.25·spread/√n)² + σ_res² + 0.03², where σ_res is the value change of a
-  0.5 px needle shift along the foreshortened dial axis.
-* **Flags** – `OCCLUDED`, `OBLIQUE_VIEW`, `TOO_FAR`, `LOW_NEEDLE_CONTRAST`, `TAG_NOT_VISIBLE`,
-  `TAG_INTERMITTENT`, `INCONSISTENT_FRAMES`, `BLURRED`, `NO_IMAGE`, `OUT_OF_SCALE`.
-* **Policy** – ACCEPT if σ ≤ 0.15 bar, ≥ 3 valid frames and no blocking flag; transient-looking
+* **Reading** – once odometry shows the robot at rest, 5 frames stamped after the request
+  (+0.5 s settle, never future-dated, captured at the requested viewpoint per TF) are read
+  independently: on 16 rings the needle must be one lobe of the predicted width at a consistent
+  angle, with no competing line and no dark structure a tapered-needle model can't explain.
+  value = median; heuristic σ_h² = (1.25·spread/√n)² + σ_res² + 0.03².
+* **Flags** – `OCCLUDED`, `OBLIQUE_VIEW`, `TOO_FAR`, `LOW_NEEDLE_CONTRAST`, `AMBIGUOUS_NEEDLE`,
+  `NEEDLE_PARTIAL`, `TAG_NOT_VISIBLE`, `TAG_INTERMITTENT`, `INCONSISTENT_FRAMES`, `BLURRED`,
+  `NO_IMAGE`, `OUT_OF_SCALE`, `FROZEN_FRAMES`, `CLOCK_RESET`, `WRONG_VIEWPOINT`, `ROBOT_MOVING`,
+  `STALE_OBSERVATION`.
+* **Policy** – ACCEPT only if the measurement contract holds (finite value inside the printed
+  scale, finite positive σ_h ≤ 0.15 bar, ≥ 3 valid frames, no flag); transient-looking
   problems → RETRY_SAME (once per pose); geometric problems → MOVE_NEW with a hint
   (`different_side` / `frontal` / `closer`); camera fault or budget spent (3 viewpoints / 8
   observations) → UNRESOLVED.
@@ -91,7 +97,9 @@ More: [docs/RUN_DEMO.md](docs/RUN_DEMO.md) · [docs/TROUBLESHOOTING.md](docs/TRO
 
 This is a simulation portfolio project. The dial is located with a printed fiducial, the imagery is
 rendered (no glare/blur/distortion), thresholds are hand-set and the σ model is a heuristic that was
-checked — not proven — against ground truth. See [KNOWN_LIMITATIONS](docs/KNOWN_LIMITATIONS.md).
+checked — not statistically validated — against synthetic ground truth. The C++ gate is a simulated
+safety and health guard, not a certified safety function. See
+[KNOWN_LIMITATIONS](docs/KNOWN_LIMITATIONS.md).
 
 ## License
 

@@ -5,6 +5,16 @@ string viewpoint_label
 uint32 num_frames              # frames in the burst (0 = node default)
 float32 frame_timeout_s        # sim seconds to wait for the burst (0 = node default)
 string run_directory           # where to store captures (empty = node default)
+# --- observation identity and acquisition contract (Astra F5) ---
+string observation_id          # unique per request; echoed in the reply
+uint32 viewpoint_epoch         # increments whenever the mission starts a new viewpoint; a new
+                               # epoch invalidates all frames buffered before it
+bool check_pose                # if true, frames must be taken at the expected pose, at rest
+float64 expected_x             # viewpoint pose (map frame)
+float64 expected_y
+float64 expected_yaw
+float32 max_pose_error_m       # 0 = node default
+float32 max_pose_error_rad     # 0 = node default
 ---
 bool success                   # true when frames were captured and processed (not: reading reliable)
 inspectloop_interfaces/GaugeReading reading

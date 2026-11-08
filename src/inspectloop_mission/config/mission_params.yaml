@@ -10,7 +10,7 @@ mission_manager:
     frame_timeout_s: 5.0
     retry_same_delay_s: 1.0
     # decision policy (ACCEPT / RETRY_SAME / MOVE_NEW / UNRESOLVED)
-    max_sigma: 0.15                    # bar, 1-sigma acceptance limit
+    max_sigma: 0.15                    # bar, limit on the HEURISTIC sigma (not a calibrated CI)
     min_valid_frames: 3
     max_retries_same: 1                # per viewpoint
     max_viewpoints: 3                  # per gauge
@@ -25,3 +25,14 @@ mission_manager:
     abort_on_lidar_failure: true
     lidar_diagnostic_name: inspectloop/stream/scan
     wall_timeout_factor: 4.0
+    # observation freshness (Astra F5)
+    settle_window_s: 0.5               # robot at rest (odom) this long before measuring
+    settle_timeout_s: 5.0
+    settle_max_v: 0.02
+    settle_max_w: 0.05
+    # Nav2 goal lifecycle (Astra F4)
+    nav_accept_timeout_s: 15.0
+    nav_cancel_timeout_s: 10.0
+    nav_terminal_timeout_s: 15.0
+    nav_inhibit_grace_s: 30.0          # unresolved goal -> e-stop latched + mission aborted
+    gate_fault_abort_s: 2.0            # gate STOPPED_SCAN_FAULT this long -> abort (Astra F3)

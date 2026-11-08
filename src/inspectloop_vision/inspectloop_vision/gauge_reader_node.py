@@ -6,16 +6,26 @@ Sub      /camera/camera_info       (sensor_msgs/CameraInfo) -> intrinsics for so
 Pub      /gauge/readings           (inspectloop_interfaces/msg/GaugeReading)
 Pub      /gauge/annotated_image    (sensor_msgs/Image)
 
-A request is served with a *burst* of N distinct frames whose header stamps are later than
-the request time plus a settle delay, i.e. frames captured after the robot stopped at the
-viewpoint. Each frame is read independently and the burst is fused into value +/- sigma
-with quality flags (see gauge_reader.py). Missing frames within the timeout are reported
-as NO_IMAGE / partial bursts instead of silently reusing old images.
+Freshness and provenance (Astra F5):
+* A request is served with a *burst* of N distinct frames stamped in
+  [request time + settle, now + max_future]: frames from before the request (another viewpoint)
+  and implausibly future-dated frames are never used.
+* A new `viewpoint_epoch` in the request invalidates every buffered frame.
+* A backward jump of the node clock (simulation reset) clears the buffer; if it happens during
+  a burst the observation is reported with CLOCK_RESET and no value.
+* A burst whose frames are pixel-identical despite new stamps is FROZEN_FRAMES (stuck camera).
+* The robot pose (map -> base_footprint) at each frame's capture time is looked up in TF.
+  With check_pose, frames taken away from the expected viewpoint (WRONG_VIEWPOINT) or while the
+  robot moved (ROBOT_MOVING) invalidate the observation.
+* The reply echoes observation_id / viewpoint_epoch and carries the frame stamps, so the
+  mission can re-validate it (observation_guard.py).
 """
 import json
+import math
 import os
 import threading
 import time
+import zlib
 
 import cv2
 from cv_bridge import CvBridge
@@ -30,12 +40,20 @@ from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 from rclpy.time import Time
 from sensor_msgs.msg import CameraInfo, Image
+import tf2_ros
 
 from inspectloop_vision import gauge_reader as gr
+from inspectloop_vision.frame_buffer import FrameBuffer, select_burst
+
+INVALIDATING_FLAGS = ('FROZEN_FRAMES', 'CLOCK_RESET', 'WRONG_VIEWPOINT', 'ROBOT_MOVING')
 
 
 def _nan_to_num(x: float) -> float:
     return float('nan') if x is None else float(x)
+
+
+def _yaw(q) -> float:
+    return math.atan2(2.0 * (q.w * q.z + q.x * q.y), 1.0 - 2.0 * (q.y * q.y + q.z * q.z))
 
 
 class GaugeReaderNode(Node):
@@ -49,10 +67,16 @@ class GaugeReaderNode(Node):
         p('num_frames', 5)
         p('frame_timeout_s', 5.0)
         p('wall_timeout_factor', 3.0)
+        p('max_frame_future_s', 0.2)
+        p('clock_reset_threshold_s', 1.0)
+        p('max_pose_error_m', 0.35)
+        p('max_pose_error_rad', 0.40)
+        p('max_motion_m', 0.02)
+        p('max_motion_rad', 0.02)
         p('min_valid_frames', 3)
         p('min_visibility', 0.85)
         p('max_view_angle_deg', 55.0)
-        p('min_dial_radius_px', 28.0)
+        p('min_dial_radius_px', 40.0)
         p('min_needle_confidence', 0.35)
         p('max_frame_spread', 0.20)
         p('min_sharpness', 15.0)
@@ -61,9 +85,14 @@ class GaugeReaderNode(Node):
         self._bridge = CvBridge()
         self._reader = gr.GaugeReader()
         self._lock = threading.Lock()
-        self._frames = []          # recent (stamp_ns, msg) ring buffer
+        to_ns = lambda s: int(float(self.get_parameter(s).value) * 1e9)  # noqa: E731
+        self._buf = FrameBuffer(maxlen=30, reset_threshold_ns=to_ns('clock_reset_threshold_s'),
+                                max_future_ns=to_ns('max_frame_future_s'))
         self._total_frames = 0
+        self._epoch = None
         self._K = None
+        self._tf = tf2_ros.Buffer()
+        self._tf_listener = tf2_ros.TransformListener(self._tf, self)
 
         sensor_cb = MutuallyExclusiveCallbackGroup()
         self.create_subscription(Image, self.get_parameter('image_topic').value, self._on_image,
@@ -77,11 +106,15 @@ class GaugeReaderNode(Node):
         self.get_logger().info('gauge reading service ready on /gauge/read')
 
     # ------------------------------------------------------------------ subscriptions
+    def _now_ns(self) -> int:
+        return self.get_clock().now().nanoseconds
+
     def _on_image(self, msg: Image):
+        stamp = Time.from_msg(msg.header.stamp).nanoseconds
+        digest = zlib.crc32(bytes(msg.data))
         with self._lock:
-            self._frames.append((Time.from_msg(msg.header.stamp).nanoseconds, msg))
-            if len(self._frames) > 30:
-                self._frames.pop(0)
+            if self._buf.add(stamp, digest, msg, self._now_ns()):
+                self.get_logger().warning('camera/clock time jumped backwards: frame buffer cleared')
             self._total_frames += 1
 
     def _on_info(self, msg: CameraInfo):
@@ -96,22 +129,35 @@ class GaugeReaderNode(Node):
                              float(g('min_sharpness')), float(g('sigma_floor')))
 
     def _collect_burst(self, not_before_ns: int, n: int, timeout_s: float):
-        """Return up to n frames with distinct stamps >= not_before (sim-time timeout)."""
-        t0 = self.get_clock().now()
+        """Up to n fresh frames. Returns (messages, stats, clock_reset)."""
+        t0 = self._now_ns()
+        epoch0 = self._buf.time_epoch
         wall_end = time.monotonic() + timeout_s * self.get_parameter('wall_timeout_factor').value
+        max_future = int(float(self.get_parameter('max_frame_future_s').value) * 1e9)
+        stats = {}
         while rclpy.ok():
+            now = self._now_ns()
             with self._lock:
-                fresh = [m for s, m in self._frames if s >= not_before_ns]
-            uniq = {}
-            for m in fresh:
-                uniq[Time.from_msg(m.header.stamp).nanoseconds] = m
-            if len(uniq) >= n:
-                return [uniq[k] for k in sorted(uniq)][:n]
-            if ((self.get_clock().now() - t0).nanoseconds * 1e-9 > timeout_s or
-                    time.monotonic() > wall_end):
-                return [uniq[k] for k in sorted(uniq)]
+                reset = self._buf.check_clock(now) or self._buf.time_epoch != epoch0
+                sel, stats = select_burst(self._buf.frames(), not_before_ns, now, max_future, n)
+            if reset:
+                return [], stats, True
+            if len(sel) >= n:
+                return [f.payload for f in sel], stats, False
+            if (now - t0) * 1e-9 > timeout_s or time.monotonic() > wall_end:
+                return [f.payload for f in sel], stats, False
             time.sleep(0.02)
-        return []
+        return [], stats, False
+
+    def _pose_at(self, stamp):
+        try:
+            tf = self._tf.lookup_transform('map', 'base_footprint', Time.from_msg(stamp),
+                                           timeout=Duration(seconds=0.3))
+        except (tf2_ros.LookupException, tf2_ros.ConnectivityException,
+                tf2_ros.ExtrapolationException):
+            return None
+        t = tf.transform.translation
+        return t.x, t.y, _yaw(tf.transform.rotation)
 
     # ------------------------------------------------------------------ service
     def _on_read(self, req: ReadGauge.Request, resp: ReadGauge.Response):
@@ -121,6 +167,7 @@ class GaugeReaderNode(Node):
             self.get_logger().error(f'[{req.gauge_id}] gauge read failed: {e!r}')
             r = GaugeReading()
             r.gauge_id, r.tag_id, r.viewpoint_label = req.gauge_id, req.tag_id, req.viewpoint_label
+            r.observation_id, r.viewpoint_epoch = req.observation_id, req.viewpoint_epoch
             r.has_value, r.value, r.sigma = False, float('nan'), float('nan')
             r.quality_flags = ['NO_IMAGE']
             r.detail = f'internal error: {type(e).__name__}: {e}'
@@ -135,9 +182,16 @@ class GaugeReaderNode(Node):
         img_dir = os.path.join(out_dir, 'images')
         os.makedirs(img_dir, exist_ok=True)
 
+        request_time = self.get_clock().now()
+        with self._lock:
+            if self._epoch != req.viewpoint_epoch:
+                # new viewpoint: nothing captured before it may serve as evidence
+                self._buf.invalidate()
+                self._epoch = req.viewpoint_epoch
         settle = Duration(seconds=float(self.get_parameter('settle_time_s').value))
-        not_before = (self.get_clock().now() + settle).nanoseconds
-        msgs = self._collect_burst(not_before, n, timeout + settle.nanoseconds * 1e-9)
+        not_before = (request_time + settle).nanoseconds
+        msgs, stats, clock_reset = self._collect_burst(not_before, n,
+                                                       timeout + settle.nanoseconds * 1e-9)
 
         t0 = time.perf_counter()
         frames, images = [], []
@@ -147,11 +201,52 @@ class GaugeReaderNode(Node):
             frames.append(self._reader.read_frame(bgr, int(req.tag_id), self._K))
         obs = gr.fuse(frames, n, self.fuse_params())
         proc_ms = (time.perf_counter() - t0) * 1000.0
+        flags = list(obs.flags)
 
         r = GaugeReading()
+        r.request_stamp = request_time.to_msg()
         r.stamp = msgs[-1].header.stamp if msgs else self.get_clock().now().to_msg()
+        if msgs:
+            r.first_frame_stamp = msgs[0].header.stamp
+
+        # provenance: pose at capture time, motion during the burst
+        poses = [self._pose_at(m.header.stamp) for m in msgs]
+        r.pose_known = bool(poses) and all(p is not None for p in poses)
+        if r.pose_known:
+            x0, y0, a0 = poses[0]
+            r.acq_x, r.acq_y, r.acq_yaw = (float(np.median([p[i] for p in poses])) for i in range(3))
+            r.pose_motion_m = float(max(math.hypot(p[0] - x0, p[1] - y0) for p in poses))
+            r.pose_motion_rad = float(max(abs(math.atan2(math.sin(p[2] - a0), math.cos(p[2] - a0)))
+                                          for p in poses))
+        else:
+            r.acq_x = r.acq_y = r.acq_yaw = float('nan')
+        if clock_reset:
+            flags.append('CLOCK_RESET')
+        if stats.get('frozen'):
+            flags.append('FROZEN_FRAMES')
+        if req.check_pose and msgs:
+            tol_m = float(req.max_pose_error_m) or float(self.get_parameter('max_pose_error_m').value)
+            tol_r = (float(req.max_pose_error_rad) or
+                     float(self.get_parameter('max_pose_error_rad').value))
+            if not r.pose_known:
+                flags.append('WRONG_VIEWPOINT')
+            else:
+                d = math.hypot(r.acq_x - req.expected_x, r.acq_y - req.expected_y)
+                da = abs(math.atan2(math.sin(r.acq_yaw - req.expected_yaw),
+                                    math.cos(r.acq_yaw - req.expected_yaw)))
+                if d > tol_m or da > tol_r:
+                    flags.append('WRONG_VIEWPOINT')
+                if (r.pose_motion_m > float(self.get_parameter('max_motion_m').value) or
+                        r.pose_motion_rad > float(self.get_parameter('max_motion_rad').value)):
+                    flags.append('ROBOT_MOVING')
+        invalid = any(f in flags for f in INVALIDATING_FLAGS)
+
         r.gauge_id, r.tag_id, r.viewpoint_label = gid, int(req.tag_id), req.viewpoint_label
-        r.has_value, r.value, r.sigma, r.unit = obs.has_value, obs.value, obs.sigma, gr.UNIT
+        r.observation_id, r.viewpoint_epoch = req.observation_id, req.viewpoint_epoch
+        r.has_value = obs.has_value and not invalid
+        r.value = obs.value if r.has_value else float('nan')
+        r.sigma = obs.sigma if r.has_value else float('nan')
+        r.unit = gr.UNIT
         r.frames_requested, r.frames_received = n, obs.frames_received
         r.frames_tag_detected, r.frames_valid = obs.frames_tag_detected, obs.frames_valid
         r.frame_values = [float(v) for v in obs.frame_values]
@@ -163,11 +258,15 @@ class GaugeReaderNode(Node):
         r.dial_radius_px = float(obs.dial_radius_px)
         r.sharpness = float(obs.sharpness)
         r.processing_time_ms = float(proc_ms)
-        r.quality_flags = list(obs.flags)
+        r.quality_flags = flags
         r.detail = obs.detail
+        if invalid:
+            r.detail = 'observation invalidated: ' + ', '.join(
+                f for f in flags if f in INVALIDATING_FLAGS) + ' | ' + obs.detail
+        if stats.get('future'):
+            r.detail += f" ({stats['future']} future-dated frame(s) rejected)"
 
         if images:
-            # representative frame: the best-confidence frame with a tag, else the last one
             idx = max(range(len(frames)), key=lambda i: (frames[i].tag_found,
                                                          frames[i].needle_confidence))
             stamp_s = Time.from_msg(msgs[idx].header.stamp).nanoseconds * 1e-9
@@ -191,7 +290,7 @@ class GaugeReaderNode(Node):
             r.detail += f' (no fresh frame within {timeout:.1f}s; frames received so far: {total})'
 
         summary = f'[{gid}] {req.viewpoint_label}: {r.detail}'
-        if obs.flags:
+        if flags:
             self.get_logger().warning(summary)
         else:
             self.get_logger().info(summary)
@@ -208,11 +307,21 @@ def _f(x, nd=4):
     return None if x != x else round(x, nd)   # NaN -> null in JSON
 
 
+def _t(stamp) -> float:
+    return round(stamp.sec + stamp.nanosec * 1e-9, 3)
+
+
 def reading_to_dict(r: GaugeReading) -> dict:
     return {
         'gauge_id': r.gauge_id, 'tag_id': r.tag_id, 'viewpoint': r.viewpoint_label,
-        'stamp_s': round(r.stamp.sec + r.stamp.nanosec * 1e-9, 3),
-        'has_value': r.has_value, 'value': _f(r.value), 'sigma': _f(r.sigma), 'unit': r.unit,
+        'observation_id': r.observation_id, 'viewpoint_epoch': r.viewpoint_epoch,
+        'stamp_s': _t(r.stamp), 'request_stamp_s': _t(r.request_stamp),
+        'first_frame_stamp_s': _t(r.first_frame_stamp), 'last_frame_stamp_s': _t(r.stamp),
+        'pose_known': r.pose_known, 'acq_x': _f(r.acq_x, 3), 'acq_y': _f(r.acq_y, 3),
+        'acq_yaw': _f(r.acq_yaw, 3), 'pose_motion_m': _f(r.pose_motion_m, 4),
+        'pose_motion_rad': _f(r.pose_motion_rad, 4),
+        'has_value': r.has_value, 'value': _f(r.value), 'sigma_heuristic': _f(r.sigma),
+        'unit': r.unit,
         'frames_requested': r.frames_requested, 'frames_received': r.frames_received,
         'frames_tag_detected': r.frames_tag_detected, 'frames_valid': r.frames_valid,
         'frame_values': [_f(v) for v in r.frame_values], 'frame_spread': _f(r.frame_spread),
@@ -234,6 +343,9 @@ def main(args=None):
         executor.spin()
     except (KeyboardInterrupt, ExternalShutdownException):
         pass
+    except Exception:   # noqa: BLE001 - context invalidated by a concurrent shutdown (SIGINT race)
+        if rclpy.ok():
+            raise
     finally:
         node.destroy_node()
         if rclpy.ok():
