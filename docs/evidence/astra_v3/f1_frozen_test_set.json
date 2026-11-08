@@ -1,0 +1,13 @@
+{
+  "purpose": "V3 F1 final evaluation set, frozen BEFORE any V3 change to the gauge reader. It is evaluated once, after tuning, for both V2 and V3. Tuning/investigation uses only the development set (seed 20261108, already used in V2) and the reproduced case #183.",
+  "frozen_at": "2026-11-08T23:59:27+01:00",
+  "tool": "tools/heldout_uncertainty_eval.py",
+  "tool_sha256_at_freeze": "6aeedb6926dc01f879cee243ca3f9bdc4aafd05d0740c4d716d3f2efb65f728f",
+  "reader_sha256_at_freeze (V2 reader)": "6a6e0ebf902426f125b4f26c70b0cef85b157fe7e2fcbd17c38b1885a5d37487",
+  "final_test_set": {"seed": 20261201, "n": 400},
+  "development_set": {"seed": 20261108, "n": 400},
+  "astra_crosscheck_set": {"seed": 20261109, "n": 200, "note": "used by the independent reviewer; reported, not used for tuning"},
+  "incorrect_tolerance_bar": 0.10,
+  "categories": "clean = clean subset & in-scale truth; difficult = distractor/occluder/shadow subsets & in-scale truth; out_of_scale = truth outside [0, 10] bar",
+  "rule": "no threshold or algorithm change may be evaluated on seed 20261201 before the final run"
+}

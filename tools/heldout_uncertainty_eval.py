@@ -20,7 +20,12 @@ decision_policy (ACCEPT only if the full contract holds). Reported with denomina
 Rates carry 95 % Wilson score intervals *for the observed proportion on this sample* - that is a
 statement about this evaluation, not a calibration of sigma.
 
+Categories (V3, Astra V2 review): `clean` = clean subset with in-scale truth, `difficult` =
+any distractor/occluder/shadow subset with in-scale truth, `out_of_scale` = truth outside the
+printed scale. Yield and false acceptance are reported for each separately.
+
 Usage: tools/heldout_uncertainty_eval.py [--n 400] [--seed 20261108] [--out file.json]
+                                         [--dump-case I --dump-dir DIR]
 """
 import argparse
 import importlib.util
@@ -53,15 +58,20 @@ def polar(r, a):
             gr.DIAL_CENTER[1] - r * gr.DIAL_R * math.cos(a))
 
 
-def make_texture(rng, value, subset):
+def make_texture(rng, value, subset, record=None):
     tex = GEN.make_gauge_texture(11, 'PG-11', value)
     na = gr.value_to_angle(value)
     if subset == 'radial_distractor':
         off = rng.choice([-1, 1]) * rng.uniform(3, 40)
         dark = int(rng.uniform(10, 90))
-        p0 = tuple(int(v) for v in polar(rng.uniform(0.1, 0.3), na + off))
-        p1 = tuple(int(v) for v in polar(rng.uniform(0.55, 0.85), na + off))
-        cv2.line(tex, p0, p1, (dark,) * 3, int(rng.integers(3, 9)), cv2.LINE_AA)
+        r0, r1 = rng.uniform(0.1, 0.3), rng.uniform(0.55, 0.85)
+        p0 = tuple(int(v) for v in polar(r0, na + off))
+        p1 = tuple(int(v) for v in polar(r1, na + off))
+        th = int(rng.integers(3, 9))
+        if record is not None:
+            record.update({'needle_angle_deg': na, 'offset_deg': float(off), 'darkness': dark,
+                           'r0': float(r0), 'r1': float(r1), 'thickness_px': th})
+        cv2.line(tex, p0, p1, (dark,) * 3, th, cv2.LINE_AA)
     elif subset == 'line_across':
         a0, a1 = na + rng.uniform(-60, -10), na + rng.uniform(10, 60)
         p0 = tuple(int(v) for v in polar(rng.uniform(0.4, 0.9), a0))
@@ -126,7 +136,11 @@ def main(argv=None):
     ap.add_argument('--n', type=int, default=400)
     ap.add_argument('--seed', type=int, default=20261108)
     ap.add_argument('--out', default=None)
+    ap.add_argument('--dump-case', type=int, default=None,
+                    help='write the frames + generation parameters of case I to --dump-dir')
+    ap.add_argument('--dump-dir', default=None)
     a = ap.parse_args(argv)
+    draws = {}
     rng = np.random.default_rng(a.seed)
     reader = gr.GaugeReader()
     policy = dp.PolicyParams()
@@ -143,9 +157,17 @@ def main(argv=None):
                 'roll': float(rng.uniform(-8, 8)), 'gain': float(rng.uniform(0.5, 1.3)),
                 'gamma': float(rng.uniform(0.7, 1.4)), 'noise': float(rng.uniform(1, 6)),
                 'blur': int(rng.choice([0, 3, 5]))}
-        tex = make_texture(rng, value, subset)
-        frames = [reader.read_frame(render(tex, rng, cond, a.seed * 1000 + i * 10 + s), 11)
-                  for s in range(5)]
+        tex = make_texture(rng, value, subset, draws if i == a.dump_case else None)
+        imgs = [render(tex, rng, cond, a.seed * 1000 + i * 10 + s) for s in range(5)]
+        frames = [reader.read_frame(img, 11) for img in imgs]
+        if i == a.dump_case and a.dump_dir:
+            os.makedirs(a.dump_dir, exist_ok=True)
+            cv2.imwrite(os.path.join(a.dump_dir, f'case{i}_texture.png'), tex)
+            for k, img in enumerate(imgs):
+                cv2.imwrite(os.path.join(a.dump_dir, f'case{i}_frame{k}.png'), img)
+            with open(os.path.join(a.dump_dir, f'case{i}_params.json'), 'w') as f:
+                json.dump({'seed': a.seed, 'i': i, 'subset': subset, 'truth': value,
+                           'cond': cond, 'texture_draws': draws}, f, indent=1)
         obs = gr.fuse(frames, 5)
         o = {'has_value': obs.has_value, 'value': obs.value if obs.has_value else None,
              'sigma': obs.sigma if obs.has_value else None, 'frames_valid': obs.frames_valid,
@@ -183,6 +205,12 @@ def main(argv=None):
             'max': round(float(errs.max()), 4) if len(errs) else None},
         'by_subset': {s: block([r for r in rows if r['subset'] == s]) for s in subsets},
         'out_of_scale_truth': block([r for r in rows if r['out_of_scale_truth']]),
+        'by_category': {
+            'clean': block([r for r in rows if not r['out_of_scale_truth'] and
+                            r['subset'] == 'clean']),
+            'difficult': block([r for r in rows if not r['out_of_scale_truth'] and
+                                r['subset'] != 'clean']),
+            'out_of_scale': block([r for r in rows if r['out_of_scale_truth']])},
         'incorrect_acceptances': [r for r in acc if abs(r['error']) > INCORRECT_TOL],
     }
     if a.out:
@@ -201,6 +229,12 @@ def main(argv=None):
               f"{b['incorrect_acceptance_of_accepted']['k']} max|err|={b['max_abs_error']}")
     b = res['out_of_scale_truth']
     print(f"  out-of-scale truth n={b['samples']} accepted={b['accepted']}")
+    for c, b in res['by_category'].items():
+        print(f"  [{c:<12}] n={b['samples']:<4} accepted={b['accepted']:<4} incorrect="
+              f"{b['incorrect_acceptance_of_accepted']['k']}")
+    for r in res['incorrect_acceptances']:
+        print(f"  INCORRECT #{r['i']} {r['subset']} truth {r['truth']:.5f} read {r['value']:.5f} "
+              f"err {r['error']:+.5f}")
     return 0
 
 
