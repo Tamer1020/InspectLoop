@@ -1,0 +1,34 @@
+# InspectLoop gauge round. For each gauge the operator provides only what an asset registry
+# would: tag id, mounting point and facing direction ('mount', map frame) and alarm limits.
+# The robot does not know the readings, nor which gauges are obstructed. Viewpoints are
+# generated online by the viewpoint planner from the mount pose and the occupancy map.
+mission:
+  name: warehouse_pressure_round
+  notes: Four 0-10 bar process gauges on racks S2/N1/N3 and the east wall.
+  home: {x: -10.0, y: 0.0, yaw: 0.0}
+
+gauges:
+  - id: PG-11
+    tag_id: 11
+    description: Rack N1 - compressed-air header
+    mount: {x: -7.0, y: 3.99, normal_yaw: -1.5708}
+    alarm_low: 1.0
+    alarm_high: 8.0
+  - id: PG-12
+    tag_id: 12
+    description: Rack S2 - hydraulic accumulator
+    mount: {x: -1.0, y: -3.99, normal_yaw: 1.5708}
+    alarm_low: 1.0
+    alarm_high: 8.0
+  - id: PG-13
+    tag_id: 13
+    description: Rack N3 - sprinkler riser
+    mount: {x: 5.0, y: 3.99, normal_yaw: -1.5708}
+    alarm_low: 1.0
+    alarm_high: 8.0
+  - id: PG-14
+    tag_id: 14
+    description: East wall - boiler feed line
+    mount: {x: 11.79, y: 0.0, normal_yaw: 3.1416}
+    alarm_low: 1.0
+    alarm_high: 8.0

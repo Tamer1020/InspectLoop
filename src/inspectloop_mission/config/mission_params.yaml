@@ -1,0 +1,27 @@
+mission_manager:
+  ros__parameters:
+    use_sim_time: true
+    # navigation
+    nav_timeout_s: 180.0               # sim seconds per navigation attempt
+    nav_attempts_per_viewpoint: 2      # then the viewpoint is treated as unreachable
+    retry_backoff_s: 2.0
+    # observation
+    frames_per_observation: 5
+    frame_timeout_s: 5.0
+    retry_same_delay_s: 1.0
+    # decision policy (ACCEPT / RETRY_SAME / MOVE_NEW / UNRESOLVED)
+    max_sigma: 0.15                    # bar, 1-sigma acceptance limit
+    min_valid_frames: 3
+    max_retries_same: 1                # per viewpoint
+    max_viewpoints: 3                  # per gauge
+    max_observations: 8                # per gauge
+    # viewpoint planner
+    viewpoint_distances: [1.5, 1.2, 1.9]          # standoff from the dial (m)
+    viewpoint_angles_deg: [0.0, -30.0, 30.0, -45.0, 45.0]
+    viewpoint_clearance_m: 0.45        # robot radius 0.33 + margin, checked on the map
+    # system
+    system_ready_timeout_s: 180.0
+    return_home: true
+    abort_on_lidar_failure: true
+    lidar_diagnostic_name: inspectloop/stream/scan
+    wall_timeout_factor: 4.0

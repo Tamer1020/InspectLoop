@@ -1,0 +1,13 @@
+# Short mission used by the fault-injection tests (scripts/fault_test.sh):
+# one unobstructed gauge, so any failure observed is caused by the injected fault.
+mission:
+  name: fault_injection_single_gauge
+  home: {x: -10.0, y: 0.0, yaw: 0.0}
+
+gauges:
+  - id: PG-11
+    tag_id: 11
+    description: Rack N1 - compressed-air header
+    mount: {x: -7.0, y: 3.99, normal_yaw: -1.5708}
+    alarm_low: 1.0
+    alarm_high: 8.0
