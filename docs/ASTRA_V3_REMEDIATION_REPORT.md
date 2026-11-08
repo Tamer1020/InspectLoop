@@ -3,6 +3,8 @@
 Input: *InspectLoop_V2_Independent_Review_AR.pdf* (verdict **REJECT V2**: two HIGH defects, F3 and
 F4; MEDIUM findings F1-residual, F5, F7, F8, F9). Baseline: git `f38d7dc` (=
 `InspectLoop_Portfolio_Reviewed_v2.zip`, kept unchanged, as is the V1 ZIP).
+V3 source = git `daad9cf` (tag `v3.0-reviewed`); the live runs used exactly that source as an
+uncommitted working tree (the only later edits are documentation).
 All numbers in this file were produced on 2026-11-08/09 on the development machine (WSL2,
 Ubuntu 24.04, ROS 2 Jazzy, Gazebo Harmonic, Nav2 1.3, 16 cores).
 
