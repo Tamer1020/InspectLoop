@@ -1,0 +1,22 @@
+# colcon / ROS build artefacts
+build/
+install/
+log/
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+# runtime output (inspection runs are archived selectively under docs/evidence)
+inspectloop_runs/
+*.bag
+*.db3
+# editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+# secrets
+.env
+*.pem
+*.key

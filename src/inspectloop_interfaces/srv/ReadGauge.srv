@@ -1,0 +1,10 @@
+# Capture a burst of fresh camera frames (taken after the request) and read the gauge.
+string gauge_id
+int32 tag_id
+string viewpoint_label
+uint32 num_frames              # frames in the burst (0 = node default)
+float32 frame_timeout_s        # sim seconds to wait for the burst (0 = node default)
+string run_directory           # where to store captures (empty = node default)
+---
+bool success                   # true when frames were captured and processed (not: reading reliable)
+inspectloop_interfaces/GaugeReading reading
