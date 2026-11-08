@@ -12,15 +12,18 @@ cd ~/InspectLoop && source /opt/ros/jazzy/setup.bash && source install/setup.bas
 ros2 launch inspectloop_bringup inspectloop.launch.py
 ```
 
-What happens (the same sequence was recorded in `docs/evidence/demo_run/`):
+What happens (recorded in `docs/evidence/demo_run_v2/`; v1 baseline in `docs/evidence/v1_demo_run/`):
 
 1. Gazebo opens the warehouse, the robot spawns at (-10, 0); bridges, robot_state_publisher,
    `cmd_vel_gate` and `health_monitor` start.
 2. After 5 s Nav2 + AMCL come up (map → odom from AMCL, initial pose from parameters).
 3. After 10 s `mission_manager` waits for Nav2, `/gauge/read`, `/map`, TF and `/amcl_pose`.
-4. **PG-11** – drives to the frontal viewpoint, captures 5 fresh frames → **ACCEPT** 4.2 bar.
+4. **PG-11** – drives to the frontal viewpoint, waits until odometry shows the robot at rest,
+   captures 5 fresh frames → **ACCEPT** 4.2 bar.
 5. **PG-12** – frontal view: the hanging conduit box hides the dial → `OCCLUDED` → **MOVE_NEW**;
-   the planner blocks that direction and picks the −45° viewpoint; Nav2 drives there → **ACCEPT** 6.8 bar.
+   the planner blocks that direction and picks the −45° viewpoint; there the dial is clear but
+   too small for the needle-evidence test (`TOO_FAR`) → **MOVE_NEW** closer along the same line of
+   sight (1.2 m) → **ACCEPT** 6.8 bar.
 6. **PG-13** – a crate stack hides the gauge: `TAG_NOT_VISIBLE` → **RETRY_SAME** → **MOVE_NEW** (−30°)
    → RETRY_SAME → MOVE_NEW (+30°) → RETRY_SAME → **UNRESOLVED** (budget of 3 viewpoints spent).
 7. **PG-14** – **ACCEPT** 8.7 bar, flagged **alarm HIGH** (limit 8.0 bar).
@@ -68,9 +71,13 @@ scripts/fault_test.sh camera /tmp/fault_camera   # camera bridge killed before t
 scripts/fault_test.sh lidar  /tmp/fault_lidar    # LiDAR bridge killed while driving
 ```
 
+Further modes (Astra F3/F5): `scan_nan`, `scan_empty` (LiDAR replaced by present-but-invalid
+scans), `image_frozen`, `image_future` (camera replaced by a frozen / future-stamped stream).
+
 Expected: camera → `NO_IMAGE` → RETRY_SAME → UNRESOLVED ("moving cannot fix a sensor fault");
-LiDAR → gate `STOPPED_SCAN_FAULT` (robot stops within ~1 s, speeds logged to `odom_speed.txt`),
-health ERROR → mission ABORTED, report still written.
+LiDAR loss or invalid scans → gate `STOPPED_SCAN_FAULT` (robot stops, speeds logged to
+`odom_speed.txt`) → mission ABORTED, report still written; frozen / future-stamped images are
+never used as evidence. The script refuses to run while another InspectLoop simulation is up.
 
 Other useful switches: `mission:=false` (drive with RViz "Nav2 Goal"), `mission_file:=<yaml>`,
 `output_root:=<dir>`, `camera_bridge:=false` (start without camera),

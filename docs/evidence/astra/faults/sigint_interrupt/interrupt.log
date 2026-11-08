@@ -1,0 +1,6 @@
+[interrupt_test] 20:42:17 SIGINT -> mission_manager pid 153948
+READY
+t+0.0-0.5s  max|v|=0.400 m/s  max|w|=0.046 rad/s  (n=20)
+t+0.5-1.0s  max|v|=0.135 m/s  max|w|=0.000 rad/s  (n=14)
+t+1.0-1.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=11)
+[interrupt_test] launch exit code 0

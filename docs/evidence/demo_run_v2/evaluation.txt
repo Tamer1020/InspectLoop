@@ -1,0 +1,17 @@
+gauge    truth status        value  2sig_h   error in2s
+PG-11     4.20 ACCEPTED      4.200   0.102  +0.000 yes
+PG-12     6.80 ACCEPTED      6.794   0.161  -0.006 yes
+PG-13     3.10 UNRESOLVED 
+PG-14     8.70 ACCEPTED      8.702   0.110  +0.002 yes
+per-observation:
+  PG-11 #1 V0 d=1.50 a=+0deg      value=4.2003 err=+0.000 flags=[] -> ACCEPT
+  PG-12 #1 V0 d=1.50 a=+0deg      value=None err=- flags=['OCCLUDED', 'LOW_NEEDLE_CONTRAST', 'AMBIGUOUS_NEEDLE', 'NEEDLE_PARTIAL'] -> MOVE_NEW
+  PG-12 #2 V3 d=1.50 a=-45deg     value=6.794 err=-0.006 flags=[] -> ACCEPT
+  PG-13 #1 V0 d=1.50 a=+0deg      value=None err=- flags=['TAG_NOT_VISIBLE'] -> RETRY_SAME
+  PG-13 #2 V0 d=1.50 a=+0deg      value=None err=- flags=['TAG_NOT_VISIBLE'] -> MOVE_NEW
+  PG-13 #3 V1 d=1.50 a=-30deg     value=None err=- flags=['TAG_NOT_VISIBLE'] -> RETRY_SAME
+  PG-13 #4 V1 d=1.50 a=-30deg     value=None err=- flags=['TAG_NOT_VISIBLE'] -> MOVE_NEW
+  PG-13 #5 V2 d=1.50 a=+30deg     value=None err=- flags=['TAG_NOT_VISIBLE'] -> RETRY_SAME
+  PG-13 #6 V2 d=1.50 a=+30deg     value=None err=- flags=['TAG_NOT_VISIBLE'] -> UNRESOLVED
+  PG-14 #1 V0 d=1.50 a=+0deg      value=8.7017 err=+0.002 flags=[] -> ACCEPT
+accepted 3/4 gauges, unresolved 1; accepted observations 3/10; mean |err| 0.0027, max |err| 0.006; within +-2 heuristic sigma 3/3; incorrect acceptances (|err| > 0.1 bar) 0/3

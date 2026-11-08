@@ -1,0 +1,58 @@
+{
+  "mission_id": "20261108_204207_1059",
+  "mission_name": "warehouse_pressure_round",
+  "mission_file": "/home/tamer/InspectLoop/install/inspectloop_mission/share/inspectloop_mission/config/gauges.yaml",
+  "run_dir": "<run_root>/20261108_204207_1059",
+  "state": "ABORTED",
+  "abort_reason": "interrupted (SIGINT)",
+  "started_wall": "2026-11-08T20:42:07",
+  "parameters": {
+    "max_sigma": 0.15,
+    "min_valid_frames": 3,
+    "max_retries_same": 1,
+    "max_viewpoints": 3,
+    "max_observations": 8,
+    "frames_per_observation": 5,
+    "viewpoint_distances": [
+      1.5,
+      1.2,
+      1.9
+    ],
+    "viewpoint_angles_deg": [
+      0.0,
+      -30.0,
+      30.0,
+      -45.0,
+      45.0
+    ],
+    "viewpoint_clearance_m": 0.45,
+    "nav_timeout_s": 180.0,
+    "nav_attempts_per_viewpoint": 2
+  },
+  "gauges": [],
+  "home_return": null,
+  "duration_wall_s": 9.4,
+  "duration_sim_s": 6.4,
+  "health_events": [],
+  "nav_goal_events": [
+    {
+      "t": 11.141,
+      "event": "SENT",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": ""
+    },
+    {
+      "t": 11.155,
+      "event": "ACCEPTED",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": ""
+    },
+    {
+      "t": 17.481,
+      "event": "CANCEL_CONFIRMED",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": "KeyboardInterrupt: cancel ERROR_NONE, terminal CANCELED"
+    }
+  ],
+  "uncertainty_note": "sigma is a HEURISTIC model (frame spread + pixel resolution + floor); bands are diagnostic, not calibrated confidence intervals"
+}

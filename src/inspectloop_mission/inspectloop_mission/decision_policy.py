@@ -130,6 +130,16 @@ def decide(obs: Dict, retries_at_view: int, viewpoints_remaining: int, observati
         blocking = {'INVALID_MEASUREMENT'} if isinstance(obs, dict) and obs.get('has_value') is not False \
             else {'TOO_FEW_VALID_FRAMES'}
 
+    # sensor/data-level invalidation dominates: any other flag was computed from invalid data
+    sensor = blocking & NOT_FIXABLE_BY_MOVING
+    if sensor:
+        why = ', '.join(sorted(sensor))
+        if can_retry:
+            return Decision(RETRY_SAME, f'possibly transient ({why}): observe again from the same pose')
+        if sensor == {'NO_IMAGE'}:
+            return Decision(UNRESOLVED, 'camera delivers no frames: moving cannot fix a sensor fault')
+        return Decision(UNRESOLVED, f'{why} persisted: moving cannot fix it')
+
     geometric = blocking & GEOMETRIC_FLAGS
     transient = blocking & TRANSIENT_FLAGS
     unknown = blocking - GEOMETRIC_FLAGS - TRANSIENT_FLAGS

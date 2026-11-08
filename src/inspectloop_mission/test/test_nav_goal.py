@@ -222,3 +222,34 @@ def test_goal_that_finishes_while_cancel_refused_is_resolved():
     out = r.run('g', 'A', 3.0)
     assert out['result'] == 'TIMEOUT' and out['cancel_confirmed'] is True
     assert r.run('g2', 'B', 5.0)['result'] == 'SUCCEEDED'
+
+
+def test_real_rclpy_logger_with_mixed_severities():
+    """Regression (found in Gazebo LiDAR fault test): the runner logged INFO and WARNING events
+    through one rclpy call site -> 'Logger severity cannot be changed between calls'."""
+    import rclpy.logging
+    c = FakeTime()
+    cl = FakeClient(c, [{'answer_after': 0.2, 'result_after': None, 'cancel': 'ok'},
+                        {'answer_after': 0.2, 'result_after': 1.0}])
+    r = NavGoalRunner(cl, c.wait, lambda: c.t, rclpy.logging.get_logger('nav_goal_test'),
+                      accept_timeout_s=2.0, cancel_timeout_s=2.0, terminal_timeout_s=2.0)
+    assert r.run('g', 'A', 3.0)['result'] == 'TIMEOUT'          # SENT/ACCEPTED (info) + CANCEL (warn)
+    assert r.run('g2', 'B', 5.0)['result'] == 'SUCCEEDED'        # info again
+
+
+def test_interrupt_handlers_installed_even_if_sigint_was_ignored():
+    """Regression (Gazebo interrupt test): with SIGINT inherited as SIG_IGN the mission ignored
+    Ctrl-C and kept driving. The mission must install its own handlers."""
+    import signal
+    from inspectloop_mission import mission_manager as mm
+    old_int, old_term = signal.getsignal(signal.SIGINT), signal.getsignal(signal.SIGTERM)
+    try:
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
+        mm.install_interrupt_handlers()
+        assert signal.getsignal(signal.SIGINT) is mm._raise_interrupt
+        assert signal.getsignal(signal.SIGTERM) is mm._raise_interrupt
+        with pytest.raises(KeyboardInterrupt):
+            signal.raise_signal(signal.SIGINT)
+    finally:
+        signal.signal(signal.SIGINT, old_int)
+        signal.signal(signal.SIGTERM, old_term)

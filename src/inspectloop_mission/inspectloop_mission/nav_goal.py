@@ -68,8 +68,12 @@ class NavGoalRunner:
         self.events.append({'t': round(self._now(), 3), 'event': kind, 'goal': label,
                             'detail': detail})
         if self._log is not None:
-            (self._log.warning if kind not in ('SENT', 'ACCEPTED', 'TERMINAL') else
-             self._log.info)(f'[nav goal {label}] {kind} {detail}')
+            msg = f'[nav goal {label}] {kind} {detail}'
+            # rclpy forbids changing the severity of one call site: use two call sites
+            if kind in ('SENT', 'ACCEPTED', 'TERMINAL'):
+                self._log.info(msg)
+            else:
+                self._log.warning(msg)
 
     def _poll(self):
         """Process late acceptances and drop goals that reached a terminal state."""

@@ -1,0 +1,71 @@
+{
+  "mission_id": "20261108_202248_4756",
+  "mission_name": "fault_injection_single_gauge",
+  "mission_file": "/home/tamer/InspectLoop/install/inspectloop_mission/share/inspectloop_mission/config/fault_single_gauge.yaml",
+  "run_dir": "<run_root>/20261108_202248_4756",
+  "state": "ABORTED",
+  "abort_reason": "LiDAR data invalid (cmd_vel_gate STOPPED_SCAN_FAULT) - stopping for safety",
+  "started_wall": "2026-11-08T20:22:48",
+  "parameters": {
+    "max_sigma": 0.15,
+    "min_valid_frames": 3,
+    "max_retries_same": 1,
+    "max_viewpoints": 3,
+    "max_observations": 8,
+    "frames_per_observation": 5,
+    "viewpoint_distances": [
+      1.5,
+      1.2,
+      1.9
+    ],
+    "viewpoint_angles_deg": [
+      0.0,
+      -30.0,
+      30.0,
+      -45.0,
+      45.0
+    ],
+    "viewpoint_clearance_m": 0.45,
+    "nav_timeout_s": 180.0,
+    "nav_attempts_per_viewpoint": 2
+  },
+  "gauges": [],
+  "home_return": null,
+  "duration_wall_s": 11.5,
+  "duration_sim_s": 7.7,
+  "health_events": [
+    {
+      "t": 18.0,
+      "name": "inspectloop/stream/camera/image_raw",
+      "level": "WARN",
+      "message": "DEGRADED"
+    },
+    {
+      "t": 19.0,
+      "name": "inspectloop/stream/camera/image_raw",
+      "level": "OK",
+      "message": "OK"
+    }
+  ],
+  "nav_goal_events": [
+    {
+      "t": 11.741,
+      "event": "SENT",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": ""
+    },
+    {
+      "t": 11.815,
+      "event": "ACCEPTED",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": ""
+    },
+    {
+      "t": 19.361,
+      "event": "CANCEL_CONFIRMED",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": "MissionAborted: cancel ERROR_NONE, terminal CANCELED"
+    }
+  ],
+  "uncertainty_note": "sigma is a HEURISTIC model (frame spread + pixel resolution + floor); bands are diagnostic, not calibrated confidence intervals"
+}

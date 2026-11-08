@@ -4,6 +4,7 @@ Behaviour is selected by goal.pose.pose.position.x:
   1 succeed after 0.3 s     2 reject            3 run until cancelled (cancel accepted)
   4 run, cancel REJECTED    5 accept only after 1.5 s (late acceptance), then run until cancelled
 """
+import os
 import threading
 import time
 
@@ -17,11 +18,15 @@ from rclpy.executors import MultiThreadedExecutor
 from inspectloop_mission.nav_goal import NavGoalRunner
 
 
+# unique action name: never collide with a real Nav2 running on the same ROS graph
+ACTION = f'test_navigate_to_pose_{os.getpid()}'
+
+
 class FakeNav2:
     def __init__(self, node):
         self.active = set()
         self.stop = threading.Event()
-        self.server = ActionServer(node, NavigateToPose, 'navigate_to_pose', self.execute,
+        self.server = ActionServer(node, NavigateToPose, ACTION, self.execute,
                                    goal_callback=self.on_goal, cancel_callback=self.on_cancel,
                                    callback_group=ReentrantCallbackGroup())
 
@@ -63,7 +68,7 @@ def ros():
     server_node = rclpy.create_node('fake_nav2')
     client_node = rclpy.create_node('nav_goal_test_client')
     fake = FakeNav2(server_node)
-    client = ActionClient(client_node, NavigateToPose, 'navigate_to_pose',
+    client = ActionClient(client_node, NavigateToPose, ACTION,
                           callback_group=ReentrantCallbackGroup())
     ex = MultiThreadedExecutor(num_threads=6)
     ex.add_node(server_node)

@@ -1,5 +1,57 @@
 # Test results
 
+> **v2 (after the Astra audit fixes, 2026-11-08)** — see §0 below and `docs/ASTRA_FIX_REPORT.md`.
+> Sections 1–7 document the v1 baseline (tag `v1.0-final`) and are kept for traceability; where v1
+> wording used "95 %" for `value ± 2σ`, that claim has been withdrawn (Astra F6).
+
+## 0. v2 results
+
+### 0.1 Automated tests
+`colcon build` (8 packages, no warnings) and `colcon test` → **260 results, 0 errors, 0 failures**
+(252 test cases + 8 CTest wrapper entries), run with `ROS_DOMAIN_ID=87` (isolated from the running
+simulation).
+
+| Package | Cases | New regression tests (Astra) |
+|---|---|---|
+| inspectloop_safety (C++ gtest) | 32 | `test_astra_safety_existing_api` (5), `test_scan_validation` (9) |
+| inspectloop_vision | 79 | `test_astra_regressions` (34), `test_frame_freshness` (10) |
+| inspectloop_mission | 115 | `test_astra_policy` (40), `test_nav_goal` (13), `test_nav_goal_ros` (5, real rclpy action server), `test_observation_guard` (12), `test_astra_uncertainty_labels` (4) |
+| gazebo / description / navigation / bringup | 7 / 7 / 6 / 6 | – |
+
+Every regression test was run against the v1 code first; failing outputs:
+`docs/evidence/astra/*_before_fix.txt`.
+
+### 0.2 Held-out evaluation (synthetic, `tools/heldout_uncertainty_eval.py`, n = 400, seed 20261108)
+
+| | v1 code | v2 code |
+|---|---|---|
+| accepted (yield) | 324/400 | 210/400 |
+| incorrect acceptance (\|err\| > 0.1 bar) / accepted | 21/324 | **1/210** |
+| accepted \|err\| mean / max | 0.028 / 0.541 bar | 0.015 / 0.118 bar |
+| out-of-scale needles accepted | 27/36 | 0/36 |
+
+σ_h is a heuristic; the within-±2σ_h count (210/210 for v2) is a property of this sample only.
+
+### 0.3 Gazebo / Nav2 integration (v2)
+Final four-gauge run (`evidence/demo_run_v2/`, exit 0): PG-11 4.200 (truth 4.20), PG-12 6.794
+(6.80; MOVE_NEW → ACCEPT at −45°), PG-13 UNRESOLVED, PG-14 8.702 (8.70, alarm HIGH); max |error|
+0.006 bar; 0 incorrect acceptances. Provenance of every observation: own viewpoint epoch, robot
+settled, first frame ≥ 0.5 s after the request, capture pose known, 0.0 m motion.
+
+### 0.4 Fault injection (v2, isolated runs, `docs/evidence/astra/faults/`)
+| Fault | Result |
+|---|---|
+| camera killed | NO_IMAGE → RETRY_SAME → UNRESOLVED |
+| LiDAR killed while driving | gate `scan timeout`, 0.40 → 0 m/s within 1.0–1.5 s, mission ABORTED |
+| LiDAR → all-NaN scans | gate `TOO_MANY_INVALID_BEAMS`, stop ≤ 0.8 s, ABORTED via gate state |
+| LiDAR → empty scans | gate `scan EMPTY`, stop ≤ 0.8 s, ABORTED via gate state |
+| camera → frozen stream | FROZEN_FRAMES → RETRY_SAME → UNRESOLVED |
+| camera → future-stamped frames | 30 future frames rejected → NO_IMAGE → UNRESOLVED |
+| SIGINT to the mission while driving | goal cancel confirmed (CANCELED), stop ≤ 1.5 s, report ABORTED "interrupted" |
+
+Details, bugs found by these runs and run conditions: `docs/ASTRA_FIX_REPORT.md`.
+
+
 All results below were produced on 2026-11-08 on the development machine (WSL2, Ubuntu 24.04,
 ROS 2 Jazzy, Gazebo Harmonic, 16 cores). Raw artefacts are in `docs/evidence/`. Nothing in this file
 is estimated or copied from elsewhere; where something was not verified it says so.
@@ -67,7 +119,7 @@ RViz (gui). Decisions were identical in all three:
 
 (± values are the reported 95 % half-widths = 2σ.)
 
-Archived run g3 (`docs/evidence/demo_run/`): mission COMPLETED, 204 s sim / 234 s wall, 7 viewpoints
+Archived run g3 (`docs/evidence/v1_demo_run/`): mission COMPLETED, 204 s sim / 234 s wall, 7 viewpoints
 visited, 7/7 navigations succeeded on the first attempt, final position errors 0.037–0.156 m
 (mean 0.083 m), yaw errors 0.14–0.19 rad, return home SUCCEEDED, launch exit code 0.
 
@@ -85,7 +137,7 @@ The frontal "view angle" is ≈ 20° because the camera (0.18 m high, tilted up 
 The PG-12 acceptance at −45° passed with modest margins (visibility 0.87 vs 0.85 limit) — see
 KNOWN_LIMITATIONS.md.
 
-Images: `docs/evidence/demo_run/images/` (raw, annotated, rectified for every observation) and the
+Images: `docs/evidence/v1_demo_run/images/` (raw, annotated, rectified for every observation) and the
 Gazebo GUI screenshot `docs/evidence/gui/gazebo_gui_pg12.png` (taken with the `/gui/screenshot`
 service during the GUI run).
 
@@ -93,8 +145,8 @@ service during the GUI run).
 
 | Test | How | Observed result | Evidence |
 |---|---|---|---|
-| Physical occlusion (hanging conduit box, invisible to LiDAR/map) | PG-12 in every mission | OCCLUDED detected → MOVE_NEW → −45° view → ACCEPT, error ≤ 0.031 bar | `demo_run/` |
-| No valid reading possible (crate) | PG-13 in every mission | 3 viewpoints, 6 observations → UNRESOLVED, no value published | `demo_run/` |
+| Physical occlusion (hanging conduit box, invisible to LiDAR/map) | PG-12 in every mission | OCCLUDED detected → MOVE_NEW → −45° view → ACCEPT, error ≤ 0.031 bar | `v1_demo_run/` |
+| No valid reading possible (crate) | PG-13 in every mission | 3 viewpoints, 6 observations → UNRESOLVED, no value published | `v1_demo_run/` |
 | **Camera failure** | `scripts/fault_test.sh camera` kills `gz_camera_bridge` while driving to PG-11 | health_monitor: `/camera/image_raw: STALE`; reader: `NO_IMAGE (no fresh frame within 5.0 s; frames received so far: 111)` — no stale frame reused; RETRY_SAME → **UNRESOLVED** "camera delivers no frames: moving cannot fix a sensor fault"; mission completed, exit 0 | `fault_camera/` |
 | **LiDAR failure** while driving | `scripts/fault_test.sh lidar` kills `gz_lidar_bridge` | `cmd_vel_gate -> STOPPED_SCAN_FAULT`; measured speed **0.400 m/s → 0.000 m/s within 0.5–1.0 s**; `/scan: STALE`; Nav2 goal aborted; mission **ABORTED** "LiDAR stream failed – stopping for safety"; report written; exit 0 | `fault_lidar/` (`odom_speed.txt`) |
 | System not ready | first integration run: mission subscribed `/amcl_pose` volatile and missed the latched message | mission ABORTED after 180 s with "missing /amcl_pose", report written (bug fixed: transient-local subscription) | log in this file's history |

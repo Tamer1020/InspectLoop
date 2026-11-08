@@ -12,6 +12,11 @@ mkdir -p "$out"; out="$(cd "$out" && pwd)"
 source /opt/ros/jazzy/setup.bash; source "$ws/install/setup.bash"   # (not set -u safe)
 set -u
 log="$out/launch.log"
+# refuse to run next to another InspectLoop simulation (shared /clock, /odom would corrupt results)
+if ps -eo args | grep -q "[i]nspectloop_gazebo/worlds/warehouse.sdf"; then
+  echo "[fault_test] another InspectLoop simulation is running - stop it first" | tee "$out/fault.log"
+  exit 4
+fi
 
 ros2 launch inspectloop_bringup inspectloop.launch.py headless:=true rviz:=false \
   exit_on_mission_end:=true output_root:="$out" \
@@ -31,7 +36,7 @@ case "$fault" in
   camera) sleep 2;  node="gz_camera_bridge" ;;
   lidar)  sleep 4;  node="gz_lidar_bridge" ;;
   scan_nan|scan_empty) sleep 4; node="gz_lidar_bridge"; injector="$fault" ;;
-  image_frozen|image_future) sleep 1; node="gz_camera_bridge"; injector="$fault" ;;
+  image_frozen|image_future) node="gz_camera_bridge"; injector="$fault" ;;
   *) echo "unknown fault $fault"; kill -INT $launch_pid; exit 2 ;;
 esac
 # the InspectLoop-specific node name is on the bridge command line (-r __node:=<name>)
@@ -48,8 +53,8 @@ t_inj=$(date +%s.%N)
 if [[ -n "$injector" ]]; then
   python3 "$ws/scripts/publish_fault_stream.py" "$injector" 1.0 > "$out/injector.log" 2>&1 &
   inj=$!
-  if [[ "$injector" == image_* ]]; then wait_for "$out/injector.log" CAPTURED 15; fi
-  if [[ "$injector" == scan_* ]]; then wait_for "$out/injector.log" FIRST_PUBLISH 15; fi
+  if [[ "$injector" == image_* ]]; then wait_for "$out/injector.log" CAPTURED 30 || { kill -INT $launch_pid; exit 5; }; fi
+  if [[ "$injector" == scan_* ]]; then wait_for "$out/injector.log" FIRST_PUBLISH 30 || { kill -INT $launch_pid; exit 5; }; fi
 fi
 echo "[fault_test] $(date +%T.%N | cut -c1-12) injecting $fault fault: killing $node (pid $pid)" | tee -a "$out/fault.log"
 kill -9 "$pid"

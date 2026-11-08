@@ -86,3 +86,15 @@ def test_robot_moving_flag_is_transient():
 def test_sigma_exactly_at_limit_is_accepted_and_just_above_is_not():
     assert dp.decide(obs(sigma=0.15), 0, 2, 1, P).decision == dp.ACCEPT
     assert dp.decide(obs(sigma=math.nextafter(0.15, 1.0)), 0, 2, 1, P).decision != dp.ACCEPT
+
+
+@pytest.mark.parametrize('sensor_flag', ['FROZEN_FRAMES', 'CLOCK_RESET'])
+def test_sensor_invalidation_dominates_derived_flags(sensor_flag):
+    """Found in the Gazebo frozen-camera test: a frozen burst also yields TAG_NOT_VISIBLE, which
+    alone would justify moving. Flags computed from invalid data are meaningless -> retry once,
+    then UNRESOLVED, never MOVE_NEW."""
+    o = obs(has_value=False, value=None, sigma=None, frames_valid=0,
+            quality_flags=['TAG_NOT_VISIBLE', sensor_flag])
+    assert dp.decide(o, 0, 2, 1, P).decision == dp.RETRY_SAME
+    d = dp.decide(o, 1, 2, 2, P)
+    assert d.decision == dp.UNRESOLVED

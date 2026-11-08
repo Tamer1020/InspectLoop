@@ -6,9 +6,9 @@
   image_frozen  /camera/image_raw at 10 Hz: one captured frame re-stamped with the current time
   image_future  /camera/image_raw at 10 Hz: live content but stamped 5 s in the future
 
-The image modes copy one real frame from the live camera during the first `start_delay` seconds
-(argv[2], default 2 s) and only then start publishing; scripts/fault_test.sh stops the real
-camera bridge in between.
+The image modes copy the first real frame they receive from the live camera and start publishing
+`delay` seconds later (argv[2], default 1 s); scripts/fault_test.sh stops the real camera bridge
+as soon as the frame has been captured.
 """
 import copy
 import math
@@ -48,18 +48,19 @@ def main():
             announce()
     else:
         pub = node.create_publisher(Image, '/camera/image_raw', 10)
-        state = {'frame': None}
-        start = time.monotonic() + (float(sys.argv[2]) if len(sys.argv) > 2 else 10.0)
+        state = {'frame': None, 'start': None}
+        delay = float(sys.argv[2]) if len(sys.argv) > 2 else 1.0
 
-        def on_img(msg):  # noqa: E306            # grab one real frame while the real camera still runs
-            if state['frame'] is None and time.monotonic() < start:
+        def on_img(msg):  # noqa: E306 - grab the first real frame, start publishing `delay` s later
+            if state['frame'] is None:
                 state['frame'] = msg
+                state['start'] = time.monotonic() + delay
                 print('CAPTURED', flush=True)
 
         node.create_subscription(Image, '/camera/image_raw', on_img, qos_profile_sensor_data)
 
         def tick():
-            if state['frame'] is None or time.monotonic() < start:
+            if state['frame'] is None or time.monotonic() < state['start']:
                 return              # the real camera bridge is stopped meanwhile
             m = copy.deepcopy(state['frame'])
             now = node.get_clock().now()

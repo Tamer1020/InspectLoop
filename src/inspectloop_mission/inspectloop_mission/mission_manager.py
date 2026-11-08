@@ -26,6 +26,7 @@ import datetime
 import json
 import math
 import os
+import signal
 import threading
 import time
 import traceback
@@ -703,10 +704,26 @@ class MissionManager(Node):
         return record
 
 
+def _raise_interrupt(signum, _frame):
+    raise KeyboardInterrupt(f'signal {signum}')
+
+
+def install_interrupt_handlers():
+    """SIGINT/SIGTERM -> KeyboardInterrupt in the mission (main) thread, explicitly.
+
+    Python only installs its default SIGINT handler if SIGINT was not ignored at start-up, and
+    processes started as background jobs of a non-interactive shell inherit SIGINT=SIG_IGN
+    (found in the Gazebo interrupt test: SIGINT was silently ignored and the robot kept driving).
+    SIGTERM is handled too because ros2 launch escalates to it."""
+    signal.signal(signal.SIGINT, _raise_interrupt)
+    signal.signal(signal.SIGTERM, _raise_interrupt)
+
+
 def main(args=None):
     # no rclpy signal handler: SIGINT raises KeyboardInterrupt in the mission thread while the
     # executor keeps spinning, so active goals can still be cancelled and confirmed (F4)
     rclpy.init(args=args, signal_handler_options=SignalHandlerOptions.NO)
+    install_interrupt_handlers()
     node = MissionManager()
     executor = MultiThreadedExecutor(num_threads=4)
     executor.add_node(node)
