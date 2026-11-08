@@ -56,3 +56,25 @@ python3 scripts/generate_warehouse.py --layout config/warehouse_layout.yaml \
 * GUI runs use WSLg. If Qt windows misbehave, `export QT_QPA_PLATFORM=xcb`.
 * Windows path to the workspace: `\\wsl.localhost\Ubuntu-24.04\home\tamer\InspectLoop`
   (use `\\wsl$\Ubuntu-24.04\...` on older Windows builds; the distro name is shown by `wsl -l -v`).
+
+## 6. Publishing to GitHub (Tamer1020/InspectLoop)
+
+The repository is a local git repo with a clean history on `main`. It was not pushed from the
+build environment because no GitHub credentials were available there. To publish:
+
+```bash
+# option A: GitHub CLI
+sudo apt install gh && gh auth login
+cd ~/InspectLoop
+gh repo create Tamer1020/InspectLoop --public --source=. --remote=origin --push
+
+# option B: create an empty public repo "InspectLoop" on github.com (no README/license), then
+cd ~/InspectLoop
+git remote add origin https://github.com/Tamer1020/InspectLoop.git
+git push -u origin main          # authenticate with a personal access token
+```
+
+The CI workflow (`.github/workflows/ci.yml`) then builds and runs all tests in a `ros:jazzy-ros-base`
+container. (It has not been executed yet; the simulation itself is not run in CI.)
+If you received the portfolio ZIP instead of the repo, restore full history with
+`git clone InspectLoop/InspectLoop.git.bundle InspectLoop-repo`.
