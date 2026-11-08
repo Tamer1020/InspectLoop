@@ -1,0 +1,44 @@
+{
+  "mission_id": "20261108_163540_0c34",
+  "mission_name": "fault_injection_single_gauge",
+  "mission_file": "/home/tamer/InspectLoop/install/inspectloop_mission/share/inspectloop_mission/config/fault_single_gauge.yaml",
+  "run_dir": "20261108_163540_0c34",
+  "state": "ABORTED",
+  "abort_reason": "LiDAR stream failed (health_monitor ERROR) - stopping for safety",
+  "started_wall": "2026-11-08T16:35:40",
+  "parameters": {
+    "max_sigma": 0.15,
+    "min_valid_frames": 3,
+    "max_retries_same": 1,
+    "max_viewpoints": 3,
+    "max_observations": 8,
+    "frames_per_observation": 5,
+    "viewpoint_distances": [
+      1.5,
+      1.2,
+      1.9
+    ],
+    "viewpoint_angles_deg": [
+      0.0,
+      -30.0,
+      30.0,
+      -45.0,
+      45.0
+    ],
+    "viewpoint_clearance_m": 0.45,
+    "nav_timeout_s": 180.0,
+    "nav_attempts_per_viewpoint": 2
+  },
+  "gauges": [],
+  "home_return": null,
+  "duration_wall_s": 12.1,
+  "duration_sim_s": 8.3,
+  "health_events": [
+    {
+      "t": 20.0,
+      "name": "inspectloop/stream/scan",
+      "level": "ERROR",
+      "message": "STALE"
+    }
+  ]
+}

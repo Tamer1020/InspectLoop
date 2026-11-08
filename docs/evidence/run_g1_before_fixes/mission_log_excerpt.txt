@@ -1,0 +1,46 @@
+[gauge_reader_node-8] [INFO] [1794151393.900582528] [gauge_reader]: gauge reading service ready on /gauge/read
+[mission_manager-10] [INFO] [1794151404.054702193] [mission_manager]: mission 20261108_162324_98ef "warehouse_pressure_round": 4 gauges -> <run_root>/20261108_162324_98ef
+[mission_manager-10] [INFO] [1794151407.585866343] [mission_manager]: system ready
+[mission_manager-10] [INFO] [1794151407.595212526] [mission_manager]: === PG-11 (tag 11) Rack N1 - compressed-air header
+[mission_manager-10] [INFO] [1794151407.650238740] [mission_manager]: [PG-11] -> viewpoint V0 d=1.50 a=+0deg (-7.00, 2.49)
+[gauge_reader_node-8] [INFO] [1794151426.629208075] [gauge_reader]: [PG-11] V0 d=1.50 a=+0deg: 4.19 +/- 0.09 bar from 5/5 frames
+[mission_manager-10] [INFO] [1794151426.734396916] [mission_manager]: [PG-11] obs #1 @ V0 d=1.50 a=+0deg: 4.19 +/- 0.09 flags=[] -> ACCEPT (5 valid frames, sigma 0.093 <= 0.15)
+[mission_manager-10] [INFO] [1794151426.824022039] [mission_manager]: [PG-11] ACCEPTED 4.19 +/- 0.19 bar (95%) alarm=NORMAL after 1 obs / 1 viewpoint(s)
+[mission_manager-10] [INFO] [1794151426.843026298] [mission_manager]: === PG-12 (tag 12) Rack S2 - hydraulic accumulator
+[mission_manager-10] [INFO] [1794151426.940549671] [mission_manager]: [PG-12] -> viewpoint V0 d=1.50 a=+0deg (-1.00, -2.49)
+[gauge_reader_node-8] [WARN] [1794151458.471946054] [gauge_reader]: [PG-12] V0 d=1.50 a=+0deg: no reading: TAG_NOT_VISIBLE
+[mission_manager-10] [INFO] [1794151458.590908301] [mission_manager]: [PG-12] obs #1 @ V0 d=1.50 a=+0deg: no value flags=['TAG_NOT_VISIBLE'] -> RETRY_SAME (possibly transient (TAG_NOT_VISIBLE): observe again from the same pose)
+[gauge_reader_node-8] [WARN] [1794151461.122650984] [gauge_reader]: [PG-12] V0 d=1.50 a=+0deg: no reading: TAG_NOT_VISIBLE
+[mission_manager-10] [INFO] [1794151461.234455274] [mission_manager]: [PG-12] obs #2 @ V0 d=1.50 a=+0deg: no value flags=['TAG_NOT_VISIBLE'] -> MOVE_NEW (TAG_NOT_VISIBLE persisted after 1 retry(ies))
+[mission_manager-10] [INFO] [1794151461.330592246] [mission_manager]: [PG-12] -> viewpoint V3 d=1.50 a=-45deg (0.06, -2.93)
+[gauge_reader_node-8] [INFO] [1794151474.838001943] [gauge_reader]: [PG-12] V3 d=1.50 a=-45deg: 6.81 +/- 0.17 bar from 5/5 frames
+[mission_manager-10] [INFO] [1794151474.870437612] [mission_manager]: [PG-12] obs #3 @ V3 d=1.50 a=-45deg: 6.81 +/- 0.17 flags=[] -> MOVE_NEW (viewpoint-dependent problem (HIGH_UNCERTAINTY))
+[mission_manager-10] [INFO] [1794151475.025834735] [mission_manager]: [PG-12] -> viewpoint V5 d=1.20 a=+0deg (-1.00, -2.79)
+[gauge_reader_node-8] [WARN] [1794151486.862035458] [gauge_reader]: [PG-12] V5 d=1.20 a=+0deg: no reading: TAG_NOT_VISIBLE
+[mission_manager-10] [INFO] [1794151486.929187116] [mission_manager]: [PG-12] obs #4 @ V5 d=1.20 a=+0deg: no value flags=['TAG_NOT_VISIBLE'] -> RETRY_SAME (possibly transient (TAG_NOT_VISIBLE): observe again from the same pose)
+[gauge_reader_node-8] [WARN] [1794151489.534303381] [gauge_reader]: [PG-12] V5 d=1.20 a=+0deg: no reading: TAG_NOT_VISIBLE
+[mission_manager-10] [INFO] [1794151489.646857204] [mission_manager]: [PG-12] obs #5 @ V5 d=1.20 a=+0deg: no value flags=['TAG_NOT_VISIBLE'] -> UNRESOLVED (TAG_NOT_VISIBLE persisted and no viewpoint/observation budget left)
+[mission_manager-10] [WARN] [1794151489.729512188] [mission_manager]: [PG-12] UNRESOLVED: TAG_NOT_VISIBLE persisted and no viewpoint/observation budget left
+[mission_manager-10] [INFO] [1794151489.732642487] [mission_manager]: === PG-13 (tag 13) Rack N3 - sprinkler riser
+[mission_manager-10] [INFO] [1794151489.807290392] [mission_manager]: [PG-13] -> viewpoint V0 d=1.50 a=+0deg (5.00, 2.49)
+[gauge_reader_node-8] [WARN] [1794151522.201496846] [gauge_reader]: [PG-13] V0 d=1.50 a=+0deg: no reading: TAG_NOT_VISIBLE
+[mission_manager-10] [INFO] [1794151522.324785318] [mission_manager]: [PG-13] obs #1 @ V0 d=1.50 a=+0deg: no value flags=['TAG_NOT_VISIBLE'] -> RETRY_SAME (possibly transient (TAG_NOT_VISIBLE): observe again from the same pose)
+[gauge_reader_node-8] [WARN] [1794151524.883163919] [gauge_reader]: [PG-13] V0 d=1.50 a=+0deg: no reading: TAG_NOT_VISIBLE
+[mission_manager-10] [INFO] [1794151524.958388632] [mission_manager]: [PG-13] obs #2 @ V0 d=1.50 a=+0deg: no value flags=['TAG_NOT_VISIBLE'] -> MOVE_NEW (TAG_NOT_VISIBLE persisted after 1 retry(ies))
+[mission_manager-10] [INFO] [1794151524.960098321] [mission_manager]: [PG-13] -> viewpoint V1 d=1.50 a=-30deg (4.25, 2.69)
+[gauge_reader_node-8] [WARN] [1794151537.821675898] [gauge_reader]: [PG-13] V1 d=1.50 a=-30deg: no reading: TAG_NOT_VISIBLE
+[mission_manager-10] [INFO] [1794151537.934583605] [mission_manager]: [PG-13] obs #3 @ V1 d=1.50 a=-30deg: no value flags=['TAG_NOT_VISIBLE'] -> RETRY_SAME (possibly transient (TAG_NOT_VISIBLE): observe again from the same pose)
+[gauge_reader_node-8] [WARN] [1794151540.773747042] [gauge_reader]: [PG-13] V1 d=1.50 a=-30deg: no reading: TAG_NOT_VISIBLE
+[mission_manager-10] [INFO] [1794151540.885838115] [mission_manager]: [PG-13] obs #4 @ V1 d=1.50 a=-30deg: no value flags=['TAG_NOT_VISIBLE'] -> MOVE_NEW (TAG_NOT_VISIBLE persisted after 1 retry(ies))
+[mission_manager-10] [INFO] [1794151540.986481589] [mission_manager]: [PG-13] -> viewpoint V2 d=1.50 a=+30deg (5.75, 2.69)
+[gauge_reader_node-8] [WARN] [1794151554.625671621] [gauge_reader]: [PG-13] V2 d=1.50 a=+30deg: no reading: TAG_NOT_VISIBLE
+[mission_manager-10] [INFO] [1794151554.725967748] [mission_manager]: [PG-13] obs #5 @ V2 d=1.50 a=+30deg: no value flags=['TAG_NOT_VISIBLE'] -> RETRY_SAME (possibly transient (TAG_NOT_VISIBLE): observe again from the same pose)
+[gauge_reader_node-8] [WARN] [1794151557.498487009] [gauge_reader]: [PG-13] V2 d=1.50 a=+30deg: no reading: TAG_NOT_VISIBLE
+[mission_manager-10] [INFO] [1794151557.503057454] [mission_manager]: [PG-13] obs #6 @ V2 d=1.50 a=+30deg: no value flags=['TAG_NOT_VISIBLE'] -> UNRESOLVED (TAG_NOT_VISIBLE persisted and no viewpoint/observation budget left)
+[mission_manager-10] [WARN] [1794151557.505861755] [mission_manager]: [PG-13] UNRESOLVED: TAG_NOT_VISIBLE persisted and no viewpoint/observation budget left
+[mission_manager-10] [INFO] [1794151557.509063481] [mission_manager]: === PG-14 (tag 14) East wall - boiler feed line
+[mission_manager-10] [INFO] [1794151557.613087853] [mission_manager]: [PG-14] -> viewpoint V0 d=1.50 a=+0deg (10.29, -0.00)
+[gauge_reader_node-8] [INFO] [1794151581.655867351] [gauge_reader]: [PG-14] V0 d=1.50 a=+0deg: 8.68 +/- 0.09 bar from 5/5 frames
+[mission_manager-10] [INFO] [1794151581.725926314] [mission_manager]: [PG-14] obs #1 @ V0 d=1.50 a=+0deg: 8.68 +/- 0.09 flags=[] -> ACCEPT (5 valid frames, sigma 0.094 <= 0.15)
+[mission_manager-10] [INFO] [1794151581.736129408] [mission_manager]: [PG-14] ACCEPTED 8.68 +/- 0.19 bar (95%) alarm=HIGH after 1 obs / 1 viewpoint(s)
+[mission_manager-10] [INFO] [1794151648.288779088] [mission_manager]: mission COMPLETED. Report: <run_root>/20261108_162324_98ef/mission_report.md

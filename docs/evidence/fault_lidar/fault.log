@@ -1,0 +1,9 @@
+[fault_test] 16:35:50 injecting lidar fault: killing gz_lidar_bridge (pid 76529)
+[fault_test] 16:35:51 killed at t+0.5s of the odom sample window
+[fault_test] robot speed around the fault (sample window starts 0.5 s before the kill):
+t+0.0-0.5s  max|v|=0.400 m/s  max|w|=0.034 rad/s  (n=4)
+t+0.5-1.0s  max|v|=0.400 m/s  max|w|=0.032 rad/s  (n=15)
+t+1.0-1.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=13)
+t+1.5-2.0s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=15)
+t+2.0-2.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=1)
+[fault_test] launch exit code 0

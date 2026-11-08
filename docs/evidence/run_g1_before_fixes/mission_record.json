@@ -1,0 +1,1650 @@
+{
+  "mission_id": "20261108_162324_98ef",
+  "mission_name": "warehouse_pressure_round",
+  "mission_file": "/home/tamer/InspectLoop/install/inspectloop_mission/share/inspectloop_mission/config/gauges.yaml",
+  "run_dir": "20261108_162324_98ef",
+  "state": "COMPLETED",
+  "abort_reason": null,
+  "started_wall": "2026-11-08T16:23:24",
+  "parameters": {
+    "max_sigma": 0.15,
+    "min_valid_frames": 3,
+    "max_retries_same": 1,
+    "max_viewpoints": 3,
+    "max_observations": 8,
+    "frames_per_observation": 5,
+    "viewpoint_distances": [
+      1.5,
+      1.2,
+      1.9
+    ],
+    "viewpoint_angles_deg": [
+      0.0,
+      -30.0,
+      30.0,
+      -45.0,
+      45.0
+    ],
+    "viewpoint_clearance_m": 0.45,
+    "nav_timeout_s": 180.0,
+    "nav_attempts_per_viewpoint": 2
+  },
+  "gauges": [
+    {
+      "id": "PG-11",
+      "tag_id": 11,
+      "description": "Rack N1 - compressed-air header",
+      "unit": "bar",
+      "mount": {
+        "x": -7.0,
+        "y": 3.99,
+        "normal_yaw": -1.5708
+      },
+      "alarm_low": 1.0,
+      "alarm_high": 8.0,
+      "candidates_feasible": [
+        {
+          "index": 0,
+          "label": "V0 d=1.50 a=+0deg",
+          "x": -7.0,
+          "y": 2.49,
+          "yaw": 1.5708,
+          "distance": 1.5,
+          "angle_deg": 0.0
+        },
+        {
+          "index": 1,
+          "label": "V1 d=1.50 a=-30deg",
+          "x": -7.75,
+          "y": 2.691,
+          "yaw": 1.0472,
+          "distance": 1.5,
+          "angle_deg": -30.0
+        },
+        {
+          "index": 2,
+          "label": "V2 d=1.50 a=+30deg",
+          "x": -6.25,
+          "y": 2.691,
+          "yaw": 2.0944,
+          "distance": 1.5,
+          "angle_deg": 30.0
+        },
+        {
+          "index": 3,
+          "label": "V3 d=1.50 a=-45deg",
+          "x": -8.061,
+          "y": 2.929,
+          "yaw": 0.7854,
+          "distance": 1.5,
+          "angle_deg": -45.0
+        },
+        {
+          "index": 4,
+          "label": "V4 d=1.50 a=+45deg",
+          "x": -5.939,
+          "y": 2.929,
+          "yaw": 2.3562,
+          "distance": 1.5,
+          "angle_deg": 45.0
+        },
+        {
+          "index": 5,
+          "label": "V5 d=1.20 a=+0deg",
+          "x": -7.0,
+          "y": 2.79,
+          "yaw": 1.5708,
+          "distance": 1.2,
+          "angle_deg": 0.0
+        },
+        {
+          "index": 6,
+          "label": "V6 d=1.20 a=-30deg",
+          "x": -7.6,
+          "y": 2.951,
+          "yaw": 1.0472,
+          "distance": 1.2,
+          "angle_deg": -30.0
+        },
+        {
+          "index": 7,
+          "label": "V7 d=1.20 a=+30deg",
+          "x": -6.4,
+          "y": 2.951,
+          "yaw": 2.0944,
+          "distance": 1.2,
+          "angle_deg": 30.0
+        },
+        {
+          "index": 8,
+          "label": "V8 d=1.20 a=-45deg",
+          "x": -7.849,
+          "y": 3.141,
+          "yaw": 0.7854,
+          "distance": 1.2,
+          "angle_deg": -45.0
+        },
+        {
+          "index": 9,
+          "label": "V9 d=1.20 a=+45deg",
+          "x": -6.151,
+          "y": 3.141,
+          "yaw": 2.3562,
+          "distance": 1.2,
+          "angle_deg": 45.0
+        },
+        {
+          "index": 10,
+          "label": "V10 d=1.90 a=+0deg",
+          "x": -7.0,
+          "y": 2.09,
+          "yaw": 1.5708,
+          "distance": 1.9,
+          "angle_deg": 0.0
+        },
+        {
+          "index": 11,
+          "label": "V11 d=1.90 a=-30deg",
+          "x": -7.95,
+          "y": 2.345,
+          "yaw": 1.0472,
+          "distance": 1.9,
+          "angle_deg": -30.0
+        },
+        {
+          "index": 12,
+          "label": "V12 d=1.90 a=+30deg",
+          "x": -6.05,
+          "y": 2.345,
+          "yaw": 2.0944,
+          "distance": 1.9,
+          "angle_deg": 30.0
+        },
+        {
+          "index": 13,
+          "label": "V13 d=1.90 a=-45deg",
+          "x": -8.344,
+          "y": 2.647,
+          "yaw": 0.7854,
+          "distance": 1.9,
+          "angle_deg": -45.0
+        },
+        {
+          "index": 14,
+          "label": "V14 d=1.90 a=+45deg",
+          "x": -5.657,
+          "y": 2.646,
+          "yaw": 2.3562,
+          "distance": 1.9,
+          "angle_deg": 45.0
+        }
+      ],
+      "candidates_rejected": [],
+      "viewpoints": [
+        {
+          "viewpoint": {
+            "index": 0,
+            "label": "V0 d=1.50 a=+0deg",
+            "x": -7.0,
+            "y": 2.49,
+            "yaw": 1.5708,
+            "distance": 1.5,
+            "angle_deg": 0.0
+          },
+          "navigation": {
+            "outcome": "SUCCEEDED",
+            "attempts": [
+              {
+                "result": "SUCCEEDED",
+                "duration_s": 14.54,
+                "recoveries": 0,
+                "attempt": 1
+              }
+            ],
+            "total_time_s": 14.54,
+            "final_pose": {
+              "x": -6.987,
+              "y": 2.61,
+              "yaw": 1.388
+            },
+            "position_error_m": 0.121,
+            "yaw_error_rad": 0.183
+          },
+          "observations": [
+            {
+              "viewpoint": "V0 d=1.50 a=+0deg",
+              "stamp_s": 27.5,
+              "robot_pose": {
+                "x": -6.96810073996696,
+                "y": 2.63335178824024,
+                "yaw": 1.4277049179229808
+              },
+              "has_value": true,
+              "value": 4.1909,
+              "sigma": 0.0927,
+              "unit": "bar",
+              "frames_requested": 5,
+              "frames_received": 5,
+              "frames_tag_detected": 5,
+              "frames_valid": 5,
+              "frame_values": [
+                4.1909,
+                4.1908,
+                4.1909,
+                4.1908,
+                4.1914
+              ],
+              "frame_spread": 0.0001,
+              "needle_confidence": 0.973,
+              "dial_visibility": 0.997,
+              "view_angle_deg": 22.2,
+              "distance_m": 1.238,
+              "dial_radius_px": 74.6,
+              "sharpness": 1321.9,
+              "processing_time_ms": 798.1,
+              "quality_flags": [],
+              "raw_image_path": "images/PG-11_V0_t00027.50_raw.png",
+              "annotated_image_path": "images/PG-11_V0_t00027.50_annotated.png",
+              "rectified_image_path": "images/PG-11_V0_t00027.50_rectified.png",
+              "detail": "4.19 +/- 0.09 bar from 5/5 frames",
+              "decision": "ACCEPT",
+              "reason": "5 valid frames, sigma 0.093 <= 0.15",
+              "index": 1
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "t": 17.1,
+          "viewpoint": "V0 d=1.50 a=+0deg",
+          "event": "OBSERVATION #1",
+          "value": 4.1909,
+          "sigma": 0.0927,
+          "flags": [],
+          "decision": "ACCEPT",
+          "reason": "5 valid frames, sigma 0.093 <= 0.15"
+        }
+      ],
+      "result": {
+        "status": "ACCEPTED",
+        "value": 4.1909,
+        "sigma": 0.0927,
+        "ci95": [
+          4.005,
+          4.376
+        ],
+        "alarm": "NORMAL",
+        "viewpoint": "V0 d=1.50 a=+0deg",
+        "annotated_image_path": "images/PG-11_V0_t00027.50_annotated.png",
+        "reason": "5 valid frames, sigma 0.093 <= 0.15",
+        "observations": 1,
+        "viewpoints_used": 1,
+        "time_s": 17.2
+      }
+    },
+    {
+      "id": "PG-12",
+      "tag_id": 12,
+      "description": "Rack S2 - hydraulic accumulator",
+      "unit": "bar",
+      "mount": {
+        "x": -1.0,
+        "y": -3.99,
+        "normal_yaw": 1.5708
+      },
+      "alarm_low": 1.0,
+      "alarm_high": 8.0,
+      "candidates_feasible": [
+        {
+          "index": 0,
+          "label": "V0 d=1.50 a=+0deg",
+          "x": -1.0,
+          "y": -2.49,
+          "yaw": -1.5708,
+          "distance": 1.5,
+          "angle_deg": 0.0
+        },
+        {
+          "index": 1,
+          "label": "V1 d=1.50 a=-30deg",
+          "x": -0.25,
+          "y": -2.691,
+          "yaw": -2.0944,
+          "distance": 1.5,
+          "angle_deg": -30.0
+        },
+        {
+          "index": 2,
+          "label": "V2 d=1.50 a=+30deg",
+          "x": -1.75,
+          "y": -2.691,
+          "yaw": -1.0472,
+          "distance": 1.5,
+          "angle_deg": 30.0
+        },
+        {
+          "index": 3,
+          "label": "V3 d=1.50 a=-45deg",
+          "x": 0.061,
+          "y": -2.929,
+          "yaw": -2.3562,
+          "distance": 1.5,
+          "angle_deg": -45.0
+        },
+        {
+          "index": 4,
+          "label": "V4 d=1.50 a=+45deg",
+          "x": -2.061,
+          "y": -2.929,
+          "yaw": -0.7854,
+          "distance": 1.5,
+          "angle_deg": 45.0
+        },
+        {
+          "index": 5,
+          "label": "V5 d=1.20 a=+0deg",
+          "x": -1.0,
+          "y": -2.79,
+          "yaw": -1.5708,
+          "distance": 1.2,
+          "angle_deg": 0.0
+        },
+        {
+          "index": 6,
+          "label": "V6 d=1.20 a=-30deg",
+          "x": -0.4,
+          "y": -2.951,
+          "yaw": -2.0944,
+          "distance": 1.2,
+          "angle_deg": -30.0
+        },
+        {
+          "index": 7,
+          "label": "V7 d=1.20 a=+30deg",
+          "x": -1.6,
+          "y": -2.951,
+          "yaw": -1.0472,
+          "distance": 1.2,
+          "angle_deg": 30.0
+        },
+        {
+          "index": 8,
+          "label": "V8 d=1.20 a=-45deg",
+          "x": -0.151,
+          "y": -3.141,
+          "yaw": -2.3562,
+          "distance": 1.2,
+          "angle_deg": -45.0
+        },
+        {
+          "index": 9,
+          "label": "V9 d=1.20 a=+45deg",
+          "x": -1.849,
+          "y": -3.141,
+          "yaw": -0.7854,
+          "distance": 1.2,
+          "angle_deg": 45.0
+        },
+        {
+          "index": 10,
+          "label": "V10 d=1.90 a=+0deg",
+          "x": -1.0,
+          "y": -2.09,
+          "yaw": -1.5708,
+          "distance": 1.9,
+          "angle_deg": 0.0
+        },
+        {
+          "index": 11,
+          "label": "V11 d=1.90 a=-30deg",
+          "x": -0.05,
+          "y": -2.345,
+          "yaw": -2.0944,
+          "distance": 1.9,
+          "angle_deg": -30.0
+        },
+        {
+          "index": 12,
+          "label": "V12 d=1.90 a=+30deg",
+          "x": -1.95,
+          "y": -2.345,
+          "yaw": -1.0472,
+          "distance": 1.9,
+          "angle_deg": 30.0
+        },
+        {
+          "index": 13,
+          "label": "V13 d=1.90 a=-45deg",
+          "x": 0.343,
+          "y": -2.646,
+          "yaw": -2.3562,
+          "distance": 1.9,
+          "angle_deg": -45.0
+        },
+        {
+          "index": 14,
+          "label": "V14 d=1.90 a=+45deg",
+          "x": -2.344,
+          "y": -2.647,
+          "yaw": -0.7854,
+          "distance": 1.9,
+          "angle_deg": 45.0
+        }
+      ],
+      "candidates_rejected": [],
+      "viewpoints": [
+        {
+          "viewpoint": {
+            "index": 0,
+            "label": "V0 d=1.50 a=+0deg",
+            "x": -1.0,
+            "y": -2.49,
+            "yaw": -1.5708,
+            "distance": 1.5,
+            "angle_deg": 0.0
+          },
+          "navigation": {
+            "outcome": "SUCCEEDED",
+            "attempts": [
+              {
+                "result": "SUCCEEDED",
+                "duration_s": 28.06,
+                "recoveries": 0,
+                "attempt": 1
+              }
+            ],
+            "total_time_s": 28.06,
+            "final_pose": {
+              "x": -1.047,
+              "y": -2.634,
+              "yaw": -1.388
+            },
+            "position_error_m": 0.151,
+            "yaw_error_rad": 0.183
+          },
+          "observations": [
+            {
+              "viewpoint": "V0 d=1.50 a=+0deg",
+              "stamp_s": 57.7,
+              "robot_pose": {
+                "x": -1.0513668884017857,
+                "y": -2.647363191199469,
+                "yaw": -1.4374932292631004
+              },
+              "has_value": false,
+              "value": null,
+              "sigma": null,
+              "unit": "bar",
+              "frames_requested": 5,
+              "frames_received": 5,
+              "frames_tag_detected": 0,
+              "frames_valid": 0,
+              "frame_values": [],
+              "frame_spread": 0.0,
+              "needle_confidence": 0.0,
+              "dial_visibility": 0.0,
+              "view_angle_deg": null,
+              "distance_m": null,
+              "dial_radius_px": 0.0,
+              "sharpness": 0.0,
+              "processing_time_ms": 176.7,
+              "quality_flags": [
+                "TAG_NOT_VISIBLE"
+              ],
+              "raw_image_path": "images/PG-12_V0_t00057.30_raw.png",
+              "annotated_image_path": "images/PG-12_V0_t00057.30_annotated.png",
+              "rectified_image_path": "",
+              "detail": "no reading: TAG_NOT_VISIBLE",
+              "decision": "RETRY_SAME",
+              "reason": "possibly transient (TAG_NOT_VISIBLE): observe again from the same pose",
+              "index": 1
+            },
+            {
+              "viewpoint": "V0 d=1.50 a=+0deg",
+              "stamp_s": 60.2,
+              "robot_pose": {
+                "x": -1.0513668884017875,
+                "y": -2.647363191199469,
+                "yaw": -1.4374932292631004
+              },
+              "has_value": false,
+              "value": null,
+              "sigma": null,
+              "unit": "bar",
+              "frames_requested": 5,
+              "frames_received": 5,
+              "frames_tag_detected": 0,
+              "frames_valid": 0,
+              "frame_values": [],
+              "frame_spread": 0.0,
+              "needle_confidence": 0.0,
+              "dial_visibility": 0.0,
+              "view_angle_deg": null,
+              "distance_m": null,
+              "dial_radius_px": 0.0,
+              "sharpness": 0.0,
+              "processing_time_ms": 112.9,
+              "quality_flags": [
+                "TAG_NOT_VISIBLE"
+              ],
+              "raw_image_path": "images/PG-12_V0_t00059.70_raw.png",
+              "annotated_image_path": "images/PG-12_V0_t00059.70_annotated.png",
+              "rectified_image_path": "",
+              "detail": "no reading: TAG_NOT_VISIBLE",
+              "decision": "MOVE_NEW",
+              "reason": "TAG_NOT_VISIBLE persisted after 1 retry(ies)",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "viewpoint": {
+            "index": 3,
+            "label": "V3 d=1.50 a=-45deg",
+            "x": 0.061,
+            "y": -2.929,
+            "yaw": -2.3562,
+            "distance": 1.5,
+            "angle_deg": -45.0
+          },
+          "navigation": {
+            "outcome": "SUCCEEDED",
+            "attempts": [
+              {
+                "result": "SUCCEEDED",
+                "duration_s": 10.48,
+                "recoveries": 0,
+                "attempt": 1
+              }
+            ],
+            "total_time_s": 10.48,
+            "final_pose": {
+              "x": 0.008,
+              "y": -2.978,
+              "yaw": -2.218
+            },
+            "position_error_m": 0.071,
+            "yaw_error_rad": 0.138
+          },
+          "observations": [
+            {
+              "viewpoint": "V3 d=1.50 a=-45deg",
+              "stamp_s": 72.3,
+              "robot_pose": {
+                "x": -0.014992691458571628,
+                "y": -3.0139434955045368,
+                "yaw": -2.277226040692708
+              },
+              "has_value": true,
+              "value": 6.8089,
+              "sigma": 0.1672,
+              "unit": "bar",
+              "frames_requested": 5,
+              "frames_received": 5,
+              "frames_tag_detected": 5,
+              "frames_valid": 5,
+              "frame_values": [
+                6.8089,
+                6.8089,
+                6.8089,
+                6.8089,
+                6.8091
+              ],
+              "frame_spread": 0.0,
+              "needle_confidence": 0.956,
+              "dial_visibility": 0.997,
+              "view_angle_deg": 48.2,
+              "distance_m": 1.409,
+              "dial_radius_px": 55.3,
+              "sharpness": 1112.3,
+              "processing_time_ms": 1152.0,
+              "quality_flags": [],
+              "raw_image_path": "images/PG-12_V3_t00072.30_raw.png",
+              "annotated_image_path": "images/PG-12_V3_t00072.30_annotated.png",
+              "rectified_image_path": "images/PG-12_V3_t00072.30_rectified.png",
+              "detail": "6.81 +/- 0.17 bar from 5/5 frames",
+              "decision": "MOVE_NEW",
+              "reason": "viewpoint-dependent problem (HIGH_UNCERTAINTY)",
+              "index": 3
+            }
+          ]
+        },
+        {
+          "viewpoint": {
+            "index": 5,
+            "label": "V5 d=1.20 a=+0deg",
+            "x": -1.0,
+            "y": -2.79,
+            "yaw": -1.5708,
+            "distance": 1.2,
+            "angle_deg": 0.0
+          },
+          "navigation": {
+            "outcome": "SUCCEEDED",
+            "attempts": [
+              {
+                "result": "SUCCEEDED",
+                "duration_s": 10.05,
+                "recoveries": 0,
+                "attempt": 1
+              }
+            ],
+            "total_time_s": 10.05,
+            "final_pose": {
+              "x": -1.054,
+              "y": -2.843,
+              "yaw": -1.756
+            },
+            "position_error_m": 0.076,
+            "yaw_error_rad": 0.185
+          },
+          "observations": [
+            {
+              "viewpoint": "V5 d=1.20 a=+0deg",
+              "stamp_s": 85.0,
+              "robot_pose": {
+                "x": -1.0342125767688728,
+                "y": -2.8310027970126255,
+                "yaw": -1.6671991049971957
+              },
+              "has_value": false,
+              "value": null,
+              "sigma": null,
+              "unit": "bar",
+              "frames_requested": 5,
+              "frames_received": 5,
+              "frames_tag_detected": 0,
+              "frames_valid": 0,
+              "frame_values": [],
+              "frame_spread": 0.0,
+              "needle_confidence": 0.0,
+              "dial_visibility": 0.0,
+              "view_angle_deg": null,
+              "distance_m": null,
+              "dial_radius_px": 0.0,
+              "sharpness": 0.0,
+              "processing_time_ms": 92.1,
+              "quality_flags": [
+                "TAG_NOT_VISIBLE"
+              ],
+              "raw_image_path": "images/PG-12_V5_t00084.40_raw.png",
+              "annotated_image_path": "images/PG-12_V5_t00084.40_annotated.png",
+              "rectified_image_path": "",
+              "detail": "no reading: TAG_NOT_VISIBLE",
+              "decision": "RETRY_SAME",
+              "reason": "possibly transient (TAG_NOT_VISIBLE): observe again from the same pose",
+              "index": 4
+            },
+            {
+              "viewpoint": "V5 d=1.20 a=+0deg",
+              "stamp_s": 87.4,
+              "robot_pose": {
+                "x": -1.0342125767688728,
+                "y": -2.8310027970126255,
+                "yaw": -1.6671991049971957
+              },
+              "has_value": false,
+              "value": null,
+              "sigma": null,
+              "unit": "bar",
+              "frames_requested": 5,
+              "frames_received": 5,
+              "frames_tag_detected": 0,
+              "frames_valid": 0,
+              "frame_values": [],
+              "frame_spread": 0.0,
+              "needle_confidence": 0.0,
+              "dial_visibility": 0.0,
+              "view_angle_deg": null,
+              "distance_m": null,
+              "dial_radius_px": 0.0,
+              "sharpness": 0.0,
+              "processing_time_ms": 121.6,
+              "quality_flags": [
+                "TAG_NOT_VISIBLE"
+              ],
+              "raw_image_path": "images/PG-12_V5_t00086.90_raw.png",
+              "annotated_image_path": "images/PG-12_V5_t00086.90_annotated.png",
+              "rectified_image_path": "",
+              "detail": "no reading: TAG_NOT_VISIBLE",
+              "decision": "UNRESOLVED",
+              "reason": "TAG_NOT_VISIBLE persisted and no viewpoint/observation budget left",
+              "index": 5
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "t": 29.5,
+          "viewpoint": "V0 d=1.50 a=+0deg",
+          "event": "OBSERVATION #1",
+          "value": null,
+          "sigma": null,
+          "flags": [
+            "TAG_NOT_VISIBLE"
+          ],
+          "decision": "RETRY_SAME",
+          "reason": "possibly transient (TAG_NOT_VISIBLE): observe again from the same pose"
+        },
+        {
+          "t": 32.0,
+          "viewpoint": "V0 d=1.50 a=+0deg",
+          "event": "OBSERVATION #2",
+          "value": null,
+          "sigma": null,
+          "flags": [
+            "TAG_NOT_VISIBLE"
+          ],
+          "decision": "MOVE_NEW",
+          "reason": "TAG_NOT_VISIBLE persisted after 1 retry(ies)",
+          "hint": "different_side"
+        },
+        {
+          "t": 45.1,
+          "viewpoint": "V3 d=1.50 a=-45deg",
+          "event": "OBSERVATION #3",
+          "value": 6.8089,
+          "sigma": 0.1672,
+          "flags": [],
+          "decision": "MOVE_NEW",
+          "reason": "viewpoint-dependent problem (HIGH_UNCERTAINTY)",
+          "hint": "closer"
+        },
+        {
+          "t": 56.7,
+          "viewpoint": "V5 d=1.20 a=+0deg",
+          "event": "OBSERVATION #4",
+          "value": null,
+          "sigma": null,
+          "flags": [
+            "TAG_NOT_VISIBLE"
+          ],
+          "decision": "RETRY_SAME",
+          "reason": "possibly transient (TAG_NOT_VISIBLE): observe again from the same pose"
+        },
+        {
+          "t": 59.3,
+          "viewpoint": "V5 d=1.20 a=+0deg",
+          "event": "OBSERVATION #5",
+          "value": null,
+          "sigma": null,
+          "flags": [
+            "TAG_NOT_VISIBLE"
+          ],
+          "decision": "UNRESOLVED",
+          "reason": "TAG_NOT_VISIBLE persisted and no viewpoint/observation budget left"
+        }
+      ],
+      "result": {
+        "status": "UNRESOLVED",
+        "reason": "TAG_NOT_VISIBLE persisted and no viewpoint/observation budget left",
+        "observations": 5,
+        "viewpoints_used": 3,
+        "time_s": 59.4
+      }
+    },
+    {
+      "id": "PG-13",
+      "tag_id": 13,
+      "description": "Rack N3 - sprinkler riser",
+      "unit": "bar",
+      "mount": {
+        "x": 5.0,
+        "y": 3.99,
+        "normal_yaw": -1.5708
+      },
+      "alarm_low": 1.0,
+      "alarm_high": 8.0,
+      "candidates_feasible": [
+        {
+          "index": 0,
+          "label": "V0 d=1.50 a=+0deg",
+          "x": 5.0,
+          "y": 2.49,
+          "yaw": 1.5708,
+          "distance": 1.5,
+          "angle_deg": 0.0
+        },
+        {
+          "index": 1,
+          "label": "V1 d=1.50 a=-30deg",
+          "x": 4.25,
+          "y": 2.691,
+          "yaw": 1.0472,
+          "distance": 1.5,
+          "angle_deg": -30.0
+        },
+        {
+          "index": 2,
+          "label": "V2 d=1.50 a=+30deg",
+          "x": 5.75,
+          "y": 2.691,
+          "yaw": 2.0944,
+          "distance": 1.5,
+          "angle_deg": 30.0
+        },
+        {
+          "index": 10,
+          "label": "V10 d=1.90 a=+0deg",
+          "x": 5.0,
+          "y": 2.09,
+          "yaw": 1.5708,
+          "distance": 1.9,
+          "angle_deg": 0.0
+        },
+        {
+          "index": 11,
+          "label": "V11 d=1.90 a=-30deg",
+          "x": 4.05,
+          "y": 2.345,
+          "yaw": 1.0472,
+          "distance": 1.9,
+          "angle_deg": -30.0
+        },
+        {
+          "index": 12,
+          "label": "V12 d=1.90 a=+30deg",
+          "x": 5.95,
+          "y": 2.345,
+          "yaw": 2.0944,
+          "distance": 1.9,
+          "angle_deg": 30.0
+        },
+        {
+          "index": 13,
+          "label": "V13 d=1.90 a=-45deg",
+          "x": 3.656,
+          "y": 2.647,
+          "yaw": 0.7854,
+          "distance": 1.9,
+          "angle_deg": -45.0
+        },
+        {
+          "index": 14,
+          "label": "V14 d=1.90 a=+45deg",
+          "x": 6.343,
+          "y": 2.646,
+          "yaw": 2.3562,
+          "distance": 1.9,
+          "angle_deg": 45.0
+        }
+      ],
+      "candidates_rejected": [
+        {
+          "index": 3,
+          "label": "V3 d=1.50 a=-45deg",
+          "x": 3.939,
+          "y": 2.929,
+          "yaw": 0.7854,
+          "distance": 1.5,
+          "angle_deg": -45.0
+        },
+        {
+          "index": 4,
+          "label": "V4 d=1.50 a=+45deg",
+          "x": 6.061,
+          "y": 2.929,
+          "yaw": 2.3562,
+          "distance": 1.5,
+          "angle_deg": 45.0
+        },
+        {
+          "index": 5,
+          "label": "V5 d=1.20 a=+0deg",
+          "x": 5.0,
+          "y": 2.79,
+          "yaw": 1.5708,
+          "distance": 1.2,
+          "angle_deg": 0.0
+        },
+        {
+          "index": 6,
+          "label": "V6 d=1.20 a=-30deg",
+          "x": 4.4,
+          "y": 2.951,
+          "yaw": 1.0472,
+          "distance": 1.2,
+          "angle_deg": -30.0
+        },
+        {
+          "index": 7,
+          "label": "V7 d=1.20 a=+30deg",
+          "x": 5.6,
+          "y": 2.951,
+          "yaw": 2.0944,
+          "distance": 1.2,
+          "angle_deg": 30.0
+        },
+        {
+          "index": 8,
+          "label": "V8 d=1.20 a=-45deg",
+          "x": 4.151,
+          "y": 3.141,
+          "yaw": 0.7854,
+          "distance": 1.2,
+          "angle_deg": -45.0
+        },
+        {
+          "index": 9,
+          "label": "V9 d=1.20 a=+45deg",
+          "x": 5.849,
+          "y": 3.141,
+          "yaw": 2.3562,
+          "distance": 1.2,
+          "angle_deg": 45.0
+        }
+      ],
+      "viewpoints": [
+        {
+          "viewpoint": {
+            "index": 0,
+            "label": "V0 d=1.50 a=+0deg",
+            "x": 5.0,
+            "y": 2.49,
+            "yaw": 1.5708,
+            "distance": 1.5,
+            "angle_deg": 0.0
+          },
+          "navigation": {
+            "outcome": "SUCCEEDED",
+            "attempts": [
+              {
+                "result": "SUCCEEDED",
+                "duration_s": 29.63,
+                "recoveries": 0,
+                "attempt": 1
+              }
+            ],
+            "total_time_s": 29.63,
+            "final_pose": {
+              "x": 5.03,
+              "y": 2.587,
+              "yaw": 1.428
+            },
+            "position_error_m": 0.101,
+            "yaw_error_rad": 0.143
+          },
+          "observations": [
+            {
+              "viewpoint": "V0 d=1.50 a=+0deg",
+              "stamp_s": 118.7,
+              "robot_pose": {
+                "x": 5.021450069412447,
+                "y": 2.5784309286363563,
+                "yaw": 1.4872780753357953
+              },
+              "has_value": false,
+              "value": null,
+              "sigma": null,
+              "unit": "bar",
+              "frames_requested": 5,
+              "frames_received": 5,
+              "frames_tag_detected": 0,
+              "frames_valid": 0,
+              "frame_values": [],
+              "frame_spread": 0.0,
+              "needle_confidence": 0.0,
+              "dial_visibility": 0.0,
+              "view_angle_deg": null,
+              "distance_m": null,
+              "dial_radius_px": 0.0,
+              "sharpness": 0.0,
+              "processing_time_ms": 92.3,
+              "quality_flags": [
+                "TAG_NOT_VISIBLE"
+              ],
+              "raw_image_path": "images/PG-13_V0_t00118.20_raw.png",
+              "annotated_image_path": "images/PG-13_V0_t00118.20_annotated.png",
+              "rectified_image_path": "",
+              "detail": "no reading: TAG_NOT_VISIBLE",
+              "decision": "RETRY_SAME",
+              "reason": "possibly transient (TAG_NOT_VISIBLE): observe again from the same pose",
+              "index": 1
+            },
+            {
+              "viewpoint": "V0 d=1.50 a=+0deg",
+              "stamp_s": 121.1,
+              "robot_pose": {
+                "x": 5.021450069412447,
+                "y": 2.5784309286363563,
+                "yaw": 1.4872780753357953
+              },
+              "has_value": false,
+              "value": null,
+              "sigma": null,
+              "unit": "bar",
+              "frames_requested": 5,
+              "frames_received": 5,
+              "frames_tag_detected": 0,
+              "frames_valid": 0,
+              "frame_values": [],
+              "frame_spread": 0.0,
+              "needle_confidence": 0.0,
+              "dial_visibility": 0.0,
+              "view_angle_deg": null,
+              "distance_m": null,
+              "dial_radius_px": 0.0,
+              "sharpness": 0.0,
+              "processing_time_ms": 249.0,
+              "quality_flags": [
+                "TAG_NOT_VISIBLE"
+              ],
+              "raw_image_path": "images/PG-13_V0_t00120.70_raw.png",
+              "annotated_image_path": "images/PG-13_V0_t00120.70_annotated.png",
+              "rectified_image_path": "",
+              "detail": "no reading: TAG_NOT_VISIBLE",
+              "decision": "MOVE_NEW",
+              "reason": "TAG_NOT_VISIBLE persisted after 1 retry(ies)",
+              "index": 2
+            }
+          ]
+        },
+        {
+          "viewpoint": {
+            "index": 1,
+            "label": "V1 d=1.50 a=-30deg",
+            "x": 4.25,
+            "y": 2.691,
+            "yaw": 1.0472,
+            "distance": 1.5,
+            "angle_deg": -30.0
+          },
+          "navigation": {
+            "outcome": "SUCCEEDED",
+            "attempts": [
+              {
+                "result": "SUCCEEDED",
+                "duration_s": 10.3,
+                "recoveries": 0,
+                "attempt": 1
+              }
+            ],
+            "total_time_s": 10.3,
+            "final_pose": {
+              "x": 4.316,
+              "y": 2.656,
+              "yaw": 1.209
+            },
+            "position_error_m": 0.075,
+            "yaw_error_rad": 0.162
+          },
+          "observations": [
+            {
+              "viewpoint": "V1 d=1.50 a=-30deg",
+              "stamp_s": 133.5,
+              "robot_pose": {
+                "x": 4.307591080557781,
+                "y": 2.6728926239355637,
+                "yaw": 1.1039311593802315
+              },
+              "has_value": false,
+              "value": null,
+              "sigma": null,
+              "unit": "bar",
+              "frames_requested": 5,
+              "frames_received": 5,
+              "frames_tag_detected": 0,
+              "frames_valid": 0,
+              "frame_values": [],
+              "frame_spread": 0.0,
+              "needle_confidence": 0.0,
+              "dial_visibility": 0.0,
+              "view_angle_deg": null,
+              "distance_m": null,
+              "dial_radius_px": 0.0,
+              "sharpness": 0.0,
+              "processing_time_ms": 53.3,
+              "quality_flags": [
+                "TAG_NOT_VISIBLE"
+              ],
+              "raw_image_path": "images/PG-13_V1_t00132.50_raw.png",
+              "annotated_image_path": "images/PG-13_V1_t00132.50_annotated.png",
+              "rectified_image_path": "",
+              "detail": "no reading: TAG_NOT_VISIBLE",
+              "decision": "RETRY_SAME",
+              "reason": "possibly transient (TAG_NOT_VISIBLE): observe again from the same pose",
+              "index": 3
+            },
+            {
+              "viewpoint": "V1 d=1.50 a=-30deg",
+              "stamp_s": 136.0,
+              "robot_pose": {
+                "x": 4.307591080557781,
+                "y": 2.6728926239355637,
+                "yaw": 1.1039311593802315
+              },
+              "has_value": false,
+              "value": null,
+              "sigma": null,
+              "unit": "bar",
+              "frames_requested": 5,
+              "frames_received": 5,
+              "frames_tag_detected": 0,
+              "frames_valid": 0,
+              "frame_values": [],
+              "frame_spread": 0.0,
+              "needle_confidence": 0.0,
+              "dial_visibility": 0.0,
+              "view_angle_deg": null,
+              "distance_m": null,
+              "dial_radius_px": 0.0,
+              "sharpness": 0.0,
+              "processing_time_ms": 87.2,
+              "quality_flags": [
+                "TAG_NOT_VISIBLE"
+              ],
+              "raw_image_path": "images/PG-13_V1_t00135.30_raw.png",
+              "annotated_image_path": "images/PG-13_V1_t00135.30_annotated.png",
+              "rectified_image_path": "",
+              "detail": "no reading: TAG_NOT_VISIBLE",
+              "decision": "MOVE_NEW",
+              "reason": "TAG_NOT_VISIBLE persisted after 1 retry(ies)",
+              "index": 4
+            }
+          ]
+        },
+        {
+          "viewpoint": {
+            "index": 2,
+            "label": "V2 d=1.50 a=+30deg",
+            "x": 5.75,
+            "y": 2.691,
+            "yaw": 2.0944,
+            "distance": 1.5,
+            "angle_deg": 30.0
+          },
+          "navigation": {
+            "outcome": "SUCCEEDED",
+            "attempts": [
+              {
+                "result": "SUCCEEDED",
+                "duration_s": 11.53,
+                "recoveries": 0,
+                "attempt": 1
+              }
+            ],
+            "total_time_s": 11.53,
+            "final_pose": {
+              "x": 5.711,
+              "y": 2.687,
+              "yaw": 1.955
+            },
+            "position_error_m": 0.04,
+            "yaw_error_rad": 0.14
+          },
+          "observations": [
+            {
+              "viewpoint": "V2 d=1.50 a=+30deg",
+              "stamp_s": 149.1,
+              "robot_pose": {
+                "x": 5.713407324959846,
+                "y": 2.7092754411293427,
+                "yaw": 2.045008160575149
+              },
+              "has_value": false,
+              "value": null,
+              "sigma": null,
+              "unit": "bar",
+              "frames_requested": 5,
+              "frames_received": 5,
+              "frames_tag_detected": 0,
+              "frames_valid": 0,
+              "frame_values": [],
+              "frame_spread": 0.0,
+              "needle_confidence": 0.0,
+              "dial_visibility": 0.0,
+              "view_angle_deg": null,
+              "distance_m": null,
+              "dial_radius_px": 0.0,
+              "sharpness": 0.0,
+              "processing_time_ms": 119.4,
+              "quality_flags": [
+                "TAG_NOT_VISIBLE"
+              ],
+              "raw_image_path": "images/PG-13_V2_t00148.60_raw.png",
+              "annotated_image_path": "images/PG-13_V2_t00148.60_annotated.png",
+              "rectified_image_path": "",
+              "detail": "no reading: TAG_NOT_VISIBLE",
+              "decision": "RETRY_SAME",
+              "reason": "possibly transient (TAG_NOT_VISIBLE): observe again from the same pose",
+              "index": 5
+            },
+            {
+              "viewpoint": "V2 d=1.50 a=+30deg",
+              "stamp_s": 151.9,
+              "robot_pose": {
+                "x": 5.713407324959846,
+                "y": 2.7092754411293427,
+                "yaw": 2.045008160575149
+              },
+              "has_value": false,
+              "value": null,
+              "sigma": null,
+              "unit": "bar",
+              "frames_requested": 5,
+              "frames_received": 5,
+              "frames_tag_detected": 0,
+              "frames_valid": 0,
+              "frame_values": [],
+              "frame_spread": 0.0,
+              "needle_confidence": 0.0,
+              "dial_visibility": 0.0,
+              "view_angle_deg": null,
+              "distance_m": null,
+              "dial_radius_px": 0.0,
+              "sharpness": 0.0,
+              "processing_time_ms": 138.5,
+              "quality_flags": [
+                "TAG_NOT_VISIBLE"
+              ],
+              "raw_image_path": "images/PG-13_V2_t00151.30_raw.png",
+              "annotated_image_path": "images/PG-13_V2_t00151.30_annotated.png",
+              "rectified_image_path": "",
+              "detail": "no reading: TAG_NOT_VISIBLE",
+              "decision": "UNRESOLVED",
+              "reason": "TAG_NOT_VISIBLE persisted and no viewpoint/observation budget left",
+              "index": 6
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "t": 31.1,
+          "viewpoint": "V0 d=1.50 a=+0deg",
+          "event": "OBSERVATION #1",
+          "value": null,
+          "sigma": null,
+          "flags": [
+            "TAG_NOT_VISIBLE"
+          ],
+          "decision": "RETRY_SAME",
+          "reason": "possibly transient (TAG_NOT_VISIBLE): observe again from the same pose"
+        },
+        {
+          "t": 33.7,
+          "viewpoint": "V0 d=1.50 a=+0deg",
+          "event": "OBSERVATION #2",
+          "value": null,
+          "sigma": null,
+          "flags": [
+            "TAG_NOT_VISIBLE"
+          ],
+          "decision": "MOVE_NEW",
+          "reason": "TAG_NOT_VISIBLE persisted after 1 retry(ies)",
+          "hint": "different_side"
+        },
+        {
+          "t": 45.8,
+          "viewpoint": "V1 d=1.50 a=-30deg",
+          "event": "OBSERVATION #3",
+          "value": null,
+          "sigma": null,
+          "flags": [
+            "TAG_NOT_VISIBLE"
+          ],
+          "decision": "RETRY_SAME",
+          "reason": "possibly transient (TAG_NOT_VISIBLE): observe again from the same pose"
+        },
+        {
+          "t": 48.4,
+          "viewpoint": "V1 d=1.50 a=-30deg",
+          "event": "OBSERVATION #4",
+          "value": null,
+          "sigma": null,
+          "flags": [
+            "TAG_NOT_VISIBLE"
+          ],
+          "decision": "MOVE_NEW",
+          "reason": "TAG_NOT_VISIBLE persisted after 1 retry(ies)",
+          "hint": "different_side"
+        },
+        {
+          "t": 61.7,
+          "viewpoint": "V2 d=1.50 a=+30deg",
+          "event": "OBSERVATION #5",
+          "value": null,
+          "sigma": null,
+          "flags": [
+            "TAG_NOT_VISIBLE"
+          ],
+          "decision": "RETRY_SAME",
+          "reason": "possibly transient (TAG_NOT_VISIBLE): observe again from the same pose"
+        },
+        {
+          "t": 64.3,
+          "viewpoint": "V2 d=1.50 a=+30deg",
+          "event": "OBSERVATION #6",
+          "value": null,
+          "sigma": null,
+          "flags": [
+            "TAG_NOT_VISIBLE"
+          ],
+          "decision": "UNRESOLVED",
+          "reason": "TAG_NOT_VISIBLE persisted and no viewpoint/observation budget left"
+        }
+      ],
+      "result": {
+        "status": "UNRESOLVED",
+        "reason": "TAG_NOT_VISIBLE persisted and no viewpoint/observation budget left",
+        "observations": 6,
+        "viewpoints_used": 3,
+        "time_s": 64.3
+      }
+    },
+    {
+      "id": "PG-14",
+      "tag_id": 14,
+      "description": "East wall - boiler feed line",
+      "unit": "bar",
+      "mount": {
+        "x": 11.79,
+        "y": 0.0,
+        "normal_yaw": 3.1416
+      },
+      "alarm_low": 1.0,
+      "alarm_high": 8.0,
+      "candidates_feasible": [
+        {
+          "index": 0,
+          "label": "V0 d=1.50 a=+0deg",
+          "x": 10.29,
+          "y": -0.0,
+          "yaw": 0.0,
+          "distance": 1.5,
+          "angle_deg": 0.0
+        },
+        {
+          "index": 1,
+          "label": "V1 d=1.50 a=-30deg",
+          "x": 10.491,
+          "y": 0.75,
+          "yaw": -0.5236,
+          "distance": 1.5,
+          "angle_deg": -30.0
+        },
+        {
+          "index": 2,
+          "label": "V2 d=1.50 a=+30deg",
+          "x": 10.491,
+          "y": -0.75,
+          "yaw": 0.5236,
+          "distance": 1.5,
+          "angle_deg": 30.0
+        },
+        {
+          "index": 3,
+          "label": "V3 d=1.50 a=-45deg",
+          "x": 10.729,
+          "y": 1.061,
+          "yaw": -0.7854,
+          "distance": 1.5,
+          "angle_deg": -45.0
+        },
+        {
+          "index": 4,
+          "label": "V4 d=1.50 a=+45deg",
+          "x": 10.729,
+          "y": -1.061,
+          "yaw": 0.7854,
+          "distance": 1.5,
+          "angle_deg": 45.0
+        },
+        {
+          "index": 5,
+          "label": "V5 d=1.20 a=+0deg",
+          "x": 10.59,
+          "y": -0.0,
+          "yaw": 0.0,
+          "distance": 1.2,
+          "angle_deg": 0.0
+        },
+        {
+          "index": 6,
+          "label": "V6 d=1.20 a=-30deg",
+          "x": 10.751,
+          "y": 0.6,
+          "yaw": -0.5236,
+          "distance": 1.2,
+          "angle_deg": -30.0
+        },
+        {
+          "index": 7,
+          "label": "V7 d=1.20 a=+30deg",
+          "x": 10.751,
+          "y": -0.6,
+          "yaw": 0.5236,
+          "distance": 1.2,
+          "angle_deg": 30.0
+        },
+        {
+          "index": 8,
+          "label": "V8 d=1.20 a=-45deg",
+          "x": 10.941,
+          "y": 0.849,
+          "yaw": -0.7854,
+          "distance": 1.2,
+          "angle_deg": -45.0
+        },
+        {
+          "index": 9,
+          "label": "V9 d=1.20 a=+45deg",
+          "x": 10.941,
+          "y": -0.849,
+          "yaw": 0.7854,
+          "distance": 1.2,
+          "angle_deg": 45.0
+        },
+        {
+          "index": 10,
+          "label": "V10 d=1.90 a=+0deg",
+          "x": 9.89,
+          "y": -0.0,
+          "yaw": 0.0,
+          "distance": 1.9,
+          "angle_deg": 0.0
+        },
+        {
+          "index": 11,
+          "label": "V11 d=1.90 a=-30deg",
+          "x": 10.145,
+          "y": 0.95,
+          "yaw": -0.5236,
+          "distance": 1.9,
+          "angle_deg": -30.0
+        },
+        {
+          "index": 12,
+          "label": "V12 d=1.90 a=+30deg",
+          "x": 10.145,
+          "y": -0.95,
+          "yaw": 0.5236,
+          "distance": 1.9,
+          "angle_deg": 30.0
+        },
+        {
+          "index": 13,
+          "label": "V13 d=1.90 a=-45deg",
+          "x": 10.446,
+          "y": 1.343,
+          "yaw": -0.7854,
+          "distance": 1.9,
+          "angle_deg": -45.0
+        },
+        {
+          "index": 14,
+          "label": "V14 d=1.90 a=+45deg",
+          "x": 10.447,
+          "y": -1.344,
+          "yaw": 0.7854,
+          "distance": 1.9,
+          "angle_deg": 45.0
+        }
+      ],
+      "candidates_rejected": [],
+      "viewpoints": [
+        {
+          "viewpoint": {
+            "index": 0,
+            "label": "V0 d=1.50 a=+0deg",
+            "x": 10.29,
+            "y": -0.0,
+            "yaw": 0.0,
+            "distance": 1.5,
+            "angle_deg": 0.0
+          },
+          "navigation": {
+            "outcome": "SUCCEEDED",
+            "attempts": [
+              {
+                "result": "SUCCEEDED",
+                "duration_s": 20.87,
+                "recoveries": 0,
+                "attempt": 1
+              }
+            ],
+            "total_time_s": 20.87,
+            "final_pose": {
+              "x": 10.387,
+              "y": 0.051,
+              "yaw": -0.166
+            },
+            "position_error_m": 0.109,
+            "yaw_error_rad": 0.166
+          },
+          "observations": [
+            {
+              "viewpoint": "V0 d=1.50 a=+0deg",
+              "stamp_s": 174.2,
+              "robot_pose": {
+                "x": 10.380627679728521,
+                "y": 0.0547509401282551,
+                "yaw": -0.15613054494062048
+              },
+              "has_value": true,
+              "value": 8.6771,
+              "sigma": 0.094,
+              "unit": "bar",
+              "frames_requested": 5,
+              "frames_received": 5,
+              "frames_tag_detected": 5,
+              "frames_valid": 5,
+              "frame_values": [
+                8.6771,
+                8.6771,
+                8.6772,
+                8.6771,
+                8.6771
+              ],
+              "frame_spread": 0.0,
+              "needle_confidence": 0.95,
+              "dial_visibility": 0.99,
+              "view_angle_deg": 21.3,
+              "distance_m": 1.243,
+              "dial_radius_px": 73.0,
+              "sharpness": 1048.6,
+              "processing_time_ms": 1032.2,
+              "quality_flags": [],
+              "raw_image_path": "images/PG-14_V0_t00173.90_raw.png",
+              "annotated_image_path": "images/PG-14_V0_t00173.90_annotated.png",
+              "rectified_image_path": "images/PG-14_V0_t00173.90_rectified.png",
+              "detail": "8.68 +/- 0.09 bar from 5/5 frames",
+              "decision": "ACCEPT",
+              "reason": "5 valid frames, sigma 0.094 <= 0.15",
+              "index": 1
+            }
+          ]
+        }
+      ],
+      "timeline": [
+        {
+          "t": 23.1,
+          "viewpoint": "V0 d=1.50 a=+0deg",
+          "event": "OBSERVATION #1",
+          "value": 8.6771,
+          "sigma": 0.094,
+          "flags": [],
+          "decision": "ACCEPT",
+          "reason": "5 valid frames, sigma 0.094 <= 0.15"
+        }
+      ],
+      "result": {
+        "status": "ACCEPTED",
+        "value": 8.6771,
+        "sigma": 0.094,
+        "ci95": [
+          8.489,
+          8.865
+        ],
+        "alarm": "HIGH",
+        "viewpoint": "V0 d=1.50 a=+0deg",
+        "annotated_image_path": "images/PG-14_V0_t00173.90_annotated.png",
+        "reason": "5 valid frames, sigma 0.094 <= 0.15",
+        "observations": 1,
+        "viewpoints_used": 1,
+        "time_s": 23.1
+      }
+    }
+  ],
+  "home_return": {
+    "outcome": "SUCCEEDED",
+    "attempts": [
+      {
+        "result": "SUCCEEDED",
+        "duration_s": 64.03,
+        "recoveries": 0,
+        "attempt": 1
+      }
+    ],
+    "total_time_s": 64.03,
+    "final_pose": {
+      "x": -10.042,
+      "y": 0.054,
+      "yaw": 0.165
+    },
+    "position_error_m": 0.069,
+    "yaw_error_rad": 0.165
+  },
+  "duration_wall_s": 244.0,
+  "duration_sim_s": 228.2,
+  "health_events": [
+    {
+      "t": 16.0,
+      "name": "inspectloop/stream/camera/image_raw",
+      "level": "WARN",
+      "message": "DEGRADED"
+    },
+    {
+      "t": 17.01,
+      "name": "inspectloop/stream/camera/image_raw",
+      "level": "OK",
+      "message": "OK"
+    },
+    {
+      "t": 42.0,
+      "name": "inspectloop/stream/camera/image_raw",
+      "level": "WARN",
+      "message": "DEGRADED"
+    },
+    {
+      "t": 43.0,
+      "name": "inspectloop/stream/camera/image_raw",
+      "level": "OK",
+      "message": "OK"
+    },
+    {
+      "t": 179.02,
+      "name": "inspectloop/stream/camera/image_raw",
+      "level": "WARN",
+      "message": "DEGRADED"
+    },
+    {
+      "t": 180.0,
+      "name": "inspectloop/stream/camera/image_raw",
+      "level": "OK",
+      "message": "OK"
+    }
+  ]
+}
