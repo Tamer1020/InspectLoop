@@ -1,0 +1,18 @@
+gauge_reader:
+  ros__parameters:
+    use_sim_time: true
+    image_topic: /camera/image_raw
+    camera_info_topic: /camera/camera_info
+    settle_time_s: 0.5          # frames must be stamped >= request + settle (robot at rest)
+    num_frames: 5               # burst size per observation
+    frame_timeout_s: 5.0        # sim seconds to collect the burst
+    wall_timeout_factor: 3.0    # wall-clock backstop if /clock stops
+    # quality thresholds -> quality_flags (consumed by the mission decision policy)
+    min_valid_frames: 3
+    min_visibility: 0.85        # fraction of dial face unobstructed
+    max_view_angle_deg: 55.0
+    min_dial_radius_px: 28.0
+    min_needle_confidence: 0.35
+    max_frame_spread: 0.20      # bar
+    min_sharpness: 15.0
+    sigma_floor: 0.03           # bar, calibration floor of the uncertainty model

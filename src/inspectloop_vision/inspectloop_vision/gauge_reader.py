@@ -1,0 +1,500 @@
+"""Analog gauge reading with explicit uncertainty (ROS independent, unit tested).
+
+Per frame
+---------
+1. Detect the ArUco tag (DICT_4X4_50) that identifies the gauge panel.
+2. Homography  H : panel-texture pixels -> image pixels  from the 4 tag corners
+   (the tag and dial are printed on the same rigid plane).
+3. Rectify the image into the canonical, fronto-parallel panel frame (500 x 600 px).
+   Pixels that fall outside the camera image are tracked with a validity mask.
+4. Needle angle: for every candidate angle in the scale sweep, average the *darkness*
+   along a ray between 0.15 R and 0.52 R (inside the numerals, outside the hub). The needle
+   is the dominant dark ray; sub-degree accuracy by parabolic peak interpolation.
+5. Quality evidence
+   * needle_confidence: peak prominence over the median ray, penalised by the
+     strongest competing peak > 12 deg away (occluders and shadows create competitors);
+   * dial_visibility: fraction of the dial face annulus that looks like the white face
+     (bright, unsaturated, inside the image) - occluders lower it;
+   * view angle / distance from solvePnP on the tag (needs camera intrinsics);
+   * apparent dial radius in image pixels (resolution) and Laplacian sharpness.
+
+Per observation (a burst of frames from one viewpoint)
+------------------------------------------------------
+`fuse()` takes the median of the valid frame readings and estimates a 1-sigma uncertainty
+
+    sigma^2 = (1.25 * spread / sqrt(n))^2 + sigma_res^2 + sigma_floor^2
+
+  spread      robust frame-to-frame spread (1.4826 * MAD)  -> random error
+  sigma_res   value change for a 0.5 px needle displacement at 0.35 R measured along the
+              foreshortened (minor) axis of the projected dial -> resolution / obliqueness
+  sigma_floor calibration floor (0.03 bar)
+
+and raises quality flags (OCCLUDED, OBLIQUE_VIEW, TOO_FAR, ...). The flags and sigma feed the
+mission's decision policy (ACCEPT / RETRY_SAME / MOVE_NEW / UNRESOLVED). This sigma model is a
+documented heuristic; docs/TEST_RESULTS.md compares it with the simulator ground truth.
+
+Texture constants mirror inspectloop_gazebo/scripts/generate_warehouse.py (checked by tests).
+"""
+from dataclasses import dataclass, field
+import math
+import time
+import warnings
+from typing import Dict, List, Optional, Sequence
+
+import cv2
+import numpy as np
+
+# ---------------------------------------------------------------- panel geometry
+TEX_W, TEX_H = 500, 680
+MARKER_BOX = (160, 40, 340, 220)
+QUIET = 30
+DIAL_CENTER = (250.0, 465.0)
+DIAL_R = 190.0
+PX_TO_M = 0.0008                      # 0.40 m x 0.544 m panel / 500 x 680 px
+TAG_SIZE_M = (MARKER_BOX[2] - MARKER_BOX[0]) * PX_TO_M
+ANGLE_MIN_DEG, ANGLE_MAX_DEG = -135.0, 135.0
+VALUE_MIN, VALUE_MAX = 0.0, 10.0
+UNIT = 'bar'
+VALUE_PER_DEG = (VALUE_MAX - VALUE_MIN) / (ANGLE_MAX_DEG - ANGLE_MIN_DEG)
+
+# ---------------------------------------------------------------- algorithm constants
+RAY_R0, RAY_R1, RAY_SAMPLES = 0.15, 0.52, 16
+SWEEP_MARGIN_DEG = 5.0
+ANGLE_STEP_DEG = 0.5
+COMPETITOR_EXCLUSION_DEG = 12.0
+MIN_RAY_VALID_FRACTION = 0.6
+VIS_R0, VIS_R1 = 0.15, 0.52
+VIS_EXCLUDE = [(150.0, 210.0)]        # 'bar' caption below the hub (degrees, clockwise from up)
+FRAME_MIN_CONFIDENCE = 0.20           # below: the frame does not produce a reading
+# Needle localisation accuracy in image pixels (perpendicular to the needle) used by the
+# resolution term of sigma. Averaging 16 ray samples per angle gives sub-pixel localisation;
+# the value is calibrated against ground truth in test_sigma_is_calibrated_on_synthetic_views.
+NEEDLE_LOCALISATION_PX = 0.5
+
+FLAGS = ('NO_IMAGE', 'TAG_NOT_VISIBLE', 'TAG_INTERMITTENT', 'OCCLUDED', 'OBLIQUE_VIEW', 'TOO_FAR',
+         'LOW_NEEDLE_CONTRAST', 'INCONSISTENT_FRAMES', 'BLURRED', 'OUT_OF_SCALE')
+
+
+@dataclass
+class FuseParams:
+    min_valid_frames: int = 3
+    min_visibility: float = 0.85
+    max_view_angle_deg: float = 55.0
+    min_dial_radius_px: float = 28.0
+    min_needle_confidence: float = 0.35
+    max_frame_spread: float = 0.20
+    min_sharpness: float = 15.0
+    sigma_floor: float = 0.03
+
+
+@dataclass
+class FrameReading:
+    tag_found: bool = False
+    value: Optional[float] = None
+    angle_deg: Optional[float] = None
+    needle_confidence: float = 0.0
+    dial_visibility: float = 0.0
+    view_angle_deg: Optional[float] = None
+    distance_m: Optional[float] = None
+    dial_radius_px: float = 0.0
+    dial_radius_minor_px: float = 0.0
+    sharpness: float = 0.0
+    tag_corners: Optional[np.ndarray] = None
+    homography: Optional[np.ndarray] = None
+    detected_ids: List[int] = field(default_factory=list)
+    profile: Optional[np.ndarray] = None
+    dial_center_tex: Optional[tuple] = None
+    center_refined: bool = False
+    detail: str = ''
+
+    @property
+    def valid(self) -> bool:
+        return self.value is not None and self.needle_confidence >= FRAME_MIN_CONFIDENCE
+
+
+@dataclass
+class Observation:
+    has_value: bool
+    value: float
+    sigma: float
+    flags: List[str]
+    frames_requested: int
+    frames_received: int
+    frames_tag_detected: int
+    frames_valid: int
+    frame_values: List[float]
+    frame_spread: float
+    needle_confidence: float
+    dial_visibility: float
+    view_angle_deg: float
+    distance_m: float
+    dial_radius_px: float
+    sharpness: float
+    detail: str
+    dial_radius_minor_px: float = 0.0
+
+
+def value_to_angle(v: float) -> float:
+    return ANGLE_MIN_DEG + (v - VALUE_MIN) / VALUE_PER_DEG
+
+
+def angle_to_value(a: float) -> float:
+    return VALUE_MIN + (a - ANGLE_MIN_DEG) * VALUE_PER_DEG
+
+
+def default_camera_matrix(width=640, height=480, hfov=1.047) -> np.ndarray:
+    f = (width / 2.0) / math.tan(hfov / 2.0)
+    return np.array([[f, 0, width / 2.0], [0, f, height / 2.0], [0, 0, 1]], np.float64)
+
+
+def _make_detector():
+    dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
+    if hasattr(cv2.aruco, 'ArucoDetector'):            # OpenCV >= 4.7
+        params = cv2.aruco.DetectorParameters()
+        params.cornerRefinementMethod = cv2.aruco.CORNER_REFINE_SUBPIX
+        det = cv2.aruco.ArucoDetector(dictionary, params)
+        return lambda grey: det.detectMarkers(grey)
+    params = cv2.aruco.DetectorParameters_create()      # OpenCV 4.6 (Ubuntu 24.04)
+    params.cornerRefinementMethod = cv2.aruco.CORNER_REFINE_SUBPIX
+    return lambda grey: cv2.aruco.detectMarkers(grey, dictionary, parameters=params)
+
+
+def _polar_xy(r_frac: np.ndarray, ang_deg: np.ndarray):
+    a = np.radians(ang_deg)
+    x = DIAL_CENTER[0] + r_frac * DIAL_R * np.sin(a)
+    y = DIAL_CENTER[1] - r_frac * DIAL_R * np.cos(a)
+    return x, y
+
+
+def _fit_circle(pts: np.ndarray):
+    """Algebraic least-squares circle fit. Returns (cx, cy, r)."""
+    x, y = pts[:, 0], pts[:, 1]
+    A = np.column_stack([2 * x, 2 * y, np.ones_like(x)])
+    b = x * x + y * y
+    (cx, cy, c), *_ = np.linalg.lstsq(A, b, rcond=None)
+    return float(cx), float(cy), float(math.sqrt(max(c + cx * cx + cy * cy, 0.0)))
+
+
+def refine_dial_center(dark: np.ndarray, maskf: np.ndarray):
+    """Locate the outer edge of the dark bezel (r = 1.0 R) and fit a circle to it.
+
+    Small errors in the 4 tag corners are magnified when the homography is extrapolated
+    to the dial (it lies ~1.6 tag-lengths below the tag); a wrong pivot point biases the
+    needle angle. Rays are searched inward from 1.06 R (still on the light panel) to the
+    first dark sample; the top +-35 deg are skipped because the tag sits just above the dial.
+    Returns (cx, cy, M, n_points): centre and 2x2 stretch (unit circle * R -> fitted ellipse) in
+    panel-texture pixels; falls back to the nominal centre and identity.
+    """
+    angs_deg = np.arange(0.0, 360.0, 4.0)
+    angs_deg = angs_deg[np.abs(((angs_deg + 180.0) % 360.0) - 180.0) > 35.0]
+    angs = np.radians(angs_deg)
+    rs = np.linspace(1.06, 0.90, 33) * DIAL_R
+    aa, rr = np.meshgrid(angs, rs, indexing='ij')
+    xs = (DIAL_CENTER[0] + rr * np.sin(aa)).astype(np.float32)
+    ys = (DIAL_CENTER[1] - rr * np.cos(aa)).astype(np.float32)
+    d = cv2.remap(dark, xs, ys, cv2.INTER_LINEAR)
+    v = cv2.remap(maskf, xs, ys, cv2.INTER_NEAREST) > 0.5
+    pts = []
+    for i in range(len(angs)):
+        if not v[i].all() or d[i, 0] > 0.35:      # off-image ray, or not on light panel
+            continue
+        hit = np.nonzero(d[i] > 0.5)[0]
+        if len(hit) == 0 or hit[0] == 0 or hit[0] + 2 >= d.shape[1]:
+            continue
+        j = hit[0]
+        if not (d[i, j:j + 3] > 0.5).all():
+            continue
+        f = (0.5 - d[i, j - 1]) / max(d[i, j] - d[i, j - 1], 1e-6)
+        r_edge = rs[j - 1] + f * (rs[j] - rs[j - 1])
+        pts.append((DIAL_CENTER[0] + r_edge * math.sin(angs[i]),
+                    DIAL_CENTER[1] - r_edge * math.cos(angs[i])))
+    if len(pts) < 15:
+        return DIAL_CENTER[0], DIAL_CENTER[1], np.eye(2), len(pts)
+    pts = np.array(pts)
+    cx, cy, r = _fit_circle(pts)
+    for _ in range(2):                              # reject outliers (circle model), refit
+        res = np.abs(np.hypot(pts[:, 0] - cx, pts[:, 1] - cy) - r)
+        keep = res < 3.0
+        if keep.sum() < 15:
+            break
+        pts = pts[keep]
+        cx, cy, r = _fit_circle(pts)
+    # ellipse model: the residual homography error is mostly an anisotropic stretch
+    (ex, ey), (w, h), theta = cv2.fitEllipse(pts.astype(np.float32))
+    c, s_ = math.cos(math.radians(theta)), math.sin(math.radians(theta))
+    rot = np.array([[c, -s_], [s_, c]])
+    M = rot @ np.diag([w / (2 * DIAL_R), h / (2 * DIAL_R)]) @ rot.T
+    if (math.hypot(ex - DIAL_CENTER[0], ey - DIAL_CENTER[1]) > 0.1 * DIAL_R or
+            not 0.85 < min(w, h) / (2 * DIAL_R) <= max(w, h) / (2 * DIAL_R) < 1.15):
+        return DIAL_CENTER[0], DIAL_CENTER[1], np.eye(2), 0
+    return float(ex), float(ey), M, len(pts)
+
+
+class GaugeReader:
+    def __init__(self):
+        self._detect = _make_detector()
+        x0, y0, x1, y1 = MARKER_BOX
+        self._tag_tex = np.array([[x0, y0], [x1, y0], [x1, y1], [x0, y1]], np.float32)
+        s = TAG_SIZE_M / 2.0
+        self._tag_obj = np.array([[-s, s, 0], [s, s, 0], [s, -s, 0], [-s, -s, 0]], np.float64)
+        # ray sampling grid (angles x radii) in texture coordinates
+        lo, hi = ANGLE_MIN_DEG - SWEEP_MARGIN_DEG, ANGLE_MAX_DEG + SWEEP_MARGIN_DEG
+        self._angles = np.arange(lo, hi + 1e-9, ANGLE_STEP_DEG)
+        radii = np.linspace(RAY_R0, RAY_R1, RAY_SAMPLES)
+        self._ray_aa, self._ray_rr = np.meshgrid(self._angles, radii, indexing='ij')
+        # visibility annulus samples (full circle, 2 deg x 10 radii)
+        va = np.arange(0.0, 360.0, 2.0)
+        vr = np.linspace(VIS_R0, VIS_R1, 10)
+        vaa, vrr = np.meshgrid(va, vr, indexing='ij')
+        self._vis_ang = vaa
+        self._vis_x, self._vis_y = (v.astype(np.float32) for v in _polar_xy(vrr, vaa))
+        # quiet zone around the tag (white reference)
+        self._white_ref_box = (MARKER_BOX[0] - QUIET + 4, MARKER_BOX[1] - QUIET + 4,
+                               MARKER_BOX[2] + QUIET - 4, MARKER_BOX[3] + QUIET - 4)
+
+    # ------------------------------------------------------------------ per frame
+    def read_frame(self, bgr: np.ndarray, tag_id: int,
+                   camera_matrix: Optional[np.ndarray] = None) -> FrameReading:
+        fr = FrameReading()
+        if bgr is None or bgr.ndim != 3 or bgr.shape[2] != 3 or bgr.size == 0:
+            fr.detail = 'invalid image buffer'
+            return fr
+        grey = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
+        corners, ids, _ = self._detect(grey)
+        found: Dict[int, np.ndarray] = {}
+        if ids is not None:
+            for c, i in zip(corners, ids.flatten()):
+                found[int(i)] = c.reshape(4, 2).astype(np.float32)
+        fr.detected_ids = sorted(found)
+        if tag_id not in found:
+            fr.detail = f'tag {tag_id} not detected (saw {fr.detected_ids})'
+            return fr
+        fr.tag_found = True
+        tc = found[tag_id]
+        fr.tag_corners = tc
+        H = cv2.getPerspectiveTransform(self._tag_tex, tc)
+        fr.homography = H
+
+        # geometry: pose of the tag plane
+        K = camera_matrix if camera_matrix is not None else default_camera_matrix(
+            bgr.shape[1], bgr.shape[0])
+        flag = getattr(cv2, 'SOLVEPNP_IPPE_SQUARE', cv2.SOLVEPNP_ITERATIVE)
+        ok, rvec, tvec = cv2.solvePnP(self._tag_obj, tc.astype(np.float64), K, None, flags=flag)
+        if ok:
+            R, _ = cv2.Rodrigues(rvec)
+            n = R[:, 2]
+            t = tvec.reshape(3)
+            fr.distance_m = float(np.linalg.norm(t))
+            cosang = abs(float(np.dot(n, -t))) / max(fr.distance_m, 1e-9)
+            fr.view_angle_deg = float(math.degrees(math.acos(min(1.0, cosang))))
+
+        # apparent dial radius in the image
+        ring = np.array([_polar_xy(np.array(1.0), np.array(a)) for a in range(0, 360, 30)],
+                        np.float32).reshape(-1, 1, 2)
+        ctr = np.array([[DIAL_CENTER]], np.float32)
+        ring_i = cv2.perspectiveTransform(ring, H).reshape(-1, 2)
+        ctr_i = cv2.perspectiveTransform(ctr, H).reshape(2)
+        radii_i = np.linalg.norm(ring_i - ctr_i, axis=1)
+        fr.dial_radius_px = float(np.mean(radii_i))
+        fr.dial_radius_minor_px = float(np.min(radii_i))   # foreshortened (worst) direction
+
+        # sharpness over the dial bounding box (clipped to the image)
+        h, w = grey.shape
+        x0, y0 = np.clip(ring_i.min(0).astype(int), 0, [w - 1, h - 1])
+        x1, y1 = np.clip(ring_i.max(0).astype(int), 0, [w - 1, h - 1])
+        if x1 - x0 > 4 and y1 - y0 > 4:
+            fr.sharpness = float(cv2.Laplacian(grey[y0:y1, x0:x1], cv2.CV_64F).var())
+
+        # rectification into the panel frame + validity mask
+        rect = cv2.warpPerspective(bgr, H, (TEX_W, TEX_H),
+                                   flags=cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP)
+        mask = cv2.warpPerspective(np.full(grey.shape, 255, np.uint8), H, (TEX_W, TEX_H),
+                                   flags=cv2.INTER_NEAREST | cv2.WARP_INVERSE_MAP)
+        rgrey = cv2.cvtColor(rect, cv2.COLOR_BGR2GRAY).astype(np.float32)
+        rsat = cv2.cvtColor(rect, cv2.COLOR_BGR2HSV)[:, :, 1].astype(np.float32)
+        maskf = mask.astype(np.float32) / 255.0
+
+        bx0, by0, bx1, by1 = self._white_ref_box
+        ref_region = rgrey[by0:by1, bx0:bx1]
+        ref_mask = np.ones_like(ref_region, bool)
+        m = QUIET - 8
+        ref_mask[m:-m, m:-m] = False           # keep only the white quiet-zone frame
+        white = float(np.percentile(ref_region[ref_mask], 75))
+        if white < 30.0:
+            fr.detail = 'tag region too dark'
+            return fr
+
+        # needle profile around the refined dial centre
+        dark = np.clip(1.0 - rgrey / white, 0.0, 1.0)
+        cx, cy, M, n_edge = refine_dial_center(dark, maskf)
+        fr.dial_center_tex = (cx, cy)
+        fr.center_refined = n_edge > 0
+        a_rad = np.radians(self._ray_aa)
+        ux = self._ray_rr * DIAL_R * np.sin(a_rad)
+        uy = -self._ray_rr * DIAL_R * np.cos(a_rad)
+        ray_x = (cx + M[0, 0] * ux + M[0, 1] * uy).astype(np.float32)
+        ray_y = (cy + M[1, 0] * ux + M[1, 1] * uy).astype(np.float32)
+        samples = cv2.remap(dark, ray_x, ray_y, cv2.INTER_LINEAR)
+        valid = cv2.remap(maskf, ray_x, ray_y, cv2.INTER_NEAREST) > 0.5
+        vfrac = valid.mean(axis=1)
+        prof = np.where(valid, samples, np.nan)
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore', RuntimeWarning)   # all-NaN rays (off-image) are expected
+            score = np.nanmean(prof, axis=1)
+        score[vfrac < MIN_RAY_VALID_FRACTION] = np.nan
+        fr.profile = score
+        if np.all(np.isnan(score)):
+            fr.detail = 'dial outside the image'
+            fr.dial_visibility = 0.0
+            return fr
+        k = int(np.nanargmax(score))
+        peak = float(score[k])
+        med = float(np.nanmedian(score))
+        far = np.abs(self._angles - self._angles[k]) > COMPETITOR_EXCLUSION_DEG
+        comp = float(np.nanmax(score[far])) if np.any(far & ~np.isnan(score)) else med
+        contrast = peak - med
+        if contrast <= 1e-6:
+            conf = 0.0
+        else:
+            conf = min(1.0, contrast / 0.5) * max(0.0, 1.0 - max(0.0, comp - med) / contrast)
+        # parabolic refinement
+        ang = float(self._angles[k])
+        if 0 < k < len(score) - 1 and not np.isnan(score[k - 1]) and not np.isnan(score[k + 1]):
+            a, b, c = score[k - 1], score[k], score[k + 1]
+            den = a - 2 * b + c
+            if abs(den) > 1e-9:
+                ang += float(np.clip(0.5 * (a - c) / den, -0.5, 0.5)) * ANGLE_STEP_DEG
+        if not fr.center_refined:
+            conf *= 0.5   # pivot not confirmed by the bezel fit -> angle may be biased
+        fr.angle_deg = ang
+        fr.needle_confidence = float(conf)
+
+        # dial visibility (needle wedge and caption excluded)
+        vis_ok = (cv2.remap(rgrey, self._vis_x, self._vis_y, cv2.INTER_LINEAR) >= 0.70 * white) & \
+                 (cv2.remap(rsat, self._vis_x, self._vis_y, cv2.INTER_LINEAR) < 70) & \
+                 (cv2.remap(maskf, self._vis_x, self._vis_y, cv2.INTER_NEAREST) > 0.5)
+        dang = np.abs((self._vis_ang - (ang % 360.0) + 180.0) % 360.0 - 180.0)
+        use = dang > 10.0
+        for lo, hi in VIS_EXCLUDE:
+            use &= ~((self._vis_ang >= lo) & (self._vis_ang <= hi))
+        fr.dial_visibility = float(vis_ok[use].mean()) if use.any() else 0.0
+
+        if ANGLE_MIN_DEG - SWEEP_MARGIN_DEG <= ang <= ANGLE_MAX_DEG + SWEEP_MARGIN_DEG:
+            fr.value = float(angle_to_value(ang))
+        fr.detail = (f'needle {ang:+.1f} deg conf {conf:.2f} vis {fr.dial_visibility:.2f}'
+                     + ('' if fr.center_refined else ' (bezel fit failed)'))
+        return fr
+
+    # ------------------------------------------------------------------ rendering helpers
+    @staticmethod
+    def rectify(bgr: np.ndarray, H: np.ndarray) -> np.ndarray:
+        return cv2.warpPerspective(bgr, H, (TEX_W, TEX_H),
+                                   flags=cv2.INTER_LINEAR | cv2.WARP_INVERSE_MAP)
+
+
+def _robust_spread(vals: Sequence[float]) -> float:
+    if len(vals) < 2:
+        return 0.0
+    v = np.asarray(vals, float)
+    if len(v) == 2:
+        return float(abs(v[0] - v[1]) / math.sqrt(2.0))
+    return float(1.4826 * np.median(np.abs(v - np.median(v))))
+
+
+def fuse(frames: List[FrameReading], frames_requested: int,
+         params: FuseParams = FuseParams()) -> Observation:
+    """Fuse a burst of per-frame readings into one observation with sigma and quality flags."""
+    flags: List[str] = []
+    received = len(frames)
+    tagged = [f for f in frames if f.tag_found]
+    valid = [f for f in tagged if f.valid]
+    vals = [f.value for f in valid]
+    nan = float('nan')
+
+    def med(xs, default=nan):
+        xs = [x for x in xs if x is not None]
+        return float(np.median(xs)) if xs else default
+
+    vis = med([f.dial_visibility for f in tagged], 0.0)
+    conf = med([f.needle_confidence for f in tagged], 0.0)
+    view = med([f.view_angle_deg for f in tagged])
+    dist = med([f.distance_m for f in tagged])
+    radius = med([f.dial_radius_px for f in tagged], 0.0)
+    radius_minor = med([f.dial_radius_minor_px for f in tagged], 0.0)
+    sharp = med([f.sharpness for f in tagged], 0.0)
+    spread = _robust_spread(vals)
+
+    if received == 0:
+        flags.append('NO_IMAGE')
+    elif not tagged:
+        flags.append('TAG_NOT_VISIBLE')
+    else:
+        if len(tagged) < received:
+            flags.append('TAG_INTERMITTENT')
+        if vis < params.min_visibility:
+            flags.append('OCCLUDED')
+        if not math.isnan(view) and view > params.max_view_angle_deg:
+            flags.append('OBLIQUE_VIEW')
+        if radius_minor < params.min_dial_radius_px:
+            flags.append('TOO_FAR')
+        if conf < params.min_needle_confidence:
+            flags.append('LOW_NEEDLE_CONTRAST')
+        if len(vals) >= 2 and spread > params.max_frame_spread:
+            flags.append('INCONSISTENT_FRAMES')
+        if sharp < params.min_sharpness:
+            flags.append('BLURRED')
+
+    has_value = len(vals) > 0
+    value = float(np.median(vals)) if has_value else nan
+    sigma = nan
+    if has_value:
+        if value < VALUE_MIN - 0.3 or value > VALUE_MAX + 0.3:
+            flags.append('OUT_OF_SCALE')
+        n = len(vals)
+        rand = 1.25 * spread / math.sqrt(n) if n >= 2 else params.max_frame_spread
+        # angular resolution at the needle sampling radius (0.35 R) in the foreshortened direction
+        res_deg = math.degrees(NEEDLE_LOCALISATION_PX / max(0.35 * max(radius_minor, 1.0), 1e-6))
+        sig_res = res_deg * VALUE_PER_DEG
+        sigma = math.sqrt(rand ** 2 + sig_res ** 2 + params.sigma_floor ** 2)
+
+    if not flags and has_value:
+        detail = f'{value:.2f} +/- {sigma:.2f} {UNIT} from {len(vals)}/{received} frames'
+    elif has_value:
+        detail = f'{value:.2f} +/- {sigma:.2f} {UNIT} but flagged: {", ".join(flags)}'
+    else:
+        detail = 'no reading: ' + (', '.join(flags) if flags else 'needle not found')
+    return Observation(has_value, value, sigma, flags, frames_requested, received, len(tagged),
+                       len(vals), [round(v, 4) for v in vals], spread, conf, vis, view, dist,
+                       radius, sharp, detail, radius_minor)
+
+
+def annotate(bgr: np.ndarray, fr: FrameReading, obs: Optional[Observation], title: str) -> np.ndarray:
+    """Draw tag, projected dial, needle estimate and the fused result on a copy of the frame."""
+    out = bgr.copy()
+    if fr.tag_corners is not None:
+        cv2.polylines(out, [fr.tag_corners.astype(np.int32)], True, (0, 255, 0), 2)
+    if fr.homography is not None:
+        H = fr.homography
+        ring = np.array([_polar_xy(np.array(1.0), np.array(a)) for a in range(0, 361, 10)],
+                        np.float32).reshape(-1, 1, 2)
+        cv2.polylines(out, [cv2.perspectiveTransform(ring, H).astype(np.int32)], True,
+                      (255, 200, 0), 1, cv2.LINE_AA)
+        if fr.angle_deg is not None:
+            seg = np.array([_polar_xy(np.array(0.0), np.array(fr.angle_deg)),
+                            _polar_xy(np.array(0.85), np.array(fr.angle_deg))],
+                           np.float32).reshape(-1, 1, 2)
+            p = cv2.perspectiveTransform(seg, H).reshape(-1, 2).astype(int)
+            cv2.line(out, tuple(p[0]), tuple(p[1]), (255, 0, 255), 2, cv2.LINE_AA)
+    cv2.rectangle(out, (0, 0), (out.shape[1], 58), (30, 30, 30), -1)
+    cv2.putText(out, title, (8, 22), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2,
+                cv2.LINE_AA)
+    line2 = obs.detail if obs is not None else fr.detail
+    color = (90, 220, 90) if obs is not None and obs.has_value and not obs.flags else (0, 165, 255)
+    cv2.putText(out, line2[:90], (8, 47), cv2.FONT_HERSHEY_SIMPLEX, 0.47, color, 1, cv2.LINE_AA)
+    return out
+
+
+def timed_read(reader: GaugeReader, bgr, tag_id, K):
+    t0 = time.perf_counter()
+    fr = reader.read_frame(bgr, tag_id, K)
+    return fr, (time.perf_counter() - t0) * 1000.0
