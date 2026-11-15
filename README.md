@@ -1,61 +1,53 @@
 # InspectLoop
 
-A mobile robot inspects pressure gauges in a simulated warehouse. When a conduit hides the dial, the robot can request a new Nav2 viewpoint, take a fresh camera observation and decide whether to record a pressure.
+An autonomous mobile robot reads analog pressure gauges in a simulated warehouse. When an overhead conduit obscures a gauge marker, the robot chooses a new Nav2 goal, inspects the gauge again and decides whether the evidence supports a reading.
 
-[![Watch the InspectLoop engineering demo: how the robot recovers a hidden gauge reading](docs/media/inspectloop-cover.jpg)](https://github.com/Tamer1020/InspectLoop/releases/download/v3.2.0/InspectLoop-Demo.mp4)
+**[Watch the mission · 1 min 37 s](https://github.com/Tamer1020/InspectLoop/releases/download/v3.2.0/InspectLoop-Demo-V2.mp4)**　·　**[Watch PG-12 reinspection · 34 s](https://github.com/Tamer1020/InspectLoop/releases/download/v3.2.0/InspectLoop-PG12-V2.mp4)**
 
-**[Watch the engineering demo](https://github.com/Tamer1020/InspectLoop/releases/download/v3.2.0/InspectLoop-Demo.mp4)** · [30-second PG-12 cut](https://github.com/Tamer1020/InspectLoop/releases/download/v3.2.0/InspectLoop-PG12-Short.mp4) · [Read the mission report](docs/media/capture/20261115_140724_e358/mission_report.md)
+[![Watch the InspectLoop mission. The robot approaches PG-12 beside the rectified image of its dial.](docs/media/v2/InspectLoop-V2-Cover.jpg)](https://github.com/Tamer1020/InspectLoop/releases/download/v3.2.0/InspectLoop-Demo-V2.mp4)
 
-The Gazebo footage, RViz route, camera frames and final report come from the same completed mission. The film also shows a separate recorded LiDAR fault test. [Footage and edit notes](tools/portfolio/README.md)
+ROS 2 Jazzy · Gazebo Harmonic · Nav2 / AMCL · OpenCV · Python · C++17
 
-**ROS 2 Jazzy · Gazebo Harmonic · Nav2 / AMCL · OpenCV · Python · C++17**
+[Run the demo](docs/RUN_DEMO.md) · [Architecture and interfaces](docs/ARCHITECTURE.md) · [Mission report](docs/media/capture/20261115_140724_e358/mission_report.md) · [Release v3.2.0](https://github.com/Tamer1020/InspectLoop/releases/tag/v3.2.0)
 
-[Build and test runs](https://github.com/Tamer1020/InspectLoop/actions/workflows/ci.yml) · [v3.2.0 release](https://github.com/Tamer1020/InspectLoop/releases/tag/v3.2.0) · [Apache-2.0](LICENSE)
+## PG-12 · Why the robot moves twice
 
-## Why the robot moves
+![Crops of the recorded robot camera at V0 and V8. A conduit hides part of the frontal tag. From the closer side view, the marker and needle are visible.](docs/media/v2/pg12-camera.jpg)
 
-PG-12 sits behind a hanging conduit box. The floor-level LiDAR allows the base to reach the frontal inspection pose, but the box obscures the camera’s view of the gauge. In the filmed mission, the reader failed to identify the expected tag in two consecutive five-frame bursts. The policy issued `RETRY_SAME` after the first burst and `MOVE_NEW` after the second.
+1. **V0 · Marker hidden.** A hanging conduit blocked the expected ArUco tag. Two five-frame bursts yielded zero valid frames. The first triggered `RETRY_SAME`, the second `MOVE_NEW`.
+2. **V3 · A number, still too far.** Nav2 reached the −45° side view in 10.2 s of simulation time. Four frames yielded **6.8056 bar**, but the `TOO_FAR` flag blocked acceptance. The robot requested a closer goal at the same angle.
+3. **V8 · Reading accepted.** At a target standoff of 1.20 m, all five frames were valid. The robot accepted their median, **6.7833 bar**. The offline reference was 6.8000 bar.
 
-Nav2 reached a −45° approach in **10.20 s of simulation time**. The reader produced a number, but the `TOO_FAR` flag blocked acceptance. The mission requested a closer target at the same angle. There, all five frames yielded valid readings and the robot accepted their median of **6.7833 bar**. The offline simulation reference was 6.80 bar. [PG-12 record and per-view observations](docs/media/capture/20261115_140724_e358/gauge_PG-12.json)
+![Simultaneous screen recordings at 122 seconds elapsed, showing the Gazebo warehouse and RViz map during the first PG-12 reposition.](docs/media/v2/pg12-navigation.jpg)
 
-![PG-12 comparison: obstruction at the first viewpoint and a readable dial after repositioning](docs/media/pg12-two-views.jpg)
+*Both views are from 02:02 in their source recordings. The main film shows the complete first reposition from 00:31.5 to 00:53.* [PG-12 film](https://github.com/Tamer1020/InspectLoop/releases/download/v3.2.0/InspectLoop-PG12-V2.mp4) · [Per-view evidence](docs/media/capture/20261115_140724_e358/gauge_PG-12.json) · [Source recordings and timing](tools/portfolio/v2/README.md)
 
-## From pixels to action
+## How the ROS 2 loop works
 
-![ROS 2 system diagram showing camera frames, the gauge reader, mission manager, Nav2 and the independent velocity gate](docs/media/architecture.png)
+![Inspection data path. Gazebo RGB feeds OpenCV. The mission manager evaluates the reading and quality flags and can send Nav2 another goal. The C++ LiDAR gate checks motion commands before they reach the drive base.](docs/media/v2/ros2-loop.svg)
 
-- **Perception.** The OpenCV reader identifies the requested ArUco marker and uses its four corners to rectify the coplanar dial. It estimates the needle angle from dark evidence on 16 rings. Competing lines, incomplete support and weak visibility can invalidate a reading.
-- **Decision.** The Python mission manager checks frame timestamps, viewpoint identity, pose and measurement quality. A usable burst needs at least three valid frames, acceptable heuristic uncertainty and no blocking flags. It can accept, retry at the same pose, move to another viewpoint, or close the gauge as unresolved.
-- **Navigation.** AMCL localizes the differential-drive base on a known occupancy map. The planner filters viewpoint candidates for footprint clearance. Nav2 establishes reachability during execution, and the mission tracks the goal through completion or cancellation.
-- **Motion guard.** A separate C++17 node checks LiDAR coverage, scan freshness, command age and obstacle clearance. The base receives only its gated velocity output. A health monitor publishes stream and TF diagnostics.
+**Read and decide.** OpenCV uses the marker corners to rectify the dial and checks needle evidence across 16 rings. The mission manager checks timestamps and viewpoint identity. Acceptance requires at least three valid frames out of five, heuristic uncertainty at or below 0.15 bar and no blocking flags. [Gauge reader](src/inspectloop_vision/inspectloop_vision/gauge_reader.py) · [Decision policy](src/inspectloop_mission/inspectloop_mission/decision_policy.py)
 
-[Architecture, interfaces and TF](docs/ARCHITECTURE.md) · [Perception implementation](src/inspectloop_vision/inspectloop_vision/gauge_reader.py) · [Decision policy](src/inspectloop_mission/inspectloop_mission/decision_policy.py) · [C++ safety package](src/inspectloop_safety)
+**Navigate and guard motion.** AMCL localizes on a known occupancy map. The mission filters candidates for footprint clearance, then tests reachability by sending a Nav2 goal. A separate C++ gate checks LiDAR coverage, scan freshness, command age and obstacle clearance. Only its output, `/cmd_vel_safe`, reaches the base. [ROS 2 interfaces and TF](docs/ARCHITECTURE.md) · [C++ safety package](src/inspectloop_safety)
 
-## The filmed inspection round
+## One inspection round
 
-| Gauge | Decision and evidence | Reported pressure |
-|---|---|---:|
-| PG-11 | Clear frontal view, accepted on the first observation | 4.1893 bar |
-| PG-12 | Frontal retry, alternate viewpoint, closer viewpoint, accepted | 6.7833 bar |
-| PG-13 | Crate occlusion persisted across 6 observations at 3 viewpoints, `UNRESOLVED` | — |
-| PG-14 | Valid reading exceeded the 8.0 bar upper limit, `HIGH` alarm | 8.7018 bar |
+The robot visited **8 viewpoints**, made **12 observations** and returned home. Three of four gauges produced accepted readings. The largest absolute error among those three was **0.0167 bar**, measured against simulator references after the run.
 
-The mission recorded **12 observations** and accepted **3 of 4 gauges**. Among those three readings, the maximum absolute error was **0.0167 bar**. These figures describe mission `20261115_140724_e358` in one simulated world. The robot returned home. The offline evaluator used the simulator reference pressures after the mission. In the [earlier release-candidate run](docs/evidence/astra_v3_2/demo/20261115_130552_5c37/mission_record.json), PG-12 was accepted at the first alternate viewpoint at 6.7966 bar.
+![Recorded pressure in bar on a zero-to-ten scale. PG-11 4.1893, PG-12 6.7833, PG-13 unresolved, PG-14 8.7018 with a high alarm over 8.0.](docs/media/v2/round-pressure.svg)
 
-[Full mission record](docs/media/capture/20261115_140724_e358/mission_record.json) · [Offline evaluation](docs/media/capture/20261115_140724_e358/evaluation.json) · [Results graphic](docs/media/mission-results.png) · [Gazebo capture](docs/media/capture/gazebo-hero.png) · [RViz navigation capture](docs/media/capture/rviz-navigation.png)
+**PG-13** remained occluded through six observations at three viewpoints. The mission reported `UNRESOLVED` and left the pressure empty. **PG-14** produced a valid **8.7018 bar** reading, above its **8.0 bar** alarm limit. [Filmed mission report](docs/media/capture/20261115_140724_e358/mission_report.md) · [Machine-readable record](docs/media/capture/20261115_140724_e358/mission_record.json) · [Offline evaluation](docs/media/capture/20261115_140724_e358/evaluation.json)
 
-## Testing and fault evidence
+## Verification and scope
 
-The archived v3.2 test report contains **489 test cases** and **11 CTest wrapper entries**, with zero reported failures. CI builds and runs unit and component tests. Separate simulation runs exercise faults during motion. [Test report](docs/evidence/astra_v3_2/colcon_test_result.txt) · [Test scope](docs/TEST_RESULTS.md)
+- **Test suite.** The archived v3.2 report records 489 test cases plus 11 CTest wrapper entries, with zero failures. GitHub Actions builds the ROS 2 workspace and runs unit and component tests. [Archived output](docs/evidence/astra_v3_2/colcon_test_result.txt) · [Test coverage](docs/TEST_RESULTS.md) · [CI runs](https://github.com/Tamer1020/InspectLoop/actions/workflows/ci.yml)
+- **Faults during motion.** In a separate simulation run, the gate rejected malformed LiDAR metadata. Measured linear speed fell from 0.40 m/s to zero. An independent interruption test recorded cancellation of the runner’s dispatched Nav2 goal. [Odometry trace](docs/evidence/astra_v3_1_live/f3_tiny_inc/odom_speed.txt) · [Goal lifecycle log](docs/evidence/astra_v3_2/live_unknown_goal/fallback.txt)
+- **Operating limits.** The reader assumes a known panel, a fiducial and one 0–10 bar dial design. On the frozen synthetic evaluation it accepted 189/204 clean in-range cases and 19/158 difficult ones. Uncertainty is heuristic. The 2-D LiDAR has limited coverage and this release has simulation-only validation. [Known limitations](docs/KNOWN_LIMITATIONS.md)
 
-| Simulation fault | Recorded response |
-|---|---|
-| Malformed LiDAR metadata while driving | The gate rejected the scan. Measured linear speed dropped from 0.40 m/s to zero. [Odometry](docs/evidence/astra_v3_1_live/f3_tiny_inc/odom_speed.txt) |
-| Interruption after a navigation goal was dispatched | The runner identified its own goal and confirmed cancellation from Nav2 status. [Goal lifecycle log](docs/evidence/astra_v3_2/live_unknown_goal/fallback.txt) |
+<details>
+<summary><strong>Reproduce the mission</strong></summary>
 
-## Run the demo
-
-Use Ubuntu 24.04 with ROS 2 Jazzy, Gazebo Harmonic, Nav2, RViz2 and OpenCV. Install the prerequisites in the [setup guide](docs/SETUP.md), then run the following in a terminal.
+Use Ubuntu 24.04, ROS 2 Jazzy and Gazebo Harmonic. Install the [prerequisites](docs/SETUP.md), then run:
 
 ```bash
 git clone https://github.com/Tamer1020/InspectLoop.git
@@ -67,12 +59,19 @@ source install/setup.bash
 ros2 launch inspectloop_bringup inspectloop.launch.py
 ```
 
-For a headless mission, add `headless:=true rviz:=false exit_on_mission_end:=true` to the launch command. Open `mission_report.html` in the new mission directory under `~/inspectloop_runs/`. [Demo guide](docs/RUN_DEMO.md) · [Troubleshooting](docs/TROUBLESHOOTING.md) · [Video sources and edit instructions](tools/portfolio/README.md)
+For a headless run, add `headless:=true rviz:=false exit_on_mission_end:=true`. The mission writes `mission_report.html` under `~/inspectloop_runs/`. [Demo guide](docs/RUN_DEMO.md) · [Troubleshooting](docs/TROUBLESHOOTING.md)
 
-## Limits and next experiments
+</details>
 
-The reader assumes a known panel, a printed fiducial and a single 0–10 bar dial design. The uncertainty score is heuristic. On the project's frozen synthetic evaluation it accepted 189/204 clean in-range cases and 19/158 difficult in-range cases. Conservative rejection helps explain both the need for repositioning and the low yield on difficult views. The 2-D LiDAR guard has limited coverage, and hardware validation and safety certification remain outside this release. [Known limitations](docs/KNOWN_LIMITATIONS.md)
+<details>
+<summary><strong>Other runs, original captures and planned comparisons</strong></summary>
 
-Planned comparisons include a six-landmark pose model against the classical reader, PyTorch training with held-out panels, ONNX Runtime latency measurements, and matched fixed-view, repeated-view and active policies. A C++ mission executive and real-camera validation are further development goals.
+In the earlier release-candidate run, PG-12 was accepted at the first alternate viewpoint at 6.7966 bar. In the filmed round, the first side view triggered a second move. [Earlier mission](docs/evidence/astra_v3_2/demo/20261115_130552_5c37/mission_record.json) · [Filmed mission](docs/media/capture/20261115_140724_e358/mission_record.json)
 
-Development included AI assistance. [License](LICENSE)
+[Full Gazebo frame](docs/media/capture/gazebo-hero.png) · [Full RViz frame](docs/media/capture/rviz-navigation.png) · [V2 edit and source provenance](tools/portfolio/v2/README.md) · [Original capture notes](tools/portfolio/README.md)
+
+Planned comparisons include matched fixed-view, repeated-view and active policies, and a six-landmark pose model evaluated against the classical reader. Further goals include held-out panel evaluation, ONNX Runtime latency measurements, a C++ mission executive and real-camera validation.
+
+</details>
+
+[Apache-2.0 license](LICENSE)
