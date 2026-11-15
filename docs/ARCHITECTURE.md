@@ -200,18 +200,31 @@ Sensor headers carry URDF frame names (`<gz_frame_id>`). The simulation world fr
 
 ## 6.2 Nav2 goal lifecycle (Astra F4)
 
-`nav_goal.NavGoalRunner` tracks every goal until a terminal result is observed. **Ownership starts
-when `send_goal_async` returns** (V3, Astra F4): the send future is registered as pending before
-the acceptance wait, and the whole send → acceptance → result lifecycle runs inside an exception
-handler that cancels whatever it owns, so an interrupt during acceptance can no longer orphan a
-late-accepted goal. If `send_goal_async` itself raises, ownership is unknown and motion stays
-inhibited permanently (e-stop). Cleanup never raises and never reports success while anything is
-unresolved; at mission end any failure of the cleanup itself latches the e-stop. Late acceptances
-are cancelled; a cancel is confirmed only by an `ERROR_NONE`/`GOAL_TERMINATED` reply listing the goal
-**and** a terminal result. While any goal is unresolved no new goal is sent; after a 30 s grace the
-mission latches the gate e-stop and aborts. Exceptions and SIGINT cancel and confirm the active
-goal before the report is written (rclpy signal handling is disabled in the mission process so the
-executor can still talk to Nav2 during the interrupt).
+`nav_goal.NavGoalRunner` tracks every goal until a terminal result is observed.
+
+* **Ownership before sending (V3.1).** The pending record is registered *before*
+  `send_goal_async` is called and the send runs inside the exception-cleanup scope, so there is no
+  instruction between "request sent" and "request owned" where an exception or SIGINT could orphan
+  a goal (regression: SIGINT injected at every bytecode after the send returns).
+* **Goal IDs chosen before sending (V3.2).** The runner passes its own `goal_uuid`. If the handle
+  is lost anyway (`send_goal_async` raised, or SIGINT landed before its future was stored),
+  ownership is *unknown* but the ID is known: cleanup cancels **only that ID** through
+  `navigate_to_pose/_action/cancel_goal` and confirms it on `navigate_to_pose/_action/status`
+  (`GoalIdCanceller`). The cancel-all form is refused: `bt_navigator` (its `/goal_pose` path),
+  `waypoint_follower`, `docking_server` and RViz's Nav2 panel share the action server.
+  An unknown goal is resolved only when the server reports that ID terminal **and** fresh
+  odometry shows the robot stationary; `ERROR_UNKNOWN_GOAL_ID`, a refused or unanswered cancel,
+  or an unobservable status leave it unresolved.
+* **Confirmed cancellation.** Late acceptances are cancelled; a cancel is confirmed only by an
+  `ERROR_NONE` / `ERROR_GOAL_TERMINATED` reply listing the goal **and** a terminal result.
+* **Fail closed.** While anything is unresolved no new goal is sent; after a 30 s grace the
+  mission latches the gate e-stop and aborts. Cleanup never raises (a second Ctrl-C included) and
+  never reports success while anything is unresolved; at mission end a failed cleanup latches the
+  e-stop. rclpy signal handling is disabled in the mission process so the executor can still
+  talk to Nav2 during an interrupt.
+
+Remaining risks (request lost in flight, nothing watching after the process exits, e-stop
+latch lost on gate restart): [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md).
 
 ## 7. Safety layer (C++) — a simulated safety/health guard, not a certified safety function
 
@@ -220,6 +233,13 @@ decision logic lives in the ROS-independent `GateSupervisor` (unit tested exactl
 the node only forwards messages and clock readings.
 Priority: e-stop (`~/set_estop`) > LiDAR fault > command stale 0.5 s / negative / non-finite age >
 **per-direction coverage** > obstacle in the swept corridor > clamping.
+
+**Bounded work per scan (V3.1).** Sector coverage looks up at most 3·(n + 6) beams for an n-beam
+scan, independent of the sector size in sample directions (V3 iterated 2π / `angle_increment`
+directions: a 720-beam scan claiming 1e-9 rad resolution blocked the single-threaded executor,
+and with it the gate's watchdog timer, for minutes). Tested: identical results to the V3
+algorithm on 4 800 plausible scan/sector combinations; scan callback ≪ 5 ms on adversarial input;
+live, `/cmd_vel_safe` kept its 50 ms period while malformed scans arrived.
 
 **Motion-sector coverage (V3, Astra F3).** Each motion component needs positive evidence that the
 region it sweeps is observed. A beam observes its ray if it is finite in [range_min, range_max]
@@ -232,7 +252,8 @@ resolution is ≤ 1°. An unobserved direction zeroes only that motion component
 (`BLOCKED_UNOBSERVED`); an obstacle inside the 0.35 m turning radius blocks rotation; an obstacle
 < 0.20 m behind the rear edge blocks reverse motion (all parameters in `safety.yaml`). The mission
 aborts if `BLOCKED_UNOBSERVED` persists for 3 s.
-A LiDAR fault is: no scan for 0.5 s (steady), a structurally invalid scan (empty, bad metadata,
+A LiDAR fault is: no scan for 0.5 s (steady), a structurally invalid scan (empty, bad metadata -
+non-finite values, `angle_increment` < 1e-5 rad or > 2π, a span of more than one revolution -,
 size inconsistent with the angular span, < 50 % usable beams overall or in the forward half;
 REP-117: +inf = clear, −inf = obstacle at the sensor, NaN = unusable), a header stamp that is zero,
 > 0.2 s in the future or > 1 s old, or a backward ROS-clock jump since the last scan.

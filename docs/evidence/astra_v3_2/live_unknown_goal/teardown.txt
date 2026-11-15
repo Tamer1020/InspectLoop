@@ -1,0 +1,6 @@
+[teardown] launch ignored SIGINT for 30 s -> SIGTERM
+stopped gz sim (InspectLoop world)
+stopped InspectLoop ros_gz bridges
+stopped InspectLoop nodes
+cleanup done
+[teardown] leftover InspectLoop processes: 0

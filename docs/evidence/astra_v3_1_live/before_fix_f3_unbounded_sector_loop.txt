@@ -1,0 +1,6 @@
+# V3 velocity_gate.cpp (git HEAD e9a12e6) on the audit scan: 720 beams, angle_increment 1e-9, span 719e-9 rad, 2026-11-15
+# g++ -O2 -std=c++17; probe calls sectorCoverage(forward) then assessScan (killed after 30 s)
+forward sector: 20.19 s observed=0
+forward-only exit=0
+assessScan exit=124 (124 = killed by the 30 s timeout, i.e. did not return)
+# V3.1: the same scan -> BAD_METADATA, 0 beam lookups, < 1 ms (test_v3_1_scan_workload)

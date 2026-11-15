@@ -1,0 +1,81 @@
+{
+  "mission_id": "20261115_122959_4664",
+  "mission_name": "warehouse_pressure_round",
+  "mission_file": "/home/tamer/InspectLoop/install/inspectloop_mission/share/inspectloop_mission/config/gauges.yaml",
+  "run_dir": "/tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/f4_dispatch_1/20261115_122959_4664",
+  "state": "ABORTED",
+  "abort_reason": "interrupted (SIGINT)",
+  "started_wall": "2026-11-15T12:29:59",
+  "parameters": {
+    "max_sigma": 0.15,
+    "min_valid_frames": 3,
+    "max_retries_same": 1,
+    "max_viewpoints": 3,
+    "max_observations": 8,
+    "frames_per_observation": 5,
+    "viewpoint_distances": [
+      1.5,
+      1.2,
+      1.9
+    ],
+    "viewpoint_angles_deg": [
+      0.0,
+      -30.0,
+      30.0,
+      -45.0,
+      45.0
+    ],
+    "viewpoint_clearance_m": 0.45,
+    "nav_timeout_s": 180.0,
+    "nav_attempts_per_viewpoint": 2,
+    "max_result_age_s": 8.0,
+    "odom_max_age_s": 0.3
+  },
+  "gauges": [],
+  "home_return": null,
+  "nav_cleanup_confirmed": true,
+  "duration_wall_s": 1.9,
+  "duration_sim_s": 0.4,
+  "health_events": [],
+  "clock_discontinuities": [],
+  "nav_goal_events": [
+    {
+      "t": 9.877,
+      "event": "SENT",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": ""
+    },
+    {
+      "t": 9.918,
+      "event": "ACCEPTED",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": ""
+    },
+    {
+      "t": 9.977,
+      "event": "CANCEL_CONFIRMED",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": "KeyboardInterrupt: signal 2: cancel ERROR_NONE, terminal CANCELED"
+    },
+    {
+      "t": 10.05,
+      "event": "TERMINAL",
+      "goal": "PG-11/V0 d=1.50 a=+0deg",
+      "detail": "CANCELED (after cancel request)"
+    }
+  ],
+  "uncertainty_note": "sigma is a HEURISTIC model (frame spread + pixel resolution + floor); bands are diagnostic, not calibrated confidence intervals",
+  "summary": {
+    "gauges_total": 0,
+    "gauges_accepted": 0,
+    "gauges_unresolved": 0,
+    "alarms": [],
+    "recovered_by_viewpoint_change": [],
+    "decision_counts": {},
+    "observations_total": 0,
+    "viewpoints_total": 0,
+    "navigation_succeeded": 0,
+    "mean_position_error_m": null,
+    "uncertainty_note": "sigma is a HEURISTIC uncertainty model (frame spread + pixel resolution + floor). It is a diagnostic, not a calibrated probability: no confidence level or coverage is claimed for value +/- k*sigma."
+  }
+}

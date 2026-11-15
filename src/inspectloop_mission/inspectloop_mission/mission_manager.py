@@ -58,7 +58,7 @@ from visualization_msgs.msg import Marker, MarkerArray
 
 from inspectloop_mission import decision_policy as dp
 from inspectloop_mission.mission_config import alarm_state, GaugeSpec, load_mission, Pose2D
-from inspectloop_mission.nav_goal import NavGoalRunner
+from inspectloop_mission.nav_goal import GoalIdCanceller, NavGoalRunner
 from inspectloop_mission.observation_guard import (ExpectedObservation, is_settled,
                                                    validate_observation)
 from inspectloop_mission.report import write_reports
@@ -183,11 +183,16 @@ class MissionManager(Node):
             JumpThreshold(min_forward=None, min_backward=Duration(nanoseconds=-1),
                           on_clock_change=True), post_callback=self._on_clock_jump)
         self.mission_id = ''
+        # V3.2 F4: unknown-ownership goals are cancelled by THEIR goal id only (never the
+        # cancel-all form: RViz / waypoint_follower share navigate_to_pose) and confirmed via
+        # the server's status topic plus a stationary robot
+        self._nav_by_id = GoalIdCanceller(self, 'navigate_to_pose', callback_group=self._cb)
         self.nav = NavGoalRunner(
             self._nav, self._wait_future, self._sim_now, self.get_logger(),
             accept_timeout_s=float(self.get_parameter('nav_accept_timeout_s').value),
             cancel_timeout_s=float(self.get_parameter('nav_cancel_timeout_s').value),
-            terminal_timeout_s=float(self.get_parameter('nav_terminal_timeout_s').value))
+            terminal_timeout_s=float(self.get_parameter('nav_terminal_timeout_s').value),
+            goal_id_fallback=self._nav_by_id, motion_stopped=self._robot_stopped)
         self.status = MissionStatus()
         self.status.state = 'IDLE'
         self.create_timer(0.5, self._publish_status, callback_group=self._cb)
@@ -285,6 +290,16 @@ class MissionManager(Node):
         wall_end = time.monotonic() + seconds * 4 + 1.0
         while rclpy.ok() and self._sim_now() - t0 < seconds and time.monotonic() < wall_end:
             time.sleep(0.05)
+
+    def _robot_stopped(self) -> bool:
+        """Fresh odometry shows the robot stationary (same thresholds as observation)."""
+        P = self.get_parameter
+        with self._lock:
+            samples = list(self._odom)
+        return is_settled(samples, float(P('settle_window_s').value),
+                          float(P('settle_max_v').value), float(P('settle_max_w').value),
+                          now_s=self._sim_now(),
+                          max_age_s=float(P('odom_max_age_s').value))
 
     def lidar_level(self) -> Optional[int]:
         with self._lock:

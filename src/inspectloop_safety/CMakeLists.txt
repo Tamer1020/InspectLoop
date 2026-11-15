@@ -58,6 +58,8 @@ if(BUILD_TESTING)
   target_link_libraries(test_v3_sector_blindness_existing_api ${PROJECT_NAME}_core)
   ament_add_gtest(test_v3_motion_coverage test/test_v3_motion_coverage.cpp)
   target_link_libraries(test_v3_motion_coverage ${PROJECT_NAME}_core)
+  ament_add_gtest(test_v3_1_scan_workload test/test_v3_1_scan_workload.cpp TIMEOUT 60)
+  target_link_libraries(test_v3_1_scan_workload ${PROJECT_NAME}_core)
 endif()
 
 ament_export_targets(export_${PROJECT_NAME})

@@ -84,10 +84,12 @@ class FakeClient:
     def __init__(self, clock, scripts):
         self.clock, self.scripts, self.handles = clock, list(scripts), []
 
-    def send_goal_async(self, goal, feedback_callback=None):
+    def send_goal_async(self, goal, feedback_callback=None, goal_uuid=None):
         script = self.scripts.pop(0)
         f = Future()
         h = FakeHandle(self.clock, script.get('accept', True), script)
+        if goal_uuid is not None:
+            h.goal_id = goal_uuid             # like rclpy: the client chooses the goal id
         self.handles.append(h)
         if script.get('answer_after') is not None:
             self.clock.at(script['answer_after'], lambda: f.set_result(h))

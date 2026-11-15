@@ -12,7 +12,8 @@ cd ~/InspectLoop && source /opt/ros/jazzy/setup.bash && source install/setup.bas
 ros2 launch inspectloop_bringup inspectloop.launch.py
 ```
 
-What happens (recorded in `docs/evidence/demo_run_v2/`; v1 baseline in `docs/evidence/v1_demo_run/`):
+What happens (release-candidate run: `docs/evidence/astra_v3_2/demo/`; earlier runs in
+`docs/evidence/demo_run_v3*`, `demo_run_v2/`, v1 baseline in `v1_demo_run/`):
 
 1. Gazebo opens the warehouse, the robot spawns at (-10, 0); bridges, robot_state_publisher,
    `cmd_vel_gate` and `health_monitor` start.
@@ -20,10 +21,10 @@ What happens (recorded in `docs/evidence/demo_run_v2/`; v1 baseline in `docs/evi
 3. After 10 s `mission_manager` waits for Nav2, `/gauge/read`, `/map`, TF and `/amcl_pose`.
 4. **PG-11** – drives to the frontal viewpoint, waits until odometry shows the robot at rest,
    captures 5 fresh frames → **ACCEPT** 4.2 bar.
-5. **PG-12** – frontal view: the hanging conduit box hides the dial → `OCCLUDED` → **MOVE_NEW**;
-   the planner blocks that direction and picks the −45° viewpoint; there the dial is clear but
-   too small for the needle-evidence test (`TOO_FAR`) → **MOVE_NEW** closer along the same line of
-   sight (1.2 m) → **ACCEPT** 6.8 bar.
+5. **PG-12** – frontal view: the hanging conduit box (invisible to the 2-D LiDAR) hides the
+   dial and its tag → `TAG_NOT_VISIBLE` → **RETRY_SAME** → **MOVE_NEW**; the planner blocks that
+   direction and picks the −45° viewpoint → **ACCEPT** 6.8 bar. (In the V2 run the frontal view
+   was flagged `OCCLUDED` instead and a second, closer move was needed.)
 6. **PG-13** – a crate stack hides the gauge: `TAG_NOT_VISIBLE` → **RETRY_SAME** → **MOVE_NEW** (−30°)
    → RETRY_SAME → MOVE_NEW (+30°) → RETRY_SAME → **UNRESOLVED** (budget of 3 viewpoints spent).
 7. **PG-14** – **ACCEPT** 8.7 bar, flagged **alarm HIGH** (limit 8.0 bar).
@@ -86,6 +87,22 @@ never used as evidence; a clock reset invalidates the observation in progress (`
 clock epoch changes) — Nav2 itself does not recover from a world-time reset, so navigation then
 fails and the gauge ends `UNRESOLVED` / `NAVIGATION_FAILURE`. The script refuses to run while
 another InspectLoop simulation is up. Recorded runs: `docs/evidence/astra_v3/faults/`.
+
+V3.1 / V3.2 live tests (harness scripts kept with their evidence; run one at a time):
+
+```bash
+T=docs/evidence/astra_v3_2/tools
+$T/tiny_inc_fault.sh /tmp/f3_tiny_inc          # 720-beam scan with angle_increment 1e-9 while driving
+$T/sigint_at_dispatch.sh /tmp/f4_dispatch 1    # SIGINT right after the 1st goal is SENT (3 = 3rd goal)
+$T/live_unknown_goal.sh /tmp/f4_unknown        # stack with mission:=false; lost goal handle
+```
+
+Expected: gate `STOPPED_SCAN_FAULT (scan BAD_METADATA)`, robot 0 m/s, `/cmd_vel_safe` still every
+~50 ms; after SIGINT `CANCEL_CONFIRMED` and Nav2's status list shows the goal `5` (CANCELED) with
+nothing `2` (EXECUTING); lost handle: `UNKNOWN_RESOLVED … cancel-by-id ERROR_NONE, server status
+CANCELED` with the fallback, and the goal still EXECUTING in the `nofallback` control run.
+The harness tears the launch down itself (SIGTERM after 30 s if SIGINT is ignored).
+Recorded runs: `docs/evidence/astra_v3_1_live/`, `docs/evidence/astra_v3_2/`.
 
 Other useful switches: `mission:=false` (drive with RViz "Nav2 Goal"), `mission_file:=<yaml>`,
 `output_root:=<dir>`, `camera_bridge:=false` (start without camera),

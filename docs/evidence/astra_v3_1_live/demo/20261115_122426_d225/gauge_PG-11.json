@@ -1,0 +1,252 @@
+{
+  "id": "PG-11",
+  "tag_id": 11,
+  "description": "Rack N1 - compressed-air header",
+  "unit": "bar",
+  "mount": {
+    "x": -7.0,
+    "y": 3.99,
+    "normal_yaw": -1.5708
+  },
+  "alarm_low": 1.0,
+  "alarm_high": 8.0,
+  "candidates_feasible": [
+    {
+      "index": 0,
+      "label": "V0 d=1.50 a=+0deg",
+      "x": -7.0,
+      "y": 2.49,
+      "yaw": 1.5708,
+      "distance": 1.5,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 1,
+      "label": "V1 d=1.50 a=-30deg",
+      "x": -7.75,
+      "y": 2.691,
+      "yaw": 1.0472,
+      "distance": 1.5,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 2,
+      "label": "V2 d=1.50 a=+30deg",
+      "x": -6.25,
+      "y": 2.691,
+      "yaw": 2.0944,
+      "distance": 1.5,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 3,
+      "label": "V3 d=1.50 a=-45deg",
+      "x": -8.061,
+      "y": 2.929,
+      "yaw": 0.7854,
+      "distance": 1.5,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 4,
+      "label": "V4 d=1.50 a=+45deg",
+      "x": -5.939,
+      "y": 2.929,
+      "yaw": 2.3562,
+      "distance": 1.5,
+      "angle_deg": 45.0
+    },
+    {
+      "index": 5,
+      "label": "V5 d=1.20 a=+0deg",
+      "x": -7.0,
+      "y": 2.79,
+      "yaw": 1.5708,
+      "distance": 1.2,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 6,
+      "label": "V6 d=1.20 a=-30deg",
+      "x": -7.6,
+      "y": 2.951,
+      "yaw": 1.0472,
+      "distance": 1.2,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 7,
+      "label": "V7 d=1.20 a=+30deg",
+      "x": -6.4,
+      "y": 2.951,
+      "yaw": 2.0944,
+      "distance": 1.2,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 8,
+      "label": "V8 d=1.20 a=-45deg",
+      "x": -7.849,
+      "y": 3.141,
+      "yaw": 0.7854,
+      "distance": 1.2,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 9,
+      "label": "V9 d=1.20 a=+45deg",
+      "x": -6.151,
+      "y": 3.141,
+      "yaw": 2.3562,
+      "distance": 1.2,
+      "angle_deg": 45.0
+    },
+    {
+      "index": 10,
+      "label": "V10 d=1.90 a=+0deg",
+      "x": -7.0,
+      "y": 2.09,
+      "yaw": 1.5708,
+      "distance": 1.9,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 11,
+      "label": "V11 d=1.90 a=-30deg",
+      "x": -7.95,
+      "y": 2.345,
+      "yaw": 1.0472,
+      "distance": 1.9,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 12,
+      "label": "V12 d=1.90 a=+30deg",
+      "x": -6.05,
+      "y": 2.345,
+      "yaw": 2.0944,
+      "distance": 1.9,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 13,
+      "label": "V13 d=1.90 a=-45deg",
+      "x": -8.344,
+      "y": 2.647,
+      "yaw": 0.7854,
+      "distance": 1.9,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 14,
+      "label": "V14 d=1.90 a=+45deg",
+      "x": -5.657,
+      "y": 2.646,
+      "yaw": 2.3562,
+      "distance": 1.9,
+      "angle_deg": 45.0
+    }
+  ],
+  "candidate_feasibility": "footprint-clear in the occupancy map; Nav2 path reachability not pre-checked",
+  "candidates_rejected": [],
+  "viewpoints": [
+    {
+      "viewpoint": {
+        "index": 0,
+        "label": "V0 d=1.50 a=+0deg",
+        "x": -7.0,
+        "y": 2.49,
+        "yaw": 1.5708,
+        "distance": 1.5,
+        "angle_deg": 0.0
+      },
+      "navigation": {
+        "outcome": "SUCCEEDED",
+        "attempts": [
+          {
+            "result": "SUCCEEDED",
+            "duration_s": 14.15,
+            "recoveries": 0,
+            "attempt": 1
+          }
+        ],
+        "total_time_s": 14.15,
+        "final_pose": {
+          "x": -7.038,
+          "y": 2.632,
+          "yaw": 1.422
+        },
+        "position_error_m": 0.147,
+        "yaw_error_rad": 0.149
+      },
+      "observations": [
+        {
+          "viewpoint": "V0 d=1.50 a=+0deg",
+          "observation_id": "20261115_122426_d225/PG-11/V0/1",
+          "mission_id": "20261115_122426_d225",
+          "fault_class": "NONE",
+          "viewpoint_epoch": 1,
+          "settled_before_request": true,
+          "request_time_s": 24.182,
+          "first_frame_stamp_s": 24.8,
+          "last_frame_stamp_s": 25.4,
+          "stamp_s": 25.4,
+          "pose_known": true,
+          "acq_x": -7.044,
+          "acq_y": 2.642,
+          "acq_yaw": 1.426,
+          "pose_motion_m": 0.0,
+          "pose_motion_rad": 0.0,
+          "has_value": true,
+          "value": 4.1913,
+          "sigma": 0.0512,
+          "unit": "bar",
+          "frames_requested": 5,
+          "frames_received": 5,
+          "frames_tag_detected": 5,
+          "frames_valid": 5,
+          "frame_values": [
+            4.1913,
+            4.1913,
+            4.1913,
+            4.1913,
+            4.1913
+          ],
+          "frame_spread": 0.0,
+          "needle_confidence": 0.993,
+          "dial_visibility": 1.0,
+          "view_angle_deg": 22.4,
+          "distance_m": 1.199,
+          "dial_radius_px": 76.4,
+          "sharpness": 1338.6,
+          "processing_time_ms": 454.0,
+          "quality_flags": [],
+          "raw_image_path": "/tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/demo/20261115_122426_d225/images/PG-11_V0_t00024.80_raw.png",
+          "annotated_image_path": "/tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/demo/20261115_122426_d225/images/PG-11_V0_t00024.80_annotated.png",
+          "rectified_image_path": "/tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/demo/20261115_122426_d225/images/PG-11_V0_t00024.80_rectified.png",
+          "detail": "4.19 +/- 0.05 bar from 5/5 frames",
+          "consumed_time_s": 26.148,
+          "result_age_s": 0.748,
+          "clock_epoch_request": 0,
+          "clock_epoch_consumed": 0,
+          "decision": "ACCEPT",
+          "reason": "5 valid frames, sigma 0.051 <= 0.15",
+          "index": 1
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "t": 16.6,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "event": "OBSERVATION #1",
+      "value": 4.1913,
+      "sigma": 0.0512,
+      "flags": [],
+      "decision": "ACCEPT",
+      "reason": "5 valid frames, sigma 0.051 <= 0.15"
+    }
+  ],
+  "result": null
+}

@@ -1,7 +1,46 @@
 # Test results
 
-> **V3 (after the independent review of V2, 2026-11-09)** — §V3 below; full detail in
-> `docs/ASTRA_V3_REMEDIATION_REPORT.md`. §0 (V2) and §1–7 (V1) are kept for traceability.
+> **Release candidate (V3.2, 2026-11-15)** — §V3.1/V3.2 below. §V3 (after the independent review
+> of V2, 2026-11-09; detail in `docs/ASTRA_V3_REMEDIATION_REPORT.md`), §0 (V2) and §1–7 (V1) are
+> kept for traceability.
+
+## V3.1 / V3.2 results (release candidate)
+
+Two HIGH findings of a further audit, fixed and re-verified:
+**F3** — `sectorCoverage()` iterated 2π / `angle_increment` directions (a 720-beam scan with
+`angle_increment = 1e-9` passed validation and cost ~6.3e9 lookups, blocking the gate's watchdog
+timer); **F4** — a SIGINT between `send_goal_async()` returning and goal registration could leave
+a sent goal untracked while shutdown reported success. V3.2 hardens F4 further: unknown-ownership
+goals are cancelled by their own goal ID and confirmed through Nav2's status topic.
+
+**Build / tests** (`ROS_DOMAIN_ID=87 colcon build && colcon test`, all 8 packages):
+**500 results, 0 errors, 0 failures, 0 skipped** — 489 test cases (C++ GoogleTest 68, vision
+pytest 208, mission pytest 187, gazebo 7 / description 7 / navigation 6 / bringup 6) + 11 CTest
+wrapper entries.
+
+| New regression tests | Cases | Before the fix |
+|---|---|---|
+| `inspectloop_safety/test/test_v3_1_scan_workload.cpp` — the audit scan → `BAD_METADATA`; 20 malformed-metadata cases fail closed; ≤ 3·(n+6) lookups; identical to the V3 algorithm on 4 800 plausible cases; watchdog scheduling (scan callback < 5 ms, tick gap < 50 ms) | 9 | V3 took 20.19 s for one sector, `assessScan` did not return in 30 s (`docs/evidence/astra_v3_1_live/before_fix_f3_unbounded_sector_loop.txt`) |
+| `inspectloop_mission/test/test_v3_1_nav_send_interrupt.py` — SIGINT injected (sys.settrace) right after `send_goal_async()` returns, and at every bytecode of the send → accept → track → result path | 9 | 7 of 9 failed on V3: "false clean shutdown after SIGINT at run:272" (`…/before_fix_f4_send_registration_gap.txt`) |
+| `inspectloop_mission/test/test_v3_2_unknown_goal_fallback.py` — lost goal handle cancelled by ID; fail closed on unknown ID / refused / unanswered cancel / unobservable status / robot still moving; foreign goals never cancelled; opcode sweep: no stranded goal with a cooperative server | 17 | new API (V3.2); behaviour before: live control run below |
+| `inspectloop_mission/test/test_v3_2_goal_id_fallback_ros.py` — the same over a **real rclpy action server**: unknown ID → `ERROR_UNKNOWN_GOAL_ID`, finished goal → `ERROR_GOAL_TERMINATED`, other client's goal untouched | 4 | – |
+
+The opcode sweep also exposed and fixed two latent cleanup defects: a second Ctrl-C could escape
+`cancel_all()`'s final check, and a SIGINT inside `_track()` left a goal whose termination could
+never be confirmed.
+
+**Live integration** (Gazebo Harmonic + Nav2, headless, developer machine):
+
+| Test | Observed | Evidence |
+|---|---|---|
+| Normal 4-gauge mission (V3.2) | COMPLETED, exit 0; PG-11 4.212, PG-12 6.797 (MOVE_NEW → −45°), PG-13 UNRESOLVED, PG-14 8.699 alarm HIGH; max \|err\| 0.012 bar, 0 incorrect acceptances | `docs/evidence/astra_v3_2/demo/` |
+| Malformed scan while driving (720 beams, 1e-9) (V3.1) | gate `STOPPED_SCAN_FAULT (scan BAD_METADATA)`; robot 0.40 → 0.000 m/s; `/cmd_vel_safe` max gap 54 ms; mission ABORTED, goal CANCELED | `docs/evidence/astra_v3_1_live/f3_tiny_inc/` |
+| SIGINT 10 ms after goal #1 SENT (V3.1, V3.2) | CANCEL_CONFIRMED; Nav2 status 1× CANCELED; robot 0.000 m/s for 10 s | `…/astra_v3_1_live/f4_dispatch_1/`, `…/astra_v3_2/sigint_dispatch_1/` |
+| SIGINT right after goal #3 SENT (V3.1, V3.2) | late acceptance cancelled and confirmed; Nav2 2× SUCCEEDED + 1× CANCELED; robot 0.000 m/s | `…/f4_dispatch_3/`, `…/sigint_dispatch_3/` |
+| Lost goal handle, real Nav2 (V3.2 harness) | with fallback: cancelled by ID, Nav2 CANCELED, robot 0.000 m/s, cleanup True. Control without fallback: goal kept EXECUTING, robot up to 0.40 m/s for ~13 s, cleanup False | `docs/evidence/astra_v3_2/live_unknown_goal/` |
+
+Not verified: gate e-stop service failure and gate restart during shutdown, CI execution, any
+hardware.
 
 ## V3 results
 

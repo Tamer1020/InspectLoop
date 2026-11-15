@@ -3,8 +3,10 @@
 #include "inspectloop_safety/velocity_gate.hpp"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <limits>
+#include <utility>
 
 namespace inspectloop_safety
 {
@@ -186,13 +188,33 @@ bool beamObserved(double r, double range_min, double range_max)
   return std::isinf(r) || (std::isfinite(r) && r >= range_min && r <= range_max);
 }
 
+constexpr double kTwoPi = 2.0 * M_PI;
+
+/// Metadata plausibility (audit F3). Besides finiteness / ordering, the increment must be a
+/// physically meaningful angular resolution and the scan may not claim more than one revolution.
+/// These bounds make every quantity derived from the metadata finite and small: with
+/// inc >= kMinScanAngleIncrementRad, a sector has at most 2*pi/inc + 1 (~628k) sample directions
+/// and (via the size-consistency check) a scan at most ~628k beams.
+bool metadataValid(const ScanData & s)
+{
+  if (!std::isfinite(s.angle_min) || !std::isfinite(s.angle_max) ||
+    !std::isfinite(s.angle_increment) || !std::isfinite(s.range_min) ||
+    !std::isfinite(s.range_max) || s.range_min < 0.0 || s.range_max <= s.range_min ||
+    s.angle_max < s.angle_min)
+  {
+    return false;
+  }
+  const double inc = s.angle_increment;
+  if (!(inc >= kMinScanAngleIncrementRad) || inc > kTwoPi) {
+    return false;
+  }
+  // at most one revolution (+ tolerance: some drivers repeat the first beam at +2*pi)
+  return s.angle_max - s.angle_min <= kTwoPi + 1.5 * inc;
+}
+
 bool structurallyValid(const ScanData & s)
 {
-  if (s.ranges.empty() || !std::isfinite(s.angle_min) || !std::isfinite(s.angle_max) ||
-    !std::isfinite(s.angle_increment) || s.angle_increment <= 0.0 ||
-    !std::isfinite(s.range_min) || !std::isfinite(s.range_max) || s.range_min < 0.0 ||
-    s.range_max <= s.range_min || s.angle_max < s.angle_min)
-  {
+  if (s.ranges.empty() || !metadataValid(s)) {
     return false;
   }
   const double expected = (s.angle_max - s.angle_min) / s.angle_increment + 1.0;
@@ -202,7 +224,6 @@ bool structurallyValid(const ScanData & s)
 /// index of the beam sampling direction theta, or -1 if the scan does not sample it
 long beamIndex(const ScanData & s, double theta)
 {
-  constexpr double kTwoPi = 2.0 * M_PI;
   const long n = static_cast<long>(s.ranges.size());
   for (const double wrap : {0.0, kTwoPi, -kTwoPi}) {
     const double t = theta + wrap;
@@ -229,27 +250,64 @@ SectorCoverage sectorCoverage(const ScanData & s, double centre, double half_ang
   }
   const double inc = s.angle_increment;
   const bool full_circle = half_angle >= M_PI - 1e-9;
-  const long samples = full_circle ?
-    std::max(1L, std::lround(2.0 * M_PI / inc)) :
-    2L * static_cast<long>(std::floor(half_angle / inc)) + 1L;
+  // Number of sample directions, in floating point first (never an unchecked conversion).
+  // metadataValid() bounds it by 2*pi / kMinScanAngleIncrementRad + 1.
+  const double samples_d = full_circle ? std::max(1.0, std::round(kTwoPi / inc)) :
+    2.0 * std::floor(half_angle / inc) + 1.0;
+  if (!(samples_d >= 1.0 && samples_d <= kTwoPi / kMinScanAngleIncrementRad + 2.0)) {
+    return out;
+  }
+  const long samples = static_cast<long>(samples_d);
   const double start = full_circle ? centre - M_PI : centre - inc * static_cast<double>(
     (samples - 1) / 2);
-  long observed = 0, run = 0, longest = 0, leading = -1;
-  for (long k = 0; k < samples; ++k) {
-    const long idx = beamIndex(s, start + static_cast<double>(k) * inc);
-    const bool ok = idx >= 0 && beamObserved(s.ranges[static_cast<std::size_t>(idx)],
-        s.range_min, s.range_max);
-    if (ok) {
-      ++observed;
-      if (leading < 0) {
-        leading = run;          // unobserved run at the start (joins the end on a full circle)
-      }
-      longest = std::max(longest, run);
-      run = 0;
-    } else {
-      ++run;
+
+  // Work bound (audit F3): sample k (direction start + k*inc) maps to beam
+  // idx = round(k - c_w) for wrap w, with c_w = (angle_min - w - start) / inc. It can only be
+  // observed if idx lies in [0, n) for one of the three wraps beamIndex() tries, i.e. if k lies
+  // in [c_w - 0.5, c_w + n - 0.5]. Only those windows (widened by kMargin against rounding) are
+  // looked up - at most 3 * (n + 2 * kMargin + 2) beamIndex() calls, whatever the sector size.
+  // Samples outside every window are provably unsampled and counted in bulk as unobserved.
+  constexpr double kMargin = 2.0;
+  const double n = static_cast<double>(s.ranges.size());
+  std::array<std::pair<long, long>, 3> win{};
+  std::size_t nwin = 0;
+  for (const double wrap : {0.0, kTwoPi, -kTwoPi}) {
+    const double c = (s.angle_min - wrap - start) / inc;
+    const double lo = std::max(0.0, std::floor(c) - kMargin);
+    const double hi = std::min(samples_d - 1.0, std::ceil(c + n - 1.0) + kMargin);
+    if (std::isfinite(c) && lo <= hi) {
+      win[nwin++] = {static_cast<long>(lo), static_cast<long>(hi)};
     }
   }
+  std::sort(win.begin(), win.begin() + static_cast<std::ptrdiff_t>(nwin));
+
+  long observed = 0, run = 0, longest = 0, leading = -1;
+  long k = 0;                   // next sample not yet accounted for
+  for (std::size_t w = 0; w < nwin; ++w) {
+    const long lo = std::max(win[w].first, k);
+    const long hi = win[w].second;
+    if (lo > hi) {
+      continue;                 // fully inside an earlier (overlapping) window
+    }
+    run += lo - k;              // [k, lo): outside every window -> unobserved
+    for (k = lo; k <= hi; ++k) {
+      ++out.lookups;
+      const long idx = beamIndex(s, start + static_cast<double>(k) * inc);
+      const bool ok = idx >= 0 && beamObserved(s.ranges[static_cast<std::size_t>(idx)],
+          s.range_min, s.range_max);
+      if (ok) {
+        ++observed;
+        if (leading < 0) {
+          leading = run;        // unobserved run at the start (joins the end on a full circle)
+        }
+        longest = std::max(longest, run);
+        run = 0;
+      } else {
+        ++run;
+      }
+    }
+  }
+  run += samples - k;           // tail outside every window
   if (leading < 0) {            // nothing observed at all
     longest = samples;
   } else if (full_circle) {
@@ -283,11 +341,7 @@ ScanAssessment assessScan(const ScanData & s, const CoverageParams & p)
     out.validity = ScanValidity::kEmpty;
     return out;
   }
-  if (!std::isfinite(s.angle_min) || !std::isfinite(s.angle_max) ||
-    !std::isfinite(s.angle_increment) || s.angle_increment <= 0.0 ||
-    !std::isfinite(s.range_min) || !std::isfinite(s.range_max) || s.range_min < 0.0 ||
-    s.range_max <= s.range_min || s.angle_max < s.angle_min)
-  {
+  if (!metadataValid(s)) {
     out.validity = ScanValidity::kBadMetadata;
     return out;
   }

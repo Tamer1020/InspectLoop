@@ -1,0 +1,77 @@
+t+ 0.00s  mode=nofallback: sending goal to (-7.00, 2.49) with SIGINT injected after send
+[WARN] [1794744081.504558554] [v32_unknown_goal_harness]: [nav goal LIVE] OWNERSHIP_UNKNOWN interrupted while sending (KeyboardInterrupt: SIGINT injected at run:477) - motion inhibited
+[WARN] [1794744081.505746131] [v32_unknown_goal_harness]: [nav goal LIVE] UNKNOWN_UNRESOLVED KeyboardInterrupt: SIGINT injected at run:477: no goal-id fallback configured
+[WARN] [1794744081.506348609] [v32_unknown_goal_harness]: [nav goal LIVE (ownership unknown)] CLEANUP_INCOMPLETE KeyboardInterrupt: SIGINT injected at run:477
+[WARN] [1794744081.506856941] [v32_unknown_goal_harness]: [nav goal LIVE] CANCEL_UNRESOLVED KeyboardInterrupt: SIGINT injected at run:477: motion inhibited
+t+ 0.50s  KeyboardInterrupt in run(): SIGINT injected at run:477
+t+ 0.50s  injection point run:477; unresolved=['LIVE (ownership unknown)']
+t+ 1.00s  nav2 status of our goal id: EXECUTING  |v|=0.086 m/s
+t+ 2.04s  nav2 status of our goal id: EXECUTING  |v|=0.211 m/s
+t+ 3.05s  nav2 status of our goal id: EXECUTING  |v|=0.329 m/s
+[WARN] [1794744084.134825622] [v32_unknown_goal_harness]: [nav goal LIVE] UNKNOWN_UNRESOLVED harness cleanup: no goal-id fallback configured
+[WARN] [1794744084.288484157] [v32_unknown_goal_harness]: [nav goal LIVE (ownership unknown)] CLEANUP_INCOMPLETE harness cleanup
+t+ 3.28s  cancel_all() -> False; unresolved=['LIVE (ownership unknown)']
+t+ 4.29s  nav2 status of our goal id: EXECUTING  |v|=0.400 m/s
+t+ 5.29s  nav2 status of our goal id: EXECUTING  |v|=0.400 m/s
+t+ 6.34s  nav2 status of our goal id: EXECUTING  |v|=0.400 m/s
+t+ 7.35s  nav2 status of our goal id: EXECUTING  |v|=0.400 m/s
+[WARN] [1794744088.376893102] [v32_unknown_goal_harness]: [nav goal LIVE] UNKNOWN_UNRESOLVED harness cleanup: no goal-id fallback configured
+[WARN] [1794744088.467584839] [v32_unknown_goal_harness]: [nav goal LIVE (ownership unknown)] CLEANUP_INCOMPLETE harness cleanup
+t+ 7.46s  cancel_all() -> False; unresolved=['LIVE (ownership unknown)']
+t+ 8.48s  nav2 status of our goal id: EXECUTING  |v|=0.400 m/s
+t+ 9.50s  nav2 status of our goal id: EXECUTING  |v|=0.400 m/s
+t+10.54s  nav2 status of our goal id: EXECUTING  |v|=0.374 m/s
+t+11.56s  nav2 status of our goal id: EXECUTING  |v|=0.287 m/s
+[WARN] [1794744092.689734140] [v32_unknown_goal_harness]: [nav goal LIVE] UNKNOWN_UNRESOLVED harness cleanup: no goal-id fallback configured
+[WARN] [1794744092.834361101] [v32_unknown_goal_harness]: [nav goal LIVE (ownership unknown)] CLEANUP_INCOMPLETE harness cleanup
+t+11.82s  cancel_all() -> False; unresolved=['LIVE (ownership unknown)']
+t+12.87s  nav2 status of our goal id: EXECUTING  |v|=0.093 m/s
+t+13.38s  nav2 status of our goal id: SUCCEEDED  |v|=0.034 m/s
+t+13.89s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+14.40s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+14.90s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+15.44s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+15.96s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+[WARN] [1794744097.473934244] [v32_unknown_goal_harness]: [nav goal LIVE] UNKNOWN_UNRESOLVED harness cleanup: no goal-id fallback configured
+[WARN] [1794744097.485283450] [v32_unknown_goal_harness]: [nav goal LIVE (ownership unknown)] CLEANUP_INCOMPLETE harness cleanup
+t+16.00s  cancel_all() -> False; unresolved=['LIVE (ownership unknown)']
+t+16.50s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+17.02s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+17.54s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+18.04s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+18.55s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+19.05s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+19.56s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+20.11s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+[WARN] [1794744101.598397799] [v32_unknown_goal_harness]: [nav goal LIVE] UNKNOWN_UNRESOLVED harness cleanup: no goal-id fallback configured
+[WARN] [1794744101.598878838] [v32_unknown_goal_harness]: [nav goal LIVE (ownership unknown)] CLEANUP_INCOMPLETE harness cleanup
+t+20.11s  cancel_all() -> False; unresolved=['LIVE (ownership unknown)']
+t+20.63s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+21.15s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+21.66s  nav2 status of our goal id: SUCCEEDED  |v|=0.000 m/s
+t+22.17s  after verdict: nav2 status SUCCEEDED  |v|=0.000 m/s
+t+22.69s  after verdict: nav2 status SUCCEEDED  |v|=0.000 m/s
+t+23.21s  after verdict: nav2 status SUCCEEDED  |v|=0.000 m/s
+t+23.72s  after verdict: nav2 status SUCCEEDED  |v|=0.000 m/s
+t+24.22s  after verdict: nav2 status SUCCEEDED  |v|=0.000 m/s
+t+24.73s  after verdict: nav2 status SUCCEEDED  |v|=0.000 m/s
+t+25.27s  after verdict: nav2 status SUCCEEDED  |v|=0.000 m/s
+t+25.78s  after verdict: nav2 status SUCCEEDED  |v|=0.000 m/s
+t+26.29s  after verdict: nav2 status SUCCEEDED  |v|=0.000 m/s
+t+26.80s  after verdict: nav2 status SUCCEEDED  |v|=0.000 m/s
+EVENT {'t': 3730.169, 'event': 'OWNERSHIP_UNKNOWN', 'goal': 'LIVE', 'detail': 'interrupted while sending (KeyboardInterrupt: SIGINT injected at run:477) - motion inhibited'}
+EVENT {'t': 3730.647, 'event': 'UNKNOWN_UNRESOLVED', 'goal': 'LIVE', 'detail': 'KeyboardInterrupt: SIGINT injected at run:477: no goal-id fallback configured'}
+EVENT {'t': 3730.648, 'event': 'CLEANUP_INCOMPLETE', 'goal': 'LIVE (ownership unknown)', 'detail': 'KeyboardInterrupt: SIGINT injected at run:477'}
+EVENT {'t': 3730.649, 'event': 'CANCEL_UNRESOLVED', 'goal': 'LIVE', 'detail': 'KeyboardInterrupt: SIGINT injected at run:477: motion inhibited'}
+EVENT {'t': 3733.207, 'event': 'UNKNOWN_UNRESOLVED', 'goal': 'LIVE', 'detail': 'harness cleanup: no goal-id fallback configured'}
+EVENT {'t': 3733.277, 'event': 'CLEANUP_INCOMPLETE', 'goal': 'LIVE (ownership unknown)', 'detail': 'harness cleanup'}
+EVENT {'t': 3737.505, 'event': 'UNKNOWN_UNRESOLVED', 'goal': 'LIVE', 'detail': 'harness cleanup: no goal-id fallback configured'}
+EVENT {'t': 3737.519, 'event': 'CLEANUP_INCOMPLETE', 'goal': 'LIVE (ownership unknown)', 'detail': 'harness cleanup'}
+EVENT {'t': 3741.716, 'event': 'UNKNOWN_UNRESOLVED', 'goal': 'LIVE', 'detail': 'harness cleanup: no goal-id fallback configured'}
+EVENT {'t': 3741.832, 'event': 'CLEANUP_INCOMPLETE', 'goal': 'LIVE (ownership unknown)', 'detail': 'harness cleanup'}
+EVENT {'t': 3746.124, 'event': 'UNKNOWN_UNRESOLVED', 'goal': 'LIVE', 'detail': 'harness cleanup: no goal-id fallback configured'}
+EVENT {'t': 3746.141, 'event': 'CLEANUP_INCOMPLETE', 'goal': 'LIVE (ownership unknown)', 'detail': 'harness cleanup'}
+EVENT {'t': 3750.265, 'event': 'UNKNOWN_UNRESOLVED', 'goal': 'LIVE', 'detail': 'harness cleanup: no goal-id fallback configured'}
+EVENT {'t': 3750.266, 'event': 'CLEANUP_INCOMPLETE', 'goal': 'LIVE (ownership unknown)', 'detail': 'harness cleanup'}
+RESULT mode=nofallback cancel_all=False nav2_status=SUCCEEDED robot_stopped=True
+harness exit 0

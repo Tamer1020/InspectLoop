@@ -3,6 +3,7 @@
 #pragma once
 
 #include <cmath>
+#include <cstddef>
 #include <limits>
 #include <string>
 #include <vector>
@@ -84,7 +85,15 @@ struct SectorCoverage
   double coverage{0.0};    ///< observed sample directions / all sample directions in the sector
   double max_gap_rad{std::numeric_limits<double>::infinity()};  ///< widest unobserved run
   bool observed{false};    ///< coverage >= min and max gap <= limit (and resolution ok)
+  /// beam lookups performed (work bound, audit F3): <= 3 * (ranges.size() + 6)
+  std::size_t lookups{0};
 };
+
+/// Finest plausible LaserScan angular increment (audit F3). 1e-5 rad (~0.0006 deg) is more than
+/// 10x finer than any 2D LiDAR (finest commercial units ~0.01 deg = 1.7e-4 rad); finer metadata
+/// is rejected as BAD_METADATA. Together with the one-revolution span limit it bounds a sector
+/// to <= 2*pi/1e-5 + 1 sample directions.
+constexpr double kMinScanAngleIncrementRad = 1e-5;
 
 /// Geometry and coverage thresholds of the motion-relevant sectors (all configurable).
 struct CoverageParams
@@ -130,7 +139,8 @@ SectorCoverage sectorCoverage(const ScanData & scan, double centre, double half_
 ScanAssessment assessScan(const ScanData & scan, const CoverageParams & params);
 
 /// Validate a scan and compute the forward clearance (Astra F3). Fail-closed:
-///  * empty ranges, non-finite / non-positive increment, range_max <= range_min, or a ranges
+///  * empty ranges, non-finite / implausibly fine (< kMinScanAngleIncrementRad) increment, a span
+///    of more than one revolution, range_max <= range_min, or a ranges
 ///    count inconsistent with the angular span -> invalid;
 ///  * per REP-117: +inf = no return within range (clear), -inf = object closer than range_min
 ///    (obstacle at the sensor), NaN or out-of-[range_min, range_max] finite values = unusable;

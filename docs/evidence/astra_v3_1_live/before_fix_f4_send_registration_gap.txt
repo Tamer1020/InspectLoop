@@ -1,0 +1,18 @@
+# V3.1 F4 regression tests run against the V3 nav_goal.py (git HEAD e9a12e6), 2026-11-15
+# command: python3 -m pytest -q -p no:cacheprovider -W ignore test/test_v3_1_nav_send_interrupt.py (in a copy whose nav_goal.py is the HEAD version)
+                    f'false clean shutdown after SIGINT at {inj.where} (#{nth})'
+E               AssertionError: false clean shutdown after SIGINT at run:272 (#3)
+                    f'false clean shutdown after SIGINT at {inj.where} (#{nth})'
+E               AssertionError: false clean shutdown after SIGINT at run:272 (#3)
+                    f'false clean shutdown after SIGINT at {inj.where} (#{nth})'
+E               AssertionError: false clean shutdown after SIGINT at run:272 (#3)
+                    f'false clean shutdown after SIGINT at {inj.where} (#{nth})'
+E               AssertionError: false clean shutdown after SIGINT at run:272 (#3)
+FAILED test/test_v3_1_nav_send_interrupt.py::test_sigint_right_after_send_goal_async_returns_is_owned_and_cancelled
+FAILED test/test_v3_1_nav_send_interrupt.py::test_sigint_right_after_send_acceptance_inside_cleanup_window
+FAILED test/test_v3_1_nav_send_interrupt.py::test_sigint_right_after_send_never_answered_never_reports_clean_shutdown
+FAILED test/test_v3_1_nav_send_interrupt.py::test_sigint_at_every_opcode_after_send_never_yields_false_clean_shutdown[script0]
+FAILED test/test_v3_1_nav_send_interrupt.py::test_sigint_at_every_opcode_after_send_never_yields_false_clean_shutdown[script1]
+FAILED test/test_v3_1_nav_send_interrupt.py::test_sigint_at_every_opcode_after_send_never_yields_false_clean_shutdown[script2]
+FAILED test/test_v3_1_nav_send_interrupt.py::test_sigint_at_every_opcode_after_send_never_yields_false_clean_shutdown[script3]
+7 failed, 2 passed in 0.30s

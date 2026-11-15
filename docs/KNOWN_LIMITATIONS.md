@@ -80,9 +80,51 @@
 * **Rotation** is blocked by an obstacle inside a 0.35 m radius and by < 95 % whole-circle coverage;
   a robot pressed against an obstacle can therefore only translate away. A 270° scanner would make
   in-place rotation and reverse motion impossible by design (tested in unit tests only).
-* **Goal ownership unknown is sticky.** If `send_goal_async` itself raises, the runner cannot know
-  whether a goal exists and inhibits motion for the rest of the mission (e-stop latched); there is
-  no cancel-all fallback through the action's cancel service.
+* **Unknown Nav2 goal ownership (V3.2).** "Unknown" = the request may have reached Nav2 but the
+  runner holds no goal handle (`send_goal_async` raised, or SIGINT landed after it returned and
+  before its future was stored). Verified facts:
+  * The runner chooses every goal UUID before sending (`goal_uuid=`), so the ID of an
+    unknown-ownership goal is known. Cleanup cancels **only that ID** through
+    `navigate_to_pose/_action/cancel_goal` and confirms it on `navigate_to_pose/_action/status`
+    (`GoalIdCanceller`). The cancel-all form (zero ID) is refused in code: the server is shared -
+    live `ros2 action info /navigate_to_pose` lists `bt_navigator` (its `/goal_pose` path),
+    `waypoint_follower` and `docking_server` as clients, plus RViz's Nav2 panel when `rviz:=true`.
+  * The goal is resolved only when the server's status shows our ID terminal (after cancel
+    `ERROR_NONE` listing it, or `ERROR_GOAL_TERMINATED`) **and** fresh odometry shows the robot
+    stationary. A sent cancel request alone, `ERROR_UNKNOWN_GOAL_ID`, `ERROR_REJECTED`, no
+    answer, or an unobservable status leave it unresolved (motion inhibited, e-stop latched at
+    mission end).
+  * Live (Gazebo + Nav2, `docs/evidence/astra_v3_2/live_unknown_goal/`): without the fallback
+    (V3.1) the orphaned goal kept `EXECUTING` and drove the robot at up to 0.40 m/s for ~13 s
+    until Nav2 reported SUCCEEDED, while cleanup correctly reported failure. With the fallback the
+    goal was `CANCELED` by ID, the robot stayed at 0.000 m/s, and cleanup reported success only
+    after both were observed.
+  * Real rclpy server semantics checked in tests: unknown ID -> `ERROR_UNKNOWN_GOAL_ID`; finished
+    goal -> `ERROR_GOAL_TERMINATED`; another client's executing goal is never cancelled.
+
+  Unresolved risks (not mitigated, do not assume otherwise):
+  * **Lost or rejected request.** `ERROR_UNKNOWN_GOAL_ID` cannot distinguish "never arrived /
+    rejected" from "still in flight", so such a goal stays unresolved for the rest of the
+    mission (fail closed, but the mission cannot continue). If the request is delivered later,
+    the status topic shows the ID and it is cancelled - but only while the mission process lives.
+  * **After the mission process exits nothing watches the goal ID.** A request that reaches Nav2
+    after exit (implausible on a local reliable DDS link, not provable) would execute; protection
+    is then only the gate's normal checks plus the latched e-stop.
+  * **Gate service failure.** If `/cmd_vel_gate/set_estop` does not answer within 2 s,
+    `latch_estop` returns False and the record says "e-stop NOT confirmed - check the robot";
+    nothing else stops a still-executing goal (code inspection; not exercised live).
+  * **Gate restart clears the e-stop.** The latch is an in-memory flag in `GateSupervisor`
+    (default released, no persistence, no respawn configured); a restarted gate passes motion
+    again subject to its scan/obstacle/deadman checks (code inspection; not exercised live).
+  * **Gate absent.** If `cmd_vel_gate` is down, `/cmd_vel_safe` stops; whether Gazebo's DiffDrive
+    then holds the last velocity was not verified. Only `/cmd_vel_safe` (the gate's output) is
+    bridged to the Gazebo base (`bridge.yaml`); Nav2's `/cmd_vel` is not, so an orphan goal
+    cannot bypass the gate in this simulation.
+  * **Nav2 preemption.** `bt_navigator` executes one NavigateToPose goal at a time; a goal from
+    another client preempts ours (and vice versa). The targeted cancel never touches the other
+    goal, but this project does not arbitrate between clients.
+  * The exact send/registration window cannot be hit with a real signal; it is covered by
+    deterministic bytecode-level injection (unit tests and the live harness), not by real SIGINTs.
 
 ## Verification gaps
 * RViz2 ran during the GUI mission but its rendering was not visually verified (WSLg screen capture

@@ -1,0 +1,41 @@
+[sigint_at_dispatch] 13:04:52.487 SIGINT -> mission_manager 10933 right after SENT #3
+[sigint_at_dispatch] mission_manager exited; sampling robot speed for 10 s
+READY
+t+0.0-0.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=15)
+t+0.5-1.0s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+1.0-1.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+1.5-2.0s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+2.0-2.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+2.5-3.0s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+3.0-3.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+3.5-4.0s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=15)
+t+4.0-4.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+4.5-5.0s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+5.0-5.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+5.5-6.0s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+6.0-6.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+6.5-7.0s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+7.0-7.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=15)
+t+7.5-8.0s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+8.0-8.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+8.5-9.0s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+9.0-9.5s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+t+9.5-10.0s  max|v|=0.000 m/s  max|w|=0.000 rad/s  (n=14)
+--- Nav2 /navigate_to_pose goal status after the interrupt (2=EXECUTING 4=SUCCEEDED 5=CANCELED 6=ABORTED)
+      2   status: 4
+      1   status: 5
+--- ros2 action info /navigate_to_pose
+Action: /navigate_to_pose
+Action clients: 3
+    /bt_navigator
+    /waypoint_follower
+    /docking_server
+Action servers: 1
+    /bt_navigator
+[teardown] launch ignored SIGINT for 30 s -> SIGTERM
+stopped gz sim (InspectLoop world)
+stopped InspectLoop ros_gz bridges
+stopped InspectLoop nodes
+cleanup done
+[teardown] leftover InspectLoop processes: 0
+[sigint_at_dispatch] teardown done

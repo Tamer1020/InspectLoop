@@ -32,8 +32,8 @@ class SpyClient(FakeClient):
         super().__init__(clock, scripts)
         self.send_futures = []
 
-    def send_goal_async(self, goal, feedback_callback=None):
-        f = super().send_goal_async(goal, feedback_callback)
+    def send_goal_async(self, goal, feedback_callback=None, **kw):
+        f = super().send_goal_async(goal, feedback_callback, **kw)
         self.send_futures.append(f)
         return f
 
@@ -121,8 +121,8 @@ def test_no_new_goal_is_dispatched_while_the_interrupted_goal_is_unresolved():
 class ExplodingHandleClient(FakeClient):
     """Accepted goal whose cancel_goal_async raises (cleanup itself fails)."""
 
-    def send_goal_async(self, goal, feedback_callback=None):
-        f = super().send_goal_async(goal, feedback_callback)
+    def send_goal_async(self, goal, feedback_callback=None, **kw):
+        f = super().send_goal_async(goal, feedback_callback, **kw)
         h = self.handles[-1]
 
         def boom():
@@ -168,7 +168,7 @@ def test_send_goal_raising_makes_ownership_unknown_and_inhibits_permanently():
     c = FakeTime()
 
     class BadClient(FakeClient):
-        def send_goal_async(self, goal, feedback_callback=None):
+        def send_goal_async(self, goal, feedback_callback=None, **kw):
             raise RuntimeError('rcl send failed after publishing?')
     r = NavGoalRunner(BadClient(c, []), c.wait, lambda: c.t, None)
     with pytest.raises(RuntimeError):

@@ -1,7 +1,8 @@
 # Setup
 
-Verified environment (2026-11-08): Windows 11 + WSL2, Ubuntu 24.04.5 LTS, ROS 2 Jazzy,
-Gazebo Harmonic (gz-sim 8.x via the ROS `gz_*_vendor` packages), Nav2 1.3.13, ros_gz 1.0.24,
+Verified environment (2026-11-08, re-checked 2026-11-15): Windows 11 + WSL2, Ubuntu 24.04.5 LTS,
+ROS 2 Jazzy, Gazebo Harmonic (gz-sim 8.15.0 via the ROS `gz_*_vendor` packages), Nav2 1.3.13,
+ros_gz 1.0.24,
 OpenCV 4.6.0 (python3-opencv), GCC 13.3, CMake 3.28, Python 3.12, 16 cores / 15 GiB RAM.
 
 ## 1. System packages
@@ -35,8 +36,11 @@ source install/setup.bash
 
 ```bash
 colcon test
-colcon test-result --verbose      # expected: 0 errors, 0 failures
+colcon test-result --verbose      # expected: 0 errors, 0 failures (500 results on V3.2)
 ```
+
+Set `export ROS_DOMAIN_ID=87` (any unused ID) first if a simulation is running on the same
+machine: some tests start real rclpy action servers.
 
 ## 4. Regenerating the world (only if you edit the layout)
 
@@ -57,24 +61,15 @@ python3 scripts/generate_warehouse.py --layout config/warehouse_layout.yaml \
 * Windows path to the workspace: `\\wsl.localhost\Ubuntu-24.04\home\tamer\InspectLoop`
   (use `\\wsl$\Ubuntu-24.04\...` on older Windows builds; the distro name is shown by `wsl -l -v`).
 
-## 6. Publishing to GitHub (Tamer1020/InspectLoop)
+## 6. Source repository and CI
 
-The repository is a local git repo with a clean history on `main`. It was not pushed from the
-build environment because no GitHub credentials were available there. To publish:
+Source: <https://github.com/Tamer1020/InspectLoop> (`main`).
 
 ```bash
-# option A: GitHub CLI
-sudo apt install gh && gh auth login
-cd ~/InspectLoop
-gh repo create Tamer1020/InspectLoop --public --source=. --remote=origin --push
-
-# option B: create an empty public repo "InspectLoop" on github.com (no README/license), then
-cd ~/InspectLoop
-git remote add origin https://github.com/Tamer1020/InspectLoop.git
-git push -u origin main          # authenticate with a personal access token
+git clone https://github.com/Tamer1020/InspectLoop.git ~/InspectLoop
 ```
 
-The CI workflow (`.github/workflows/ci.yml`) then builds and runs all tests in a `ros:jazzy-ros-base`
-container. (It has not been executed yet; the simulation itself is not run in CI.)
-If you received the portfolio ZIP instead of the repo, restore full history with
-`git clone InspectLoop/InspectLoop.git.bundle InspectLoop-repo`.
+GitHub Actions (`.github/workflows/ci.yml`) builds all packages and runs `colcon test` in a
+`ros:jazzy-ros-base` container on every push to `main` and on pull requests. The Gazebo / Nav2
+simulation itself is **not** run in CI; live results come from the development machine
+(`docs/evidence/`).

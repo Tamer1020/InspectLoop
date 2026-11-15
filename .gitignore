@@ -20,3 +20,32 @@ inspectloop_runs/
 .env
 *.pem
 *.key
+# Python tooling / coverage
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+# CMake / compiled artefacts outside build/
+*.o
+*.so
+*.a
+CMakeCache.txt
+compile_commands.json
+core
+core.[0-9]*
+# packaging artefacts (portfolio ZIPs / git bundles are distributed separately, never committed)
+*.zip
+*.bundle
+*.tar.gz
+# ROS / Gazebo runtime data
+*.mcap
+.ros/
+.gz/
+# more secrets / credentials
+.env.*
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+credentials*.json
+*token*.txt

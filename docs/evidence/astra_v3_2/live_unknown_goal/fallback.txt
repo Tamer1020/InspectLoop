@@ -1,0 +1,27 @@
+t+ 0.00s  mode=fallback: sending goal to (-7.00, 2.49) with SIGINT injected after send
+[WARN] [1794744066.326876968] [v32_unknown_goal_harness]: [nav goal LIVE] OWNERSHIP_UNKNOWN interrupted while sending (KeyboardInterrupt: SIGINT injected at run:477) - motion inhibited
+[WARN] [1794744066.327342985] [v32_unknown_goal_harness]: [nav goal LIVE] UNKNOWN_GOAL_ACTIVE server lists our goal id with status 2 - cancelling it
+[WARN] [1794744066.421261243] [v32_unknown_goal_harness]: [nav goal LIVE] UNKNOWN_RESOLVED KeyboardInterrupt: SIGINT injected at run:477: cancel-by-id ERROR_NONE, server status CANCELED
+t+ 1.58s  KeyboardInterrupt in run(): SIGINT injected at run:477
+t+ 1.58s  injection point run:477; unresolved=[]
+t+ 2.08s  nav2 status of our goal id: CANCELED  |v|=0.000 m/s
+t+ 2.59s  nav2 status of our goal id: CANCELED  |v|=0.000 m/s
+t+ 3.10s  nav2 status of our goal id: CANCELED  |v|=0.000 m/s
+t+ 3.62s  nav2 status of our goal id: CANCELED  |v|=0.000 m/s
+t+ 4.14s  nav2 status of our goal id: CANCELED  |v|=0.000 m/s
+t+ 4.14s  cancel_all() -> True; unresolved=[]
+t+ 4.66s  after verdict: nav2 status CANCELED  |v|=0.000 m/s
+t+ 5.16s  after verdict: nav2 status CANCELED  |v|=0.000 m/s
+t+ 5.67s  after verdict: nav2 status CANCELED  |v|=0.000 m/s
+t+ 6.17s  after verdict: nav2 status CANCELED  |v|=0.000 m/s
+t+ 6.68s  after verdict: nav2 status CANCELED  |v|=0.000 m/s
+t+ 7.18s  after verdict: nav2 status CANCELED  |v|=0.000 m/s
+t+ 7.69s  after verdict: nav2 status CANCELED  |v|=0.000 m/s
+t+ 8.20s  after verdict: nav2 status CANCELED  |v|=0.000 m/s
+t+ 8.70s  after verdict: nav2 status CANCELED  |v|=0.000 m/s
+t+ 9.21s  after verdict: nav2 status CANCELED  |v|=0.000 m/s
+EVENT {'t': 3714.197, 'event': 'OWNERSHIP_UNKNOWN', 'goal': 'LIVE', 'detail': 'interrupted while sending (KeyboardInterrupt: SIGINT injected at run:477) - motion inhibited'}
+EVENT {'t': 3715.469, 'event': 'UNKNOWN_GOAL_ACTIVE', 'goal': 'LIVE', 'detail': 'server lists our goal id with status 2 - cancelling it'}
+EVENT {'t': 3715.512, 'event': 'UNKNOWN_RESOLVED', 'goal': 'LIVE', 'detail': 'KeyboardInterrupt: SIGINT injected at run:477: cancel-by-id ERROR_NONE, server status CANCELED'}
+RESULT mode=fallback cancel_all=True nav2_status=CANCELED robot_stopped=True
+harness exit 0

@@ -23,10 +23,10 @@ ACTION = f'test_navigate_to_pose_{os.getpid()}'
 
 
 class FakeNav2:
-    def __init__(self, node):
+    def __init__(self, node, name=ACTION):
         self.active = set()
         self.stop = threading.Event()
-        self.server = ActionServer(node, NavigateToPose, ACTION, self.execute,
+        self.server = ActionServer(node, NavigateToPose, name, self.execute,
                                    goal_callback=self.on_goal, cancel_callback=self.on_cancel,
                                    callback_group=ReentrantCallbackGroup())
 

@@ -1,0 +1,256 @@
+{
+  "id": "PG-12",
+  "tag_id": 12,
+  "description": "Rack S2 - hydraulic accumulator",
+  "unit": "bar",
+  "mount": {
+    "x": -1.0,
+    "y": -3.99,
+    "normal_yaw": 1.5708
+  },
+  "alarm_low": 1.0,
+  "alarm_high": 8.0,
+  "candidates_feasible": [
+    {
+      "index": 0,
+      "label": "V0 d=1.50 a=+0deg",
+      "x": -1.0,
+      "y": -2.49,
+      "yaw": -1.5708,
+      "distance": 1.5,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 1,
+      "label": "V1 d=1.50 a=-30deg",
+      "x": -0.25,
+      "y": -2.691,
+      "yaw": -2.0944,
+      "distance": 1.5,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 2,
+      "label": "V2 d=1.50 a=+30deg",
+      "x": -1.75,
+      "y": -2.691,
+      "yaw": -1.0472,
+      "distance": 1.5,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 3,
+      "label": "V3 d=1.50 a=-45deg",
+      "x": 0.061,
+      "y": -2.929,
+      "yaw": -2.3562,
+      "distance": 1.5,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 4,
+      "label": "V4 d=1.50 a=+45deg",
+      "x": -2.061,
+      "y": -2.929,
+      "yaw": -0.7854,
+      "distance": 1.5,
+      "angle_deg": 45.0
+    },
+    {
+      "index": 5,
+      "label": "V5 d=1.20 a=+0deg",
+      "x": -1.0,
+      "y": -2.79,
+      "yaw": -1.5708,
+      "distance": 1.2,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 6,
+      "label": "V6 d=1.20 a=-30deg",
+      "x": -0.4,
+      "y": -2.951,
+      "yaw": -2.0944,
+      "distance": 1.2,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 7,
+      "label": "V7 d=1.20 a=+30deg",
+      "x": -1.6,
+      "y": -2.951,
+      "yaw": -1.0472,
+      "distance": 1.2,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 8,
+      "label": "V8 d=1.20 a=-45deg",
+      "x": -0.151,
+      "y": -3.141,
+      "yaw": -2.3562,
+      "distance": 1.2,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 9,
+      "label": "V9 d=1.20 a=+45deg",
+      "x": -1.849,
+      "y": -3.141,
+      "yaw": -0.7854,
+      "distance": 1.2,
+      "angle_deg": 45.0
+    },
+    {
+      "index": 10,
+      "label": "V10 d=1.90 a=+0deg",
+      "x": -1.0,
+      "y": -2.09,
+      "yaw": -1.5708,
+      "distance": 1.9,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 11,
+      "label": "V11 d=1.90 a=-30deg",
+      "x": -0.05,
+      "y": -2.345,
+      "yaw": -2.0944,
+      "distance": 1.9,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 12,
+      "label": "V12 d=1.90 a=+30deg",
+      "x": -1.95,
+      "y": -2.345,
+      "yaw": -1.0472,
+      "distance": 1.9,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 13,
+      "label": "V13 d=1.90 a=-45deg",
+      "x": 0.343,
+      "y": -2.646,
+      "yaw": -2.3562,
+      "distance": 1.9,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 14,
+      "label": "V14 d=1.90 a=+45deg",
+      "x": -2.344,
+      "y": -2.647,
+      "yaw": -0.7854,
+      "distance": 1.9,
+      "angle_deg": 45.0
+    }
+  ],
+  "candidate_feasibility": "footprint-clear in the occupancy map; Nav2 path reachability not pre-checked",
+  "candidates_rejected": [],
+  "viewpoints": [
+    {
+      "viewpoint": {
+        "index": 0,
+        "label": "V0 d=1.50 a=+0deg",
+        "x": -1.0,
+        "y": -2.49,
+        "yaw": -1.5708,
+        "distance": 1.5,
+        "angle_deg": 0.0
+      },
+      "navigation": {
+        "outcome": "SUCCEEDED",
+        "attempts": [
+          {
+            "result": "SUCCEEDED",
+            "duration_s": 28.77,
+            "recoveries": 0,
+            "attempt": 1
+          }
+        ],
+        "total_time_s": 28.77,
+        "final_pose": {
+          "x": -1.011,
+          "y": -2.629,
+          "yaw": -1.426
+        },
+        "position_error_m": 0.139,
+        "yaw_error_rad": 0.145
+      },
+      "observations": [
+        {
+          "viewpoint": "V0 d=1.50 a=+0deg",
+          "observation_id": "20261115_124108_29fb/PG-12/V0/1",
+          "mission_id": "20261115_124108_29fb",
+          "fault_class": "INSUFFICIENT_EVIDENCE",
+          "viewpoint_epoch": 2,
+          "settled_before_request": true,
+          "request_time_s": 57.508,
+          "first_frame_stamp_s": 58.1,
+          "last_frame_stamp_s": 58.5,
+          "stamp_s": 58.5,
+          "pose_known": true,
+          "acq_x": -1.036,
+          "acq_y": -2.637,
+          "acq_yaw": -1.458,
+          "pose_motion_m": 0.0,
+          "pose_motion_rad": 0.0,
+          "has_value": false,
+          "value": null,
+          "sigma": null,
+          "unit": "bar",
+          "frames_requested": 5,
+          "frames_received": 5,
+          "frames_tag_detected": 5,
+          "frames_valid": 0,
+          "frame_values": [],
+          "frame_spread": 0.0,
+          "needle_confidence": 0.0,
+          "dial_visibility": 0.008,
+          "view_angle_deg": 24.0,
+          "distance_m": 1.288,
+          "dial_radius_px": 69.7,
+          "sharpness": 619.3,
+          "processing_time_ms": 275.2,
+          "quality_flags": [
+            "OCCLUDED",
+            "LOW_NEEDLE_CONTRAST",
+            "AMBIGUOUS_NEEDLE",
+            "NEEDLE_PARTIAL"
+          ],
+          "raw_image_path": "/tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/f4_dispatch_3/20261115_124108_29fb/images/PG-12_V0_t00058.10_raw.png",
+          "annotated_image_path": "/tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/f4_dispatch_3/20261115_124108_29fb/images/PG-12_V0_t00058.10_annotated.png",
+          "rectified_image_path": "/tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/f4_dispatch_3/20261115_124108_29fb/images/PG-12_V0_t00058.10_rectified.png",
+          "detail": "no reading: OCCLUDED, LOW_NEEDLE_CONTRAST, AMBIGUOUS_NEEDLE, NEEDLE_PARTIAL",
+          "consumed_time_s": 59.064,
+          "result_age_s": 0.564,
+          "clock_epoch_request": 0,
+          "clock_epoch_consumed": 0,
+          "decision": "MOVE_NEW",
+          "reason": "viewpoint-dependent problem (AMBIGUOUS_NEEDLE, LOW_NEEDLE_CONTRAST, NEEDLE_PARTIAL, OCCLUDED)",
+          "index": 1
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "t": 31.1,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "event": "OBSERVATION #1",
+      "value": null,
+      "sigma": null,
+      "flags": [
+        "OCCLUDED",
+        "LOW_NEEDLE_CONTRAST",
+        "AMBIGUOUS_NEEDLE",
+        "NEEDLE_PARTIAL"
+      ],
+      "decision": "MOVE_NEW",
+      "reason": "viewpoint-dependent problem (AMBIGUOUS_NEEDLE, LOW_NEEDLE_CONTRAST, NEEDLE_PARTIAL, OCCLUDED)"
+    }
+  ],
+  "result": null
+}

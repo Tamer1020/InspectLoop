@@ -1,0 +1,8 @@
+--- ros2 action info /navigate_to_pose (who shares the server)
+Action: /navigate_to_pose
+Action clients: 3
+    /bt_navigator
+    /waypoint_follower
+    /docking_server
+Action servers: 1
+    /bt_navigator
