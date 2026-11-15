@@ -307,6 +307,10 @@ Full list with measured facts and open risks: [docs/KNOWN_LIMITATIONS.md](docs/K
 [TROUBLESHOOTING](docs/TROUBLESHOOTING.md) · review reports:
 [V2](docs/ASTRA_FIX_REPORT.md), [V3](docs/ASTRA_V3_REMEDIATION_REPORT.md)
 
+## Development note
+
+Developed with AI-assisted coding tools, with engineering requirements, review, validation, and project direction overseen by the repository maintainer.
+
 ## License
 
 Apache-2.0 — see [LICENSE](LICENSE).

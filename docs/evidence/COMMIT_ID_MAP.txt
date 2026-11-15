@@ -1,0 +1,28 @@
+Commit-ID map. The history was rewritten twice on 2026-11-15:
+  1. before publication: the author/committer e-mail was replaced by the GitHub noreply address,
+     also in the maintainer fields of package.xml / setup.py (the only content change);
+  2. after publication: automatic AI co-author trailers were removed from the commit messages
+     (no content change).
+Authors, timestamps, messages otherwise and all other file contents are unchanged. Documents and
+review reports written before these rewrites may cite the original IDs:
+
+original  current  subject
+da47774   19b8524  Add robot description and gauge inspection interfaces
+82cb0f8   e96e867  Add generated warehouse world, gauge panels and ros_gz bridging
+3ebdf94   e276fc0  Add AMCL/Nav2 configuration, generated map and RViz config
+8470629   84c61fb  Add C++ safety layer: velocity gate and health monitor
+fcd235f   4edebe5  Add uncertainty-aware analog gauge reader
+cc2aeba   1b2e7bd  Add decision policy, viewpoint planner and mission manager
+ca8ff2c   b72b4ec  Add system bringup, fault-injection scripts and CI workflow
+6ba41c1   bb574d9  Add documentation and recorded simulation evidence
+cd87581   76267d0  docs: update test counts after fresh-clone verification
+848458c   83a8409  docs: add GitHub publication instructions
+4ba22e2   4ddda61  WIP: Astra audit fixes F1-F6 (tests, reader, gate, nav lifecycle, freshness, heuristic sigma)
+f38d7dc   222763b  Astra audit fixes F1-F6: verified build, tests, Gazebo demo and fault injection
+4785f10   732a9ec  V3 F1: freeze final CV evaluation set (seed 20261201) before any reader change
+daad9cf   68a59a4  V3: remediation of the independent V2 review (F3, F4, F5, F1, F7, F8, F9)
+e9a12e6   7cddec9  docs: record V3 source revision
+
+Published briefly on 2026-11-15 and replaced by rewrite 2:
+66b05b2   173b006  V3.1/V3.2: bound LiDAR sector workload (F3), harden Nav2 goal ownership (F4), release docs
+c122fd7   9c4410d  CI: clean Release build, Node 24 actions; docs: record CI status (tag v3.2.0)

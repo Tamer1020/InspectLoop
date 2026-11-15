@@ -1,9 +1,9 @@
 # InspectLoop V3 — Remediation of the Independent V2 Review
 
 Input: *InspectLoop_V2_Independent_Review_AR.pdf* (verdict **REJECT V2**: two HIGH defects, F3 and
-F4; MEDIUM findings F1-residual, F5, F7, F8, F9). Baseline: git `f38d7dc` (=
+F4; MEDIUM findings F1-residual, F5, F7, F8, F9). Baseline: git `222763b` (=
 `InspectLoop_Portfolio_Reviewed_v2.zip`, kept unchanged, as is the V1 ZIP).
-V3 source = git `daad9cf` (tag `v3.0-reviewed`); the live runs used exactly that source as an
+V3 source = git `68a59a4` (tag `v3.0-reviewed`); the live runs used exactly that source as an
 uncommitted working tree (the only later edits are documentation).
 All numbers in this file were produced on 2026-11-08/09 on the development machine (WSL2,
 Ubuntu 24.04, ROS 2 Jazzy, Gazebo Harmonic, Nav2 1.3, 16 cores).
@@ -17,7 +17,7 @@ Ubuntu 24.04, ROS 2 Jazzy, Gazebo Harmonic, Nav2 1.3, 16 cores).
   images and the exact commands are archived under `docs/evidence/` so they can be re-run.
 
 For every finding a regression test was written first and run against the V2 code; the failing
-output is in `docs/evidence/astra_v3/before_fix_*.txt` (V2 code taken from git `f38d7dc`, run in an
+output is in `docs/evidence/astra_v3/before_fix_*.txt` (V2 code taken from git `222763b`, run in an
 isolated copy where shadowing by the new code was possible).
 
 ## Summary
@@ -173,11 +173,11 @@ seen by anyone; Nav2/AMCL themselves do not recover from a world-time reset.
 0.11840 bar, no flag.
 
 **Protocol (no tuning on the test set).** Before any reader change, a final test set was frozen
-and committed (`docs/evidence/astra_v3/f1_frozen_test_set.json`, git `4785f10`: seed 20261201,
+and committed (`docs/evidence/astra_v3/f1_frozen_test_set.json`, git `732a9ec`: seed 20261201,
 n = 400, tool SHA-256 recorded). Investigation and the design check used only the development set
 (seed 20261108, already used for V2) and the reproduced case. Astra's cross-check set (seed
 20261109, n = 200) was used once, as a check. The frozen set was evaluated once, for V2 (exported
-from `f38d7dc`) and V3, after the change was final. Tolerance 0.10 bar.
+from `222763b`) and V3, after the change was final. Tolerance 0.10 bar.
 
 **Reproduction and mechanism.** The eval tool now records the generator draws (`--dump-case`):
 a radial line 5.92° from the needle, darkness 24/255, 3 px wide in the texture (≈ 1 px in the
@@ -358,7 +358,7 @@ comparable with V1's. Images: `docs/evidence/astra/pg12_bracket/`.
 ## Errata to the V2 deliverable
 
 * **Test file counts.** The V2 hand-over message stated "13 new test files plus 3 updated". Correct
-  (git `v1.0-final..f38d7dc`): **9 added, 2 modified** test files, as the reviewer found. The file
+  (git `v1.0-final..222763b`): **9 added, 2 modified** test files, as the reviewer found. The file
   list in `ASTRA_FIX_REPORT.md` itself was correct.
 * **Fault-test exit codes.** `ASTRA_FIX_REPORT.md` said launch exit codes were 1 in some fault runs
   "because bridges are killed on purpose and Nav2's container is SIGKILLed". Wrong: the harness
@@ -366,7 +366,7 @@ comparable with V1's. Images: `docs/evidence/astra/pg12_bracket/`.
   not the launch's exit code. Fixed in V3 (`rc=$?` right after `wait`); V3 fault runs report the
   real code.
 
-## Changed files (vs. V2, git `f38d7dc`)
+## Changed files (vs. V2, git `222763b`)
 
 - `README.md` (modified)
 - `docs/ARCHITECTURE.md` (modified)

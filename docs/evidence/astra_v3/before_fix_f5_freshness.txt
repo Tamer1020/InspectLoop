@@ -1,4 +1,4 @@
-# V3 F5 regression tests against V2 code (git f38d7dc), 2026-11-08T23:53:09+01:00
+# V3 F5 regression tests against V2 code (git 222763b), 2026-11-08T23:53:09+01:00
 PASSED src/inspectloop_mission/test/test_v3_freshness.py::test_reference_reading_is_admissible
 PASSED src/inspectloop_mission/test/test_v3_freshness.py::test_value_without_acquisition_pose_is_rejected
 PASSED src/inspectloop_mission/test/test_v3_freshness.py::test_reply_from_another_mission_is_rejected

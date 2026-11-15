@@ -1,4 +1,4 @@
-# V3.1 F4 regression tests run against the V3 nav_goal.py (git HEAD e9a12e6), 2026-11-15
+# V3.1 F4 regression tests run against the V3 nav_goal.py (git HEAD 7cddec9), 2026-11-15
 # command: python3 -m pytest -q -p no:cacheprovider -W ignore test/test_v3_1_nav_send_interrupt.py (in a copy whose nav_goal.py is the HEAD version)
                     f'false clean shutdown after SIGINT at {inj.where} (#{nth})'
 E               AssertionError: false clean shutdown after SIGINT at run:272 (#3)

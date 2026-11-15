@@ -1,4 +1,4 @@
-# V3 F1 case-183 regression against V2 gauge_reader.py (git f38d7dc), run in an isolated copy, 2026-11-09T00:04:47+01:00
+# V3 F1 case-183 regression against V2 gauge_reader.py (git 222763b), run in an isolated copy, 2026-11-09T00:04:47+01:00
 E       AssertionError: ([], '1.96 +/- 0.07 bar from 5/5 frames')
 E       assert 'AMBIGUOUS_NEEDLE' in []
 E        +  where [] = Observation(has_value=True, value=1.9580382257846338, sigma=0.07123003840598183, flags=[], frames_requested=5, frames_..._px=53.330814361572266, needle_support=1.0, needle_ambiguity=0.007144816348135712, needle_residual=0.05204792528697337).flags

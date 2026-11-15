@@ -1,4 +1,4 @@
-# V3 velocity_gate.cpp (git HEAD e9a12e6) on the audit scan: 720 beams, angle_increment 1e-9, span 719e-9 rad, 2026-11-15
+# V3 velocity_gate.cpp (git HEAD 7cddec9) on the audit scan: 720 beams, angle_increment 1e-9, span 719e-9 rad, 2026-11-15
 # g++ -O2 -std=c++17; probe calls sectorCoverage(forward) then assessScan (killed after 30 s)
 forward sector: 20.19 s observed=0
 forward-only exit=0

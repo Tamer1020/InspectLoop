@@ -9,7 +9,7 @@ BEFORE the V3.2 goal-id cancellation fallback. Preserved from a temporary direct
   f4_dispatch_3/  SIGINT right after goal #3 SENT: CANCEL_CONFIRMED, Nav2 statuses 4,4,5, robot 0 m/s
 Harness scripts: ../astra_v3_2/tools/ (tiny_inc_fault.sh, sigint_at_dispatch.sh).
 
-Before-fix reproductions (regenerated 2026-11-15 against git HEAD e9a12e6 = V3):
+Before-fix reproductions (regenerated 2026-11-15 against git HEAD 7cddec9 = V3):
   before_fix_f4_send_registration_gap.txt  V3.1 F4 tests on V3 nav_goal.py: 7 of 9 fail
                                            ("false clean shutdown after SIGINT at run:272")
   before_fix_f3_unbounded_sector_loop.txt  V3 sectorCoverage on the 1e-9 scan: 20.19 s for one

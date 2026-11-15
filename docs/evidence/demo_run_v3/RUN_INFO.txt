@@ -1,4 +1,4 @@
-V3 source: git 4785f10 + uncommitted V3 working tree (committed afterwards; see ASTRA_V3_REMEDIATION_REPORT.md)
+V3 source: git 732a9ec + uncommitted V3 working tree (committed afterwards; see ASTRA_V3_REMEDIATION_REPORT.md)
 command: ros2 launch inspectloop_bringup inspectloop.launch.py headless:=true rviz:=false exit_on_mission_end:=true
 launch exit code 0, wall 2026-11-09T00:33:54+01:00
-Committed afterwards as git daad9cf (tag v3.0-reviewed); no source change between this run and that commit except mission_params.yaml comments/defaults identical to the code defaults and docs.
+Committed afterwards as git 68a59a4 (tag v3.0-reviewed); no source change between this run and that commit except mission_params.yaml comments/defaults identical to the code defaults and docs.
