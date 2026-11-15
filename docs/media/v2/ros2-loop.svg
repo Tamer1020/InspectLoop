@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 544" role="img" aria-labelledby="title desc">
+<title id="title">ROS 2 inspection loop</title><desc id="desc">Gazebo RGB feeds an OpenCV gauge reader. The mission manager requests a new Nav2 goal when evidence is weak. The C++ gate checks LiDAR before forwarding velocity to the simulated base.</desc>
+<rect width="800" height="544" rx="14" fill="#111b1c"/>
+<rect x="23" y="29" width="295" height="89" rx="9" fill="#203234" stroke="#426063" stroke-width="2"/>
+<text x="39" y="66" fill="#f4f4e9" font-family="Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">Simulated camera</text>
+<text x="39" y="98" fill="#a7f1d2" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="start">Gazebo RGB</text>
+<rect x="482" y="29" width="295" height="89" rx="9" fill="#203234" stroke="#426063" stroke-width="2"/>
+<text x="498" y="66" fill="#f4f4e9" font-family="Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">Gauge reader</text>
+<text x="498" y="98" fill="#a7f1d2" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="start">OpenCV + ArUco</text>
+<rect x="482" y="222" width="295" height="89" rx="9" fill="#203234" stroke="#426063" stroke-width="2"/>
+<text x="498" y="259" fill="#f4f4e9" font-family="Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">Mission manager</text>
+<text x="498" y="291" fill="#a7f1d2" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="start">Burst quality + policy</text>
+<rect x="23" y="222" width="295" height="89" rx="9" fill="#203234" stroke="#426063" stroke-width="2"/>
+<text x="39" y="259" fill="#f4f4e9" font-family="Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">Nav2</text>
+<text x="39" y="291" fill="#a7f1d2" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="start">AMCL + known map</text>
+<rect x="23" y="418" width="295" height="89" rx="9" fill="#203234" stroke="#426063" stroke-width="2"/>
+<text x="39" y="455" fill="#f4f4e9" font-family="Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">Velocity gate</text>
+<text x="39" y="487" fill="#a7f1d2" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="start">C++17 + LiDAR scan</text>
+<rect x="482" y="418" width="295" height="89" rx="9" fill="#203234" stroke="#426063" stroke-width="2"/>
+<text x="498" y="455" fill="#f4f4e9" font-family="Arial, sans-serif" font-size="29" font-weight="700" text-anchor="start">Drive base</text>
+<text x="498" y="487" fill="#a7f1d2" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="start">Gazebo DiffDrive</text>
+<line x1="319" y1="79" x2="480" y2="79" stroke="#a7f1d2" stroke-width="3" stroke-dasharray="none"/>
+<polyline points="468,72 478,79 468,86" stroke="#a7f1d2" fill="none" stroke-width="3"/>
+<text x="400" y="66" fill="#f4f4e9" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle">RGB</text>
+<line x1="319" y1="272" x2="480" y2="272" stroke="#a7f1d2" stroke-width="3" stroke-dasharray="none"/>
+<polyline points="333,265 323,272 333,279" stroke="#a7f1d2" fill="none" stroke-width="3"/>
+<text x="400" y="259" fill="#f4f4e9" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle">new pose</text>
+<line x1="319" y1="468" x2="480" y2="468" stroke="#a7f1d2" stroke-width="3" stroke-dasharray="none"/>
+<polyline points="468,461 478,468 468,475" stroke="#a7f1d2" fill="none" stroke-width="3"/>
+<text x="400" y="455" fill="#f4f4e9" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle">safe twist</text>
+<line x1="630" y1="120" x2="630" y2="219" stroke="#a7f1d2" stroke-width="3" stroke-dasharray="none"/>
+<polyline points="623,209 630,219 637,209" stroke="#a7f1d2" fill="none" stroke-width="3"/>
+<text x="618" y="174" fill="#f4f4e9" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="end">Reading + quality flags</text>
+<line x1="170" y1="313" x2="170" y2="415" stroke="#a7f1d2" stroke-width="3" stroke-dasharray="none"/>
+<polyline points="163,405 170,415 177,405" stroke="#a7f1d2" fill="none" stroke-width="3"/>
+<text x="183" y="371" fill="#f4f4e9" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="start">/cmd_vel</text>
+</svg>

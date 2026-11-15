@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 335" role="img" aria-labelledby="title desc">
+<title id="title">Pressure readings from the filmed round</title><desc id="desc">Three accepted pressures on a zero to ten bar scale. PG-13 has no accepted value. PG-14 exceeded its eight bar alarm threshold.</desc>
+<rect width="840" height="335" rx="14" fill="#f2f4ef"/>
+<text x="23" y="66" fill="#192a2a" font-family="Arial, sans-serif" font-size="26" font-weight="700" text-anchor="start">PG-11</text>
+<line x1="188" y1="58" x2="605" y2="58" stroke="#cfdbd5" stroke-width="8" stroke-dasharray="none"/>
+<line x1="188" y1="58" x2="362.69381" y2="58" stroke="#267567" stroke-width="8" stroke-dasharray="none"/>
+<circle cx="362.69381" cy="58" r="7" fill="#267567"/>
+<text x="630" y="66" fill="#267567" font-family="Arial, sans-serif" font-size="25" font-weight="700" text-anchor="start">4.1893 bar</text>
+<text x="23" y="131" fill="#192a2a" font-family="Arial, sans-serif" font-size="26" font-weight="700" text-anchor="start">PG-12</text>
+<line x1="188" y1="123" x2="605" y2="123" stroke="#cfdbd5" stroke-width="8" stroke-dasharray="none"/>
+<line x1="188" y1="123" x2="470.86361" y2="123" stroke="#267567" stroke-width="8" stroke-dasharray="none"/>
+<circle cx="470.86361" cy="123" r="7" fill="#267567"/>
+<text x="630" y="131" fill="#267567" font-family="Arial, sans-serif" font-size="25" font-weight="700" text-anchor="start">6.7833 bar</text>
+<text x="23" y="196" fill="#192a2a" font-family="Arial, sans-serif" font-size="26" font-weight="700" text-anchor="start">PG-13</text>
+<line x1="188" y1="188" x2="605" y2="188" stroke="#a9b6b1" stroke-width="2" stroke-dasharray="4 8"/>
+<text x="630" y="196" fill="#475b57" font-family="Arial, sans-serif" font-size="24" font-weight="400" text-anchor="start">Unresolved</text>
+<text x="23" y="261" fill="#192a2a" font-family="Arial, sans-serif" font-size="26" font-weight="700" text-anchor="start">PG-14</text>
+<line x1="188" y1="253" x2="605" y2="253" stroke="#cfdbd5" stroke-width="8" stroke-dasharray="none"/>
+<line x1="188" y1="253" x2="550.8650600000001" y2="253" stroke="#a24b21" stroke-width="8" stroke-dasharray="none"/>
+<circle cx="550.8650600000001" cy="253" r="7" fill="#a24b21"/>
+<text x="630" y="261" fill="#a24b21" font-family="Arial, sans-serif" font-size="25" font-weight="700" text-anchor="start">8.7018 bar</text>
+<line x1="521.6" y1="236" x2="521.6" y2="269" stroke="#192a2a" stroke-width="2" stroke-dasharray="none"/>
+<text x="516.6" y="230" fill="#192a2a" font-family="Arial, sans-serif" font-size="18" font-weight="400" text-anchor="end">8.0 limit</text>
+<line x1="188.0" y1="281" x2="188.0" y2="291" stroke="#475b57" stroke-width="2" stroke-dasharray="none"/>
+<text x="188.0" y="317" fill="#475b57" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="middle">0</text>
+<line x1="396.5" y1="281" x2="396.5" y2="291" stroke="#475b57" stroke-width="2" stroke-dasharray="none"/>
+<text x="396.5" y="317" fill="#475b57" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="middle">5</text>
+<line x1="605.0" y1="281" x2="605.0" y2="291" stroke="#475b57" stroke-width="2" stroke-dasharray="none"/>
+<text x="605.0" y="317" fill="#475b57" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="middle">10</text>
+<line x1="188" y1="283" x2="605" y2="283" stroke="#475b57" stroke-width="2" stroke-dasharray="none"/>
+</svg>
