@@ -18,7 +18,7 @@ jobs:
         run: |
           set -eo pipefail
           apt-get update -qq
-          DEBIAN_FRONTEND=noninteractive apt-get install -yq ros-jazzy-rviz2 ros-jazzy-nav2-bringup ros-jazzy-ros-gz ros-jazzy-cv-bridge ros-jazzy-navigation2 ros-jazzy-xacro python3-opencv xvfb openbox wmctrl ffmpeg mesa-utils libgl1-mesa-dri
+          DEBIAN_FRONTEND=noninteractive apt-get install -yq ros-jazzy-rviz2 ros-jazzy-nav2-bringup ros-jazzy-ros-gz ros-jazzy-cv-bridge ros-jazzy-navigation2 ros-jazzy-xacro python3-opencv xvfb x11-utils openbox wmctrl ffmpeg mesa-utils libgl1-mesa-dri
           rosdep update --rosdistro jazzy
           rosdep install --from-paths src --ignore-src -y --rosdistro jazzy
       - name: Build the unmodified robotics stack
@@ -31,7 +31,7 @@ jobs:
           source /opt/ros/jazzy/setup.bash
           source install/setup.bash
           mkdir -p capture/runs
-          export LIBGL_ALWAYS_SOFTWARE=1 QT_QPA_PLATFORM=xcb
+          export LIBGL_ALWAYS_SOFTWARE=1 QT_QPA_PLATFORM=xcb LP_NUM_THREADS=2
           export XDG_RUNTIME_DIR=/tmp/inspectloop-xdg
           mkdir -p "$XDG_RUNTIME_DIR"; chmod 700 "$XDG_RUNTIME_DIR"
           for n in 81 82; do
@@ -51,8 +51,9 @@ jobs:
             pids+=("$!")
           done
           for i in {1..210}; do
+            [[ "$i" != 5 ]] || (gz service -l | grep /gui/ >capture/gui-services.log; gz service -s /gui/follow --reqtype gz.msgs.StringMsg --reptype gz.msgs.Boolean --timeout 1200 --req 'data: "inspectloop"' >>capture/gui-services.log) || true
             for n in 81 82; do
-              DISPLAY=":$n" wmctrl -l | head -n1 | while read -r id rest; do DISPLAY=":$n" wmctrl -ir "$id" -b add,maximized_vert,maximized_horz; done
+              DISPLAY=":$n" wmctrl -l | head -n1 | while read -r id rest; do DISPLAY=":$n" wmctrl -ir "$id" -b add,maximized_vert,maximized_horz; done || true
             done
             find capture/runs -name mission_record.json | grep -q . && break
             kill -0 "$sim" 2>/dev/null || break
