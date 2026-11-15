@@ -1,5 +1,9 @@
 # Reproduce the InspectLoop films
 
+The [V2 production notes and edit list](v2/README.md) cover the two films cut from the full-length screen recordings.
+
+## Original release films
+
 The main film runs 93 seconds at 1920 × 1080. The 30-second vertical cut runs at 1080 × 1920. Both are silent, captioned H.264 MP4 files encoded at 24 fps. GUI recordings were acquired at 8 fps.
 
 ## Source material
