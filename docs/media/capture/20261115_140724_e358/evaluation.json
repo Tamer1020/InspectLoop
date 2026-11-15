@@ -1,0 +1,194 @@
+{
+  "mission_id": "20261115_140724_e358",
+  "accepted": 3,
+  "unresolved": 1,
+  "max_abs_error": 0.0167,
+  "mean_abs_error": 0.0097,
+  "within_2sigma": 3,
+  "incorrect_acceptances": 0,
+  "incorrect_tolerance_bar": 0.1,
+  "gauges": 4,
+  "observations_total": 12,
+  "observations_accepted": 3,
+  "rejected_observations_with_value": 1,
+  "rows": [
+    {
+      "gauge": "PG-11",
+      "truth": 4.2,
+      "status": "ACCEPTED",
+      "value": 4.1893,
+      "sigma": 0.0524,
+      "error": -0.0107,
+      "abs_error": 0.0107,
+      "within_2sigma": true,
+      "incorrect": false
+    },
+    {
+      "gauge": "PG-12",
+      "truth": 6.8,
+      "status": "ACCEPTED",
+      "value": 6.7833,
+      "sigma": 0.0788,
+      "error": -0.0167,
+      "abs_error": 0.0167,
+      "within_2sigma": true,
+      "incorrect": false
+    },
+    {
+      "gauge": "PG-13",
+      "truth": 3.1,
+      "status": "UNRESOLVED"
+    },
+    {
+      "gauge": "PG-14",
+      "truth": 8.7,
+      "status": "ACCEPTED",
+      "value": 8.7018,
+      "sigma": 0.0529,
+      "error": 0.0018,
+      "abs_error": 0.0018,
+      "within_2sigma": true,
+      "incorrect": false
+    }
+  ],
+  "observations": [
+    {
+      "gauge": "PG-11",
+      "index": 1,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "value": 4.1893,
+      "sigma": 0.0524,
+      "error": -0.0107,
+      "flags": [],
+      "decision": "ACCEPT"
+    },
+    {
+      "gauge": "PG-12",
+      "index": 1,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "RETRY_SAME"
+    },
+    {
+      "gauge": "PG-12",
+      "index": 2,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "MOVE_NEW"
+    },
+    {
+      "gauge": "PG-12",
+      "index": 3,
+      "viewpoint": "V3 d=1.50 a=-45deg",
+      "value": 6.8056,
+      "sigma": 0.0828,
+      "error": 0.0056,
+      "flags": [
+        "TOO_FAR"
+      ],
+      "decision": "MOVE_NEW"
+    },
+    {
+      "gauge": "PG-12",
+      "index": 4,
+      "viewpoint": "V8 d=1.20 a=-45deg",
+      "value": 6.7833,
+      "sigma": 0.0788,
+      "error": -0.0167,
+      "flags": [],
+      "decision": "ACCEPT"
+    },
+    {
+      "gauge": "PG-13",
+      "index": 1,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "RETRY_SAME"
+    },
+    {
+      "gauge": "PG-13",
+      "index": 2,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "MOVE_NEW"
+    },
+    {
+      "gauge": "PG-13",
+      "index": 3,
+      "viewpoint": "V1 d=1.50 a=-30deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "RETRY_SAME"
+    },
+    {
+      "gauge": "PG-13",
+      "index": 4,
+      "viewpoint": "V1 d=1.50 a=-30deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "MOVE_NEW"
+    },
+    {
+      "gauge": "PG-13",
+      "index": 5,
+      "viewpoint": "V2 d=1.50 a=+30deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "RETRY_SAME"
+    },
+    {
+      "gauge": "PG-13",
+      "index": 6,
+      "viewpoint": "V2 d=1.50 a=+30deg",
+      "value": null,
+      "sigma": null,
+      "error": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "UNRESOLVED"
+    },
+    {
+      "gauge": "PG-14",
+      "index": 1,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "value": 8.7018,
+      "sigma": 0.0529,
+      "error": 0.0018,
+      "flags": [],
+      "decision": "ACCEPT"
+    }
+  ]
+}

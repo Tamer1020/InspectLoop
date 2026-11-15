@@ -1,0 +1,506 @@
+{
+  "id": "PG-12",
+  "tag_id": 12,
+  "description": "Rack S2 - hydraulic accumulator",
+  "unit": "bar",
+  "mount": {
+    "x": -1.0,
+    "y": -3.99,
+    "normal_yaw": 1.5708
+  },
+  "alarm_low": 1.0,
+  "alarm_high": 8.0,
+  "candidates_feasible": [
+    {
+      "index": 0,
+      "label": "V0 d=1.50 a=+0deg",
+      "x": -1.0,
+      "y": -2.49,
+      "yaw": -1.5708,
+      "distance": 1.5,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 1,
+      "label": "V1 d=1.50 a=-30deg",
+      "x": -0.25,
+      "y": -2.691,
+      "yaw": -2.0944,
+      "distance": 1.5,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 2,
+      "label": "V2 d=1.50 a=+30deg",
+      "x": -1.75,
+      "y": -2.691,
+      "yaw": -1.0472,
+      "distance": 1.5,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 3,
+      "label": "V3 d=1.50 a=-45deg",
+      "x": 0.061,
+      "y": -2.929,
+      "yaw": -2.3562,
+      "distance": 1.5,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 4,
+      "label": "V4 d=1.50 a=+45deg",
+      "x": -2.061,
+      "y": -2.929,
+      "yaw": -0.7854,
+      "distance": 1.5,
+      "angle_deg": 45.0
+    },
+    {
+      "index": 5,
+      "label": "V5 d=1.20 a=+0deg",
+      "x": -1.0,
+      "y": -2.79,
+      "yaw": -1.5708,
+      "distance": 1.2,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 6,
+      "label": "V6 d=1.20 a=-30deg",
+      "x": -0.4,
+      "y": -2.951,
+      "yaw": -2.0944,
+      "distance": 1.2,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 7,
+      "label": "V7 d=1.20 a=+30deg",
+      "x": -1.6,
+      "y": -2.951,
+      "yaw": -1.0472,
+      "distance": 1.2,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 8,
+      "label": "V8 d=1.20 a=-45deg",
+      "x": -0.151,
+      "y": -3.141,
+      "yaw": -2.3562,
+      "distance": 1.2,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 9,
+      "label": "V9 d=1.20 a=+45deg",
+      "x": -1.849,
+      "y": -3.141,
+      "yaw": -0.7854,
+      "distance": 1.2,
+      "angle_deg": 45.0
+    },
+    {
+      "index": 10,
+      "label": "V10 d=1.90 a=+0deg",
+      "x": -1.0,
+      "y": -2.09,
+      "yaw": -1.5708,
+      "distance": 1.9,
+      "angle_deg": 0.0
+    },
+    {
+      "index": 11,
+      "label": "V11 d=1.90 a=-30deg",
+      "x": -0.05,
+      "y": -2.345,
+      "yaw": -2.0944,
+      "distance": 1.9,
+      "angle_deg": -30.0
+    },
+    {
+      "index": 12,
+      "label": "V12 d=1.90 a=+30deg",
+      "x": -1.95,
+      "y": -2.345,
+      "yaw": -1.0472,
+      "distance": 1.9,
+      "angle_deg": 30.0
+    },
+    {
+      "index": 13,
+      "label": "V13 d=1.90 a=-45deg",
+      "x": 0.343,
+      "y": -2.646,
+      "yaw": -2.3562,
+      "distance": 1.9,
+      "angle_deg": -45.0
+    },
+    {
+      "index": 14,
+      "label": "V14 d=1.90 a=+45deg",
+      "x": -2.344,
+      "y": -2.647,
+      "yaw": -0.7854,
+      "distance": 1.9,
+      "angle_deg": 45.0
+    }
+  ],
+  "candidate_feasibility": "footprint-clear in the occupancy map; Nav2 path reachability not pre-checked",
+  "candidates_rejected": [],
+  "viewpoints": [
+    {
+      "viewpoint": {
+        "index": 0,
+        "label": "V0 d=1.50 a=+0deg",
+        "x": -1.0,
+        "y": -2.49,
+        "yaw": -1.5708,
+        "distance": 1.5,
+        "angle_deg": 0.0
+      },
+      "navigation": {
+        "outcome": "SUCCEEDED",
+        "attempts": [
+          {
+            "result": "SUCCEEDED",
+            "duration_s": 28.25,
+            "recoveries": 0,
+            "attempt": 1
+          }
+        ],
+        "total_time_s": 28.25,
+        "final_pose": {
+          "x": -1.0,
+          "y": -2.578,
+          "yaw": -1.372
+        },
+        "position_error_m": 0.088,
+        "yaw_error_rad": 0.199
+      },
+      "observations": [
+        {
+          "viewpoint": "V0 d=1.50 a=+0deg",
+          "observation_id": "20261115_140724_e358/PG-12/V0/1",
+          "mission_id": "20261115_140724_e358",
+          "fault_class": "INSUFFICIENT_EVIDENCE",
+          "viewpoint_epoch": 2,
+          "settled_before_request": true,
+          "request_time_s": 51.966,
+          "first_frame_stamp_s": 52.5,
+          "last_frame_stamp_s": 54.0,
+          "stamp_s": 54.0,
+          "pose_known": true,
+          "acq_x": -0.999,
+          "acq_y": -2.575,
+          "acq_yaw": -1.418,
+          "pose_motion_m": 0.0,
+          "pose_motion_rad": 0.0,
+          "has_value": false,
+          "value": null,
+          "sigma": null,
+          "unit": "bar",
+          "frames_requested": 5,
+          "frames_received": 5,
+          "frames_tag_detected": 0,
+          "frames_valid": 0,
+          "frame_values": [],
+          "frame_spread": 0.0,
+          "needle_confidence": 0.0,
+          "dial_visibility": 0.0,
+          "view_angle_deg": null,
+          "distance_m": null,
+          "dial_radius_px": 0.0,
+          "sharpness": 0.0,
+          "processing_time_ms": 125.1,
+          "quality_flags": [
+            "TAG_NOT_VISIBLE"
+          ],
+          "raw_image_path": "/__w/InspectLoop/InspectLoop/capture/runs/20261115_140724_e358/images/PG-12_V0_t00052.50_raw.png",
+          "annotated_image_path": "/__w/InspectLoop/InspectLoop/capture/runs/20261115_140724_e358/images/PG-12_V0_t00052.50_annotated.png",
+          "rectified_image_path": "",
+          "detail": "no reading: TAG_NOT_VISIBLE",
+          "consumed_time_s": 54.189,
+          "result_age_s": 0.189,
+          "clock_epoch_request": 0,
+          "clock_epoch_consumed": 0,
+          "decision": "RETRY_SAME",
+          "reason": "possibly transient (TAG_NOT_VISIBLE): observe again from the same pose",
+          "index": 1
+        },
+        {
+          "viewpoint": "V0 d=1.50 a=+0deg",
+          "observation_id": "20261115_140724_e358/PG-12/V0/2",
+          "mission_id": "20261115_140724_e358",
+          "fault_class": "INSUFFICIENT_EVIDENCE",
+          "viewpoint_epoch": 2,
+          "settled_before_request": true,
+          "request_time_s": 55.2,
+          "first_frame_stamp_s": 55.7,
+          "last_frame_stamp_s": 57.7,
+          "stamp_s": 57.7,
+          "pose_known": true,
+          "acq_x": -0.999,
+          "acq_y": -2.575,
+          "acq_yaw": -1.418,
+          "pose_motion_m": 0.0,
+          "pose_motion_rad": 0.0,
+          "has_value": false,
+          "value": null,
+          "sigma": null,
+          "unit": "bar",
+          "frames_requested": 5,
+          "frames_received": 5,
+          "frames_tag_detected": 0,
+          "frames_valid": 0,
+          "frame_values": [],
+          "frame_spread": 0.0,
+          "needle_confidence": 0.0,
+          "dial_visibility": 0.0,
+          "view_angle_deg": null,
+          "distance_m": null,
+          "dial_radius_px": 0.0,
+          "sharpness": 0.0,
+          "processing_time_ms": 156.8,
+          "quality_flags": [
+            "TAG_NOT_VISIBLE"
+          ],
+          "raw_image_path": "/__w/InspectLoop/InspectLoop/capture/runs/20261115_140724_e358/images/PG-12_V0_t00055.70_raw.png",
+          "annotated_image_path": "/__w/InspectLoop/InspectLoop/capture/runs/20261115_140724_e358/images/PG-12_V0_t00055.70_annotated.png",
+          "rectified_image_path": "",
+          "detail": "no reading: TAG_NOT_VISIBLE",
+          "consumed_time_s": 57.892,
+          "result_age_s": 0.192,
+          "clock_epoch_request": 0,
+          "clock_epoch_consumed": 0,
+          "decision": "MOVE_NEW",
+          "reason": "TAG_NOT_VISIBLE persisted after 1 retry(ies)",
+          "index": 2
+        }
+      ]
+    },
+    {
+      "viewpoint": {
+        "index": 3,
+        "label": "V3 d=1.50 a=-45deg",
+        "x": 0.061,
+        "y": -2.929,
+        "yaw": -2.3562,
+        "distance": 1.5,
+        "angle_deg": -45.0
+      },
+      "navigation": {
+        "outcome": "SUCCEEDED",
+        "attempts": [
+          {
+            "result": "SUCCEEDED",
+            "duration_s": 10.2,
+            "recoveries": 0,
+            "attempt": 1
+          }
+        ],
+        "total_time_s": 10.2,
+        "final_pose": {
+          "x": 0.054,
+          "y": -2.974,
+          "yaw": -2.204
+        },
+        "position_error_m": 0.045,
+        "yaw_error_rad": 0.152
+      },
+      "observations": [
+        {
+          "viewpoint": "V3 d=1.50 a=-45deg",
+          "observation_id": "20261115_140724_e358/PG-12/V3/3",
+          "mission_id": "20261115_140724_e358",
+          "fault_class": "NONE",
+          "viewpoint_epoch": 3,
+          "settled_before_request": true,
+          "request_time_s": 68.744,
+          "first_frame_stamp_s": 70.5,
+          "last_frame_stamp_s": 73.8,
+          "stamp_s": 73.8,
+          "pose_known": true,
+          "acq_x": 0.058,
+          "acq_y": -2.98,
+          "acq_yaw": -2.269,
+          "pose_motion_m": 0.0,
+          "pose_motion_rad": 0.0,
+          "has_value": true,
+          "value": 6.8056,
+          "sigma": 0.0828,
+          "unit": "bar",
+          "frames_requested": 5,
+          "frames_received": 4,
+          "frames_tag_detected": 4,
+          "frames_valid": 4,
+          "frame_values": [
+            6.8056,
+            6.8056,
+            6.8056,
+            6.8056
+          ],
+          "frame_spread": 0.0,
+          "needle_confidence": 0.974,
+          "dial_visibility": 1.0,
+          "view_angle_deg": 49.1,
+          "distance_m": 1.465,
+          "dial_radius_px": 52.5,
+          "sharpness": 1060.0,
+          "processing_time_ms": 339.4,
+          "quality_flags": [
+            "TOO_FAR"
+          ],
+          "raw_image_path": "/__w/InspectLoop/InspectLoop/capture/runs/20261115_140724_e358/images/PG-12_V3_t00070.50_raw.png",
+          "annotated_image_path": "/__w/InspectLoop/InspectLoop/capture/runs/20261115_140724_e358/images/PG-12_V3_t00070.50_annotated.png",
+          "rectified_image_path": "/__w/InspectLoop/InspectLoop/capture/runs/20261115_140724_e358/images/PG-12_V3_t00070.50_rectified.png",
+          "detail": "6.81 +/- 0.08 bar but flagged: TOO_FAR",
+          "consumed_time_s": 74.49,
+          "result_age_s": 0.69,
+          "clock_epoch_request": 0,
+          "clock_epoch_consumed": 0,
+          "decision": "MOVE_NEW",
+          "reason": "viewpoint-dependent problem (TOO_FAR)",
+          "index": 3
+        }
+      ]
+    },
+    {
+      "viewpoint": {
+        "index": 8,
+        "label": "V8 d=1.20 a=-45deg",
+        "x": -0.151,
+        "y": -3.141,
+        "yaw": -2.3562,
+        "distance": 1.2,
+        "angle_deg": -45.0
+      },
+      "navigation": {
+        "outcome": "SUCCEEDED",
+        "attempts": [
+          {
+            "result": "SUCCEEDED",
+            "duration_s": 1.22,
+            "recoveries": 0,
+            "attempt": 1
+          }
+        ],
+        "total_time_s": 1.22,
+        "final_pose": {
+          "x": 0.01,
+          "y": -3.033,
+          "yaw": -2.334
+        },
+        "position_error_m": 0.194,
+        "yaw_error_rad": 0.022
+      },
+      "observations": [
+        {
+          "viewpoint": "V8 d=1.20 a=-45deg",
+          "observation_id": "20261115_140724_e358/PG-12/V8/4",
+          "mission_id": "20261115_140724_e358",
+          "fault_class": "NONE",
+          "viewpoint_epoch": 4,
+          "settled_before_request": true,
+          "request_time_s": 76.388,
+          "first_frame_stamp_s": 77.2,
+          "last_frame_stamp_s": 78.5,
+          "stamp_s": 78.5,
+          "pose_known": true,
+          "acq_x": 0.002,
+          "acq_y": -3.034,
+          "acq_yaw": -2.361,
+          "pose_motion_m": 0.0,
+          "pose_motion_rad": 0.0,
+          "has_value": true,
+          "value": 6.7833,
+          "sigma": 0.0788,
+          "unit": "bar",
+          "frames_requested": 5,
+          "frames_received": 5,
+          "frames_tag_detected": 5,
+          "frames_valid": 5,
+          "frame_values": [
+            6.7834,
+            6.7834,
+            6.7833,
+            6.7833,
+            6.7833
+          ],
+          "frame_spread": 0.0,
+          "needle_confidence": 0.976,
+          "dial_visibility": 1.0,
+          "view_angle_deg": 48.7,
+          "distance_m": 1.387,
+          "dial_radius_px": 55.4,
+          "sharpness": 1078.9,
+          "processing_time_ms": 495.9,
+          "quality_flags": [],
+          "raw_image_path": "/__w/InspectLoop/InspectLoop/capture/runs/20261115_140724_e358/images/PG-12_V8_t00077.70_raw.png",
+          "annotated_image_path": "/__w/InspectLoop/InspectLoop/capture/runs/20261115_140724_e358/images/PG-12_V8_t00077.70_annotated.png",
+          "rectified_image_path": "/__w/InspectLoop/InspectLoop/capture/runs/20261115_140724_e358/images/PG-12_V8_t00077.70_rectified.png",
+          "detail": "6.78 +/- 0.08 bar from 5/5 frames",
+          "consumed_time_s": 78.919,
+          "result_age_s": 0.419,
+          "clock_epoch_request": 0,
+          "clock_epoch_consumed": 0,
+          "decision": "ACCEPT",
+          "reason": "5 valid frames, sigma 0.079 <= 0.15",
+          "index": 4
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "t": 31.1,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "event": "OBSERVATION #1",
+      "value": null,
+      "sigma": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "RETRY_SAME",
+      "reason": "possibly transient (TAG_NOT_VISIBLE): observe again from the same pose"
+    },
+    {
+      "t": 34.8,
+      "viewpoint": "V0 d=1.50 a=+0deg",
+      "event": "OBSERVATION #2",
+      "value": null,
+      "sigma": null,
+      "flags": [
+        "TAG_NOT_VISIBLE"
+      ],
+      "decision": "MOVE_NEW",
+      "reason": "TAG_NOT_VISIBLE persisted after 1 retry(ies)",
+      "hint": "different_side"
+    },
+    {
+      "t": 51.4,
+      "viewpoint": "V3 d=1.50 a=-45deg",
+      "event": "OBSERVATION #3",
+      "value": 6.8056,
+      "sigma": 0.0828,
+      "flags": [
+        "TOO_FAR"
+      ],
+      "decision": "MOVE_NEW",
+      "reason": "viewpoint-dependent problem (TOO_FAR)",
+      "hint": "closer"
+    },
+    {
+      "t": 55.9,
+      "viewpoint": "V8 d=1.20 a=-45deg",
+      "event": "OBSERVATION #4",
+      "value": 6.7833,
+      "sigma": 0.0788,
+      "flags": [],
+      "decision": "ACCEPT",
+      "reason": "5 valid frames, sigma 0.079 <= 0.15"
+    }
+  ],
+  "result": null
+}

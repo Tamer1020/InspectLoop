@@ -1,0 +1,21 @@
+[INFO] [launch]: All log files can be found below /github/home/.ros/log/2026-11-15-14-07-10-776896-d0976d04d0d5-13716
+[mission_manager-11] [INFO] [1794751647.580706505] [mission_manager]: [nav goal PG-11/V0 d=1.50 a=+0deg] SENT 
+[mission_manager-11] [INFO] [1794751647.634728044] [mission_manager]: [nav goal PG-11/V0 d=1.50 a=+0deg] ACCEPTED 
+[mission_manager-11] [INFO] [1794751674.165784587] [mission_manager]: [nav goal PG-11/V0 d=1.50 a=+0deg] TERMINAL SUCCEEDED
+[mission_manager-11] [INFO] [1794751678.197261187] [mission_manager]: [nav goal PG-12/V0 d=1.50 a=+0deg] SENT 
+[mission_manager-11] [INFO] [1794751678.214065020] [mission_manager]: [nav goal PG-12/V0 d=1.50 a=+0deg] ACCEPTED 
+[mission_manager-11] [INFO] [1794751732.585851740] [mission_manager]: [nav goal PG-12/V0 d=1.50 a=+0deg] TERMINAL SUCCEEDED
+[mission_manager-11] [INFO] [1794751738.191813097] [mission_manager]: [PG-12] obs #1 @ V0 d=1.50 a=+0deg: no value flags=['TAG_NOT_VISIBLE'] -> RETRY_SAME (possibly transient (TAG_NOT_VISIBLE): observe again from the same pose)
+[mission_manager-11] [INFO] [1794751745.306219917] [mission_manager]: [PG-12] obs #2 @ V0 d=1.50 a=+0deg: no value flags=['TAG_NOT_VISIBLE'] -> MOVE_NEW (TAG_NOT_VISIBLE persisted after 1 retry(ies))
+[mission_manager-11] [INFO] [1794751745.310396882] [mission_manager]: [nav goal PG-12/V3 d=1.50 a=-45deg] SENT 
+[mission_manager-11] [INFO] [1794751745.373514886] [mission_manager]: [nav goal PG-12/V3 d=1.50 a=-45deg] ACCEPTED 
+[mission_manager-11] [INFO] [1794751764.956759246] [mission_manager]: [nav goal PG-12/V3 d=1.50 a=-45deg] TERMINAL SUCCEEDED
+[mission_manager-11] [INFO] [1794751776.541048875] [mission_manager]: [PG-12] obs #3 @ V3 d=1.50 a=-45deg: 6.81 +/- 0.08 flags=['TOO_FAR'] -> MOVE_NEW (viewpoint-dependent problem (TOO_FAR))
+[mission_manager-11] [INFO] [1794751776.610163642] [mission_manager]: [nav goal PG-12/V8 d=1.20 a=-45deg] SENT 
+[mission_manager-11] [INFO] [1794751776.668429756] [mission_manager]: [nav goal PG-12/V8 d=1.20 a=-45deg] ACCEPTED 
+[mission_manager-11] [INFO] [1794751779.025673349] [mission_manager]: [nav goal PG-12/V8 d=1.20 a=-45deg] TERMINAL SUCCEEDED
+[mission_manager-11] [INFO] [1794751784.767950024] [mission_manager]: [PG-12] obs #4 @ V8 d=1.20 a=-45deg: 6.78 +/- 0.08 flags=[] -> ACCEPT (5 valid frames, sigma 0.079 <= 0.15)
+[mission_manager-11] [INFO] [1794751976.980985361] [mission_manager]: [PG-14] obs #1 @ V0 d=1.50 a=+0deg: 8.70 +/- 0.05 flags=[] -> ACCEPT (5 valid frames, sigma 0.053 <= 0.15)
+[mission_manager-11] [INFO] [1794751977.023492961] [mission_manager]: [nav goal HOME] SENT 
+[mission_manager-11] [INFO] [1794751977.077463093] [mission_manager]: [nav goal HOME] ACCEPTED 
+[mission_manager-11] [INFO] [1794752096.600394272] [mission_manager]: [nav goal HOME] TERMINAL SUCCEEDED
