@@ -1,0 +1,40 @@
+utc,mission_manager_event
+2026-11-15T14:07:27.580706505Z,[nav goal PG-11/V0 d=1.50 a=+0deg] SENT
+2026-11-15T14:07:27.634728044Z,[nav goal PG-11/V0 d=1.50 a=+0deg] ACCEPTED
+2026-11-15T14:07:54.165784587Z,[nav goal PG-11/V0 d=1.50 a=+0deg] TERMINAL SUCCEEDED
+2026-11-15T14:07:58.067865081Z,"[PG-11] obs #1 @ V0 d=1.50 a=+0deg: 4.19 +/- 0.05 flags=[] -> ACCEPT (5 valid frames, sigma 0.052 <= 0.15)"
+2026-11-15T14:07:58.197261187Z,[nav goal PG-12/V0 d=1.50 a=+0deg] SENT
+2026-11-15T14:07:58.214065020Z,[nav goal PG-12/V0 d=1.50 a=+0deg] ACCEPTED
+2026-11-15T14:08:52.585851740Z,[nav goal PG-12/V0 d=1.50 a=+0deg] TERMINAL SUCCEEDED
+2026-11-15T14:08:58.191813097Z,[PG-12] obs #1 @ V0 d=1.50 a=+0deg: no value flags=['TAG_NOT_VISIBLE'] -> RETRY_SAME (possibly transient (TAG_NOT_VISIBLE): observe again from the same pose)
+2026-11-15T14:09:05.306219917Z,[PG-12] obs #2 @ V0 d=1.50 a=+0deg: no value flags=['TAG_NOT_VISIBLE'] -> MOVE_NEW (TAG_NOT_VISIBLE persisted after 1 retry(ies))
+2026-11-15T14:09:05.310396882Z,[nav goal PG-12/V3 d=1.50 a=-45deg] SENT
+2026-11-15T14:09:05.373514886Z,[nav goal PG-12/V3 d=1.50 a=-45deg] ACCEPTED
+2026-11-15T14:09:24.956759246Z,[nav goal PG-12/V3 d=1.50 a=-45deg] TERMINAL SUCCEEDED
+2026-11-15T14:09:36.541048875Z,[PG-12] obs #3 @ V3 d=1.50 a=-45deg: 6.81 +/- 0.08 flags=['TOO_FAR'] -> MOVE_NEW (viewpoint-dependent problem (TOO_FAR))
+2026-11-15T14:09:36.610163642Z,[nav goal PG-12/V8 d=1.20 a=-45deg] SENT
+2026-11-15T14:09:36.668429756Z,[nav goal PG-12/V8 d=1.20 a=-45deg] ACCEPTED
+2026-11-15T14:09:39.025673349Z,[nav goal PG-12/V8 d=1.20 a=-45deg] TERMINAL SUCCEEDED
+2026-11-15T14:09:44.767950024Z,"[PG-12] obs #4 @ V8 d=1.20 a=-45deg: 6.78 +/- 0.08 flags=[] -> ACCEPT (5 valid frames, sigma 0.079 <= 0.15)"
+2026-11-15T14:09:44.869390012Z,[nav goal PG-13/V0 d=1.50 a=+0deg] SENT
+2026-11-15T14:09:44.927026904Z,[nav goal PG-13/V0 d=1.50 a=+0deg] ACCEPTED
+2026-11-15T14:10:37.294546430Z,[nav goal PG-13/V0 d=1.50 a=+0deg] TERMINAL SUCCEEDED
+2026-11-15T14:10:44.598674456Z,[PG-13] obs #1 @ V0 d=1.50 a=+0deg: no value flags=['TAG_NOT_VISIBLE'] -> RETRY_SAME (possibly transient (TAG_NOT_VISIBLE): observe again from the same pose)
+2026-11-15T14:10:51.109964621Z,[PG-13] obs #2 @ V0 d=1.50 a=+0deg: no value flags=['TAG_NOT_VISIBLE'] -> MOVE_NEW (TAG_NOT_VISIBLE persisted after 1 retry(ies))
+2026-11-15T14:10:51.122167100Z,[nav goal PG-13/V1 d=1.50 a=-30deg] SENT
+2026-11-15T14:10:51.173331237Z,[nav goal PG-13/V1 d=1.50 a=-30deg] ACCEPTED
+2026-11-15T14:11:10.766162313Z,[nav goal PG-13/V1 d=1.50 a=-30deg] TERMINAL SUCCEEDED
+2026-11-15T14:11:17.182577697Z,[PG-13] obs #3 @ V1 d=1.50 a=-30deg: no value flags=['TAG_NOT_VISIBLE'] -> RETRY_SAME (possibly transient (TAG_NOT_VISIBLE): observe again from the same pose)
+2026-11-15T14:11:26.044687209Z,[PG-13] obs #4 @ V1 d=1.50 a=-30deg: no value flags=['TAG_NOT_VISIBLE'] -> MOVE_NEW (TAG_NOT_VISIBLE persisted after 1 retry(ies))
+2026-11-15T14:11:26.083753507Z,[nav goal PG-13/V2 d=1.50 a=+30deg] SENT
+2026-11-15T14:11:26.088537779Z,[nav goal PG-13/V2 d=1.50 a=+30deg] ACCEPTED
+2026-11-15T14:11:51.763558546Z,[nav goal PG-13/V2 d=1.50 a=+30deg] TERMINAL SUCCEEDED
+2026-11-15T14:11:59.211827024Z,[PG-13] obs #5 @ V2 d=1.50 a=+30deg: no value flags=['TAG_NOT_VISIBLE'] -> RETRY_SAME (possibly transient (TAG_NOT_VISIBLE): observe again from the same pose)
+2026-11-15T14:12:07.835470088Z,[PG-13] obs #6 @ V2 d=1.50 a=+30deg: no value flags=['TAG_NOT_VISIBLE'] -> UNRESOLVED (TAG_NOT_VISIBLE persisted and no viewpoint/observation budget left)
+2026-11-15T14:12:08.049343007Z,[nav goal PG-14/V0 d=1.50 a=+0deg] SENT
+2026-11-15T14:12:08.147123628Z,[nav goal PG-14/V0 d=1.50 a=+0deg] ACCEPTED
+2026-11-15T14:12:49.169324132Z,[nav goal PG-14/V0 d=1.50 a=+0deg] TERMINAL SUCCEEDED
+2026-11-15T14:12:56.980985361Z,"[PG-14] obs #1 @ V0 d=1.50 a=+0deg: 8.70 +/- 0.05 flags=[] -> ACCEPT (5 valid frames, sigma 0.053 <= 0.15)"
+2026-11-15T14:12:57.023492961Z,[nav goal HOME] SENT
+2026-11-15T14:12:57.077463093Z,[nav goal HOME] ACCEPTED
+2026-11-15T14:14:56.600394272Z,[nav goal HOME] TERMINAL SUCCEEDED
