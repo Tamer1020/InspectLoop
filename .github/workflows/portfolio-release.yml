@@ -1,0 +1,98 @@
+name: Upload inspected portfolio films
+on:
+  push:
+    branches: [media/publish-v3-2-20261115]
+permissions:
+  contents: write
+jobs:
+  release-media:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the media and attach the two films
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd film-delivery
+          sha256sum -c SHA256SUMS
+          if ! command -v ffprobe >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -yq ffmpeg
+          fi
+          for file in InspectLoop-Demo.mp4 InspectLoop-PG12-Short.mp4; do
+            ffprobe -v error -show_entries stream=codec_name,width,height:format=duration -of json "$file"
+            existing=$(gh release view v3.2.0 --repo "$GITHUB_REPOSITORY" --json assets --jq ".assets[] | select(.name == \"$file\") | .name")
+            if [[ -z "$existing" ]]; then
+              gh release upload v3.2.0 "$file" --repo "$GITHUB_REPOSITORY"
+            fi
+            curl -fsSL --retry-all-errors --retry 5 "https://github.com/$GITHUB_REPOSITORY/releases/download/v3.2.0/$file" -o "$RUNNER_TEMP/$file"
+            cmp "$file" "$RUNNER_TEMP/$file"
+          done
+  public-page:
+    needs: release-media
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    timeout-minutes: 16
+    steps:
+      - name: Inspect the public README on desktop and mobile
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ready=false
+          for i in {1..65}; do
+            text=$(gh api -H "Accept: application/vnd.github.raw+json" "repos/$GITHUB_REPOSITORY/contents/README.md")
+            if grep -q 'docs/media/inspectloop-cover.jpg' <<<"$text"; then ready=true; break; fi
+            sleep 10
+          done
+          "$ready"
+          mkdir -p screenshots
+          npm install --prefix "$RUNNER_TEMP/screen" playwright-core --silent
+          export NODE_PATH="$RUNNER_TEMP/screen/node_modules"
+          node <<'JS'
+          const {chromium}=require('playwright-core');
+          (async()=>{
+            const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',args:['--no-sandbox']});
+            try {
+              for(const [name,width,height] of [['desktop',1440,1000],['mobile',390,844]]){
+                const page=await browser.newPage({viewport:{width,height},deviceScaleFactor:1});
+                await page.goto('https://github.com/'+process.env.GITHUB_REPOSITORY,{waitUntil:'domcontentloaded',timeout:60000});
+                const article=page.locator('article.markdown-body').first();
+                const cover=article.locator('img[alt*="engineering demo"]').first();
+                await cover.scrollIntoViewIfNeeded({timeout:30000});
+                await page.waitForFunction(()=>{const img=document.querySelector('article img[alt*="engineering demo"]');return img?.complete && img.naturalWidth>0});
+                const sizes=await article.evaluate(e=>({article:e.scrollWidth,visible:e.clientWidth}));
+                if(sizes.article>sizes.visible+2) throw new Error(name+' README overflow '+JSON.stringify(sizes));
+                const href=await cover.locator('..').getAttribute('href');
+                if(!href || !href.includes('/releases/download/v3.2.0/InspectLoop-Demo.mp4')) throw new Error('poster URL '+href);
+                await article.locator('h1').first().evaluate(e=>e.scrollIntoView({block:'start'}));
+                await page.waitForTimeout(1200);
+                await page.screenshot({path:'screenshots/'+name+'.png'});
+                console.log(name,JSON.stringify(sizes),href);
+                await page.close();
+              }
+              const player = await browser.newPage();
+              const base = 'https://github.com/'+process.env.GITHUB_REPOSITORY+'/releases/download/v3.2.0/';
+              for(const [name,expected] of [['InspectLoop-Demo.mp4',93],['InspectLoop-PG12-Short.mp4',30]]){
+                await player.setContent('<video muted playsinline preload="auto" style="width:640px"></video>');
+                await player.locator('video').evaluate((v,url)=>{v.src=url},base+name);
+                await player.waitForFunction(()=>document.querySelector('video').readyState>=2,null,{timeout:45000});
+                await player.locator('video').evaluate(v=>{v.currentTime=6;return v.play()});
+                await player.waitForFunction(()=>document.querySelector('video').currentTime>6.4);
+                const meta=await player.locator('video').evaluate(v=>({w:v.videoWidth,h:v.videoHeight,duration:v.duration}));
+                if(Math.abs(meta.duration-expected)>.25) throw new Error(name+' duration '+meta.duration);
+                console.log('Public H.264 playback passed',name,meta);
+              }
+              await player.close();
+            } finally {await browser.close()}
+          })().catch(e=>{console.error(e);process.exitCode=1});
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public-page-inspection
+          path: screenshots/
+          retention-days: 3
