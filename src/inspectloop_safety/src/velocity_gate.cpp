@@ -279,7 +279,13 @@ SectorCoverage sectorCoverage(const ScanData & s, double centre, double half_ang
       win[nwin++] = {static_cast<long>(lo), static_cast<long>(hi)};
     }
   }
-  std::sort(win.begin(), win.begin() + static_cast<std::ptrdiff_t>(nwin));
+  // order the <= 3 windows by start (insertion sort: std::sort on a partially filled std::array
+  // triggers a GCC -Warray-bounds false positive at -O2)
+  for (std::size_t a = 1; a < nwin; ++a) {
+    for (std::size_t b = a; b > 0 && win[b] < win[b - 1]; --b) {
+      std::swap(win[b], win[b - 1]);
+    }
+  }
 
   long observed = 0, run = 0, longest = 0, leading = -1;
   long k = 0;                   // next sample not yet accounted for

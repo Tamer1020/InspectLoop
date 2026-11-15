@@ -39,8 +39,8 @@ never be confirmed.
 | SIGINT right after goal #3 SENT (V3.1, V3.2) | late acceptance cancelled and confirmed; Nav2 2× SUCCEEDED + 1× CANCELED; robot 0.000 m/s | `…/f4_dispatch_3/`, `…/sigint_dispatch_3/` |
 | Lost goal handle, real Nav2 (V3.2 harness) | with fallback: cancelled by ID, Nav2 CANCELED, robot 0.000 m/s, cleanup True. Control without fallback: goal kept EXECUTING, robot up to 0.40 m/s for ~13 s, cleanup False | `docs/evidence/astra_v3_2/live_unknown_goal/` |
 
-Not verified: gate e-stop service failure and gate restart during shutdown, CI execution, any
-hardware.
+CI: the same 500 results pass in GitHub Actions (Release build, `ros:jazzy-ros-base`).
+Not verified: gate e-stop service failure and gate restart during shutdown, any hardware.
 
 ## V3 results
 

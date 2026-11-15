@@ -90,7 +90,7 @@ This is one run in one world; earlier runs are in `docs/evidence/demo_run_v3*`.
 
 ROS 2 Jazzy · Nav2 1.3 (AMCL, MPPI, bt_navigator) · Gazebo Harmonic (gz-sim 8) via `ros_gz` ·
 C++17 (rclcpp, GoogleTest) · Python 3.12 (rclpy, OpenCV 4.6, NumPy, pytest) · xacro/URDF ·
-colcon / ament · GitHub Actions (workflow defined, not yet executed).
+colcon / ament · GitHub Actions CI (full build + `colcon test` in a `ros:jazzy-ros-base` container on every push).
 
 ## Architecture
 
@@ -190,7 +190,9 @@ colcon test && colcon test-result --verbose
 
 Last full run on the release candidate: **500 results, 0 errors, 0 failures, 0 skipped** —
 489 test cases (C++ GoogleTest 68, vision pytest 208, mission pytest 187, gazebo / description /
-navigation / bringup 26) plus 11 CTest wrapper entries.
+navigation / bringup 26) plus 11 CTest wrapper entries — identical locally and in
+[GitHub Actions CI](https://github.com/Tamer1020/InspectLoop/actions/workflows/ci.yml) (Release build). CI runs the unit and
+component tests only; the Gazebo / Nav2 simulation is not run in CI.
 
 Live integration and fault-injection scripts (each needs the simulation stack, run one at a time):
 
@@ -211,7 +213,7 @@ Everything runs in simulation. The table separates what was checked, and how.
 | **Unit / component tests** (automated, `colcon test`) | Gauge reader on synthetic images, decision policy, viewpoint planner, report generation, Nav2 goal lifecycle against fakes **and a real rclpy action server** (late acceptance, cancel refused, SIGINT at every bytecode of the send path, cancel by goal ID without touching other clients' goals), velocity-gate logic (scan validation, sector coverage, bounded work, watchdog scheduling), world/map generation, URDF, launch files | `src/*/test/`, [docs/TEST_RESULTS.md](docs/TEST_RESULTS.md) |
 | **Offline evaluation** (synthetic, ground truth) | 400-burst frozen test set: 208 accepted, 0 incorrect acceptances | `docs/evidence/astra_v3/f1_eval/` |
 | **Live integration** (Gazebo + Nav2 on the development machine, headless) | Full 4-gauge missions; LiDAR/camera loss; all-NaN, empty, front-blind and malformed-metadata scans (gate stops, timer keeps its 20 Hz period); frozen / future-stamped images; sim-time reset; SIGINT during navigation and right after goal dispatch (goal cancelled and confirmed in Nav2's status); lost goal handle cancelled by goal ID (control run without the fix: robot kept driving) | `docs/evidence/demo_run_v3*`, `docs/evidence/astra_v3/faults/`, `docs/evidence/astra_v3_1_live/`, `docs/evidence/astra_v3_2/` |
-| **Not verified** | CI workflow (never executed); real hardware, real camera images, glare/blur; RViz rendering; gate e-stop service failure or gate restart during shutdown; long-duration or randomised runs; SLAM mapping | [docs/KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md) |
+| **Not verified** | Real hardware, real camera images, glare/blur; RViz rendering; gate e-stop service failure or gate restart during shutdown; long-duration or randomised runs; SLAM mapping | [docs/KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md) |
 
 Live results are developer-reported from one machine (logs, mission records and images are
 archived under `docs/evidence/`). Folders named `astra*` belong to independent review rounds;

@@ -129,7 +129,8 @@
 ## Verification gaps
 * RViz2 ran during the GUI mission but its rendering was not visually verified (WSLg screen capture
   unavailable; GLSL warning for the costmap colour shader on the WSL Mesa driver).
-* CI workflow not executed (repository not published from this environment).
+* CI (GitHub Actions) builds and runs the unit / component tests only; the Gazebo + Nav2 simulation
+  and the fault-injection scripts are not run in CI.
 * The independent reviewer could not run ROS 2 / Gazebo; all live results are developer-reported
   from this machine (logs, records and images are archived in `docs/evidence/`).
 * Results come from a handful of runs of one world; no randomised or long-duration testing.
