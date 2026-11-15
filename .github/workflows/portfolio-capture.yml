@@ -1,0 +1,70 @@
+name: Capture InspectLoop simulation
+on:
+  push:
+    branches: [media/gui-capture-20261115]
+permissions:
+  contents: read
+jobs:
+  record:
+    runs-on: ubuntu-24.04
+    container: ros:jazzy-ros-base
+    timeout-minutes: 38
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the simulation and display tools
+        run: |
+          set -eo pipefail
+          apt-get update -qq
+          DEBIAN_FRONTEND=noninteractive apt-get install -yq ros-jazzy-rviz2 ros-jazzy-nav2-bringup ros-jazzy-ros-gz ros-jazzy-cv-bridge ros-jazzy-navigation2 ros-jazzy-xacro python3-opencv xvfb openbox wmctrl ffmpeg mesa-utils libgl1-mesa-dri
+          rosdep update --rosdistro jazzy
+          rosdep install --from-paths src --ignore-src -y --rosdistro jazzy
+      - name: Build the unmodified robotics stack
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          colcon build --parallel-workers 2 --cmake-args -DCMAKE_BUILD_TYPE=Release
+      - name: Record two displays and preserve the actual mission
+        run: |
+          set -eo pipefail
+          source /opt/ros/jazzy/setup.bash
+          source install/setup.bash
+          mkdir -p capture/runs
+          export LIBGL_ALWAYS_SOFTWARE=1 QT_QPA_PLATFORM=xcb
+          export XDG_RUNTIME_DIR=/tmp/inspectloop-xdg
+          mkdir -p "$XDG_RUNTIME_DIR"; chmod 700 "$XDG_RUNTIME_DIR"
+          for n in 81 82; do
+            Xvfb ":$n" -screen 0 1280x720x24 -ac +extension GLX >"capture/xvfb-$n.log" 2>&1 &
+            for i in {1..30}; do DISPLAY=":$n" xdpyinfo >/dev/null 2>&1 && break; sleep 1; done
+            DISPLAY=":$n" openbox >"capture/wm-$n.log" 2>&1 &
+          done
+          export DISPLAY=:81
+          ros2 launch inspectloop_bringup inspectloop.launch.py rviz:=false exit_on_mission_end:=true output_root:="$PWD/capture/runs" >capture/launch.log 2>&1 &
+          sim=$!
+          DISPLAY=:82 rviz2 -d src/inspectloop_navigation/rviz/inspectloop.rviz --ros-args -p use_sim_time:=true >capture/rviz.log 2>&1 &
+          rv=$!
+          pids=()
+          for spec in "81 gazebo" "82 rviz"; do
+            read -r n label <<< "$spec"
+            ffmpeg -nostdin -loglevel error -f x11grab -draw_mouse 0 -framerate 8 -video_size 1280x720 -i ":$n.0" -threads 2 -c:v libx264 -preset ultrafast -crf 25 -pix_fmt yuv420p -y "capture/$label.mkv" &
+            pids+=("$!")
+          done
+          for i in {1..210}; do
+            for n in 81 82; do
+              DISPLAY=":$n" wmctrl -l | head -n1 | while read -r id rest; do DISPLAY=":$n" wmctrl -ir "$id" -b add,maximized_vert,maximized_horz; done
+            done
+            find capture/runs -name mission_record.json | grep -q . && break
+            kill -0 "$sim" 2>/dev/null || break
+            sleep 5
+          done
+          kill -INT "${pids[@]}" 2>/dev/null || true
+          for p in "${pids[@]}"; do wait "$p" || true; done
+          kill -INT "$rv" "$sim" 2>/dev/null || true
+          find capture/runs -name mission_record.json | grep -q .
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: inspectloop-gui-capture
+          path: capture/
+          retention-days: 3
