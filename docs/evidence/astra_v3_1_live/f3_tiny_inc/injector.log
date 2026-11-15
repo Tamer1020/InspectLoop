@@ -5,7 +5,7 @@ PUBLISHED 150
 PUBLISHED 200
 PUBLISHED 250
 Traceback (most recent call last):
-  File "/tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/tools/inject_tiny_inc.py", line 34, in <module>
+  File "<scratch>/live/tools/inject_tiny_inc.py", line 34, in <module>
     rclpy.spin(node)
   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
     executor.spin_once()

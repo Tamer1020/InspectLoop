@@ -343,7 +343,7 @@
 [component_container_isolated-10] [INFO] [1794741865.964670158] [lifecycle_manager_navigation]: [34m[1mActivating velocity_smoother[0m[0m
 [component_container_isolated-10] [INFO] [1794741865.965150629] [velocity_smoother]: Activating
 [component_container_isolated-10] [INFO] [1794741865.965226424] [velocity_smoother]: Creating bond (velocity_smoother) to lifecycle manager.
-[mission_manager-11] [0m[INFO] [1794741866.049584107] [mission_manager]: mission 20261115_122426_d225 "warehouse_pressure_round": 4 gauges -> /tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/demo/20261115_122426_d225[0m
+[mission_manager-11] [0m[INFO] [1794741866.049584107] [mission_manager]: mission 20261115_122426_d225 "warehouse_pressure_round": 4 gauges -> <scratch>/live/demo/20261115_122426_d225[0m
 [component_container_isolated-10] [INFO] [1794741866.151125320] [lifecycle_manager_navigation]: Server velocity_smoother connected with bond.
 [component_container_isolated-10] [INFO] [1794741866.151189726] [lifecycle_manager_navigation]: [34m[1mActivating collision_monitor[0m[0m
 [component_container_isolated-10] [INFO] [1794741866.151560214] [collision_monitor]: Activating
@@ -687,7 +687,7 @@
 [component_container_isolated-10] [INFO] [1794742091.483415482] [controller_server]: Optimizer reset
 [component_container_isolated-10] [INFO] [1794742091.512090034] [bt_navigator]: Goal succeeded
 [mission_manager-11] [0m[INFO] [1794742091.679809601] [mission_manager]: [nav goal HOME] TERMINAL SUCCEEDED[0m
-[mission_manager-11] [0m[INFO] [1794742091.798021591] [mission_manager]: mission COMPLETED. Report: /tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/demo/20261115_122426_d225/mission_report.md[0m
+[mission_manager-11] [0m[INFO] [1794742091.798021591] [mission_manager]: mission COMPLETED. Report: <scratch>/live/demo/20261115_122426_d225/mission_report.md[0m
 [INFO] [mission_manager-11]: process has finished cleanly [pid 3188]
 [INFO] [launch.user]: Mission finished - report written. Shutting down (exit_on_mission_end).
 [INFO] [component_container_isolated-10]: sending signal 'SIGINT' to process[component_container_isolated-10]

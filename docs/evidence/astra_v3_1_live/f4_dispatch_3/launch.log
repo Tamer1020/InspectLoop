@@ -363,7 +363,7 @@
 [component_container_isolated-10] [INFO] [1794742867.309599028] [lifecycle_manager_navigation]: Server docking_server connected with bond.
 [component_container_isolated-10] [INFO] [1794742867.309691368] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
 [component_container_isolated-10] [INFO] [1794742867.309701105] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
-[mission_manager-11] [0m[INFO] [1794742868.356056991] [mission_manager]: mission 20261115_124108_29fb "warehouse_pressure_round": 4 gauges -> /tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/f4_dispatch_3/20261115_124108_29fb[0m
+[mission_manager-11] [0m[INFO] [1794742868.356056991] [mission_manager]: mission 20261115_124108_29fb "warehouse_pressure_round": 4 gauges -> <scratch>/live/f4_dispatch_3/20261115_124108_29fb[0m
 [mission_manager-11] [0m[INFO] [1794742870.893217108] [mission_manager]: system ready[0m
 [mission_manager-11] [0m[INFO] [1794742870.927359620] [mission_manager]: === PG-11 (tag 11) Rack N1 - compressed-air header[0m
 [mission_manager-11] [0m[INFO] [1794742871.037698684] [mission_manager]: [PG-11] -> viewpoint V0 d=1.50 a=+0deg (-7.00, 2.49)[0m
@@ -454,7 +454,7 @@
 [mission_manager-11] [33m[WARN] [1794742922.280225295] [mission_manager]: [nav goal PG-12/V3 d=1.50 a=-45deg] CANCEL_CONFIRMED KeyboardInterrupt: signal 2: cancel ERROR_NONE, terminal CANCELED[0m
 [mission_manager-11] [0m[INFO] [1794742922.280761909] [mission_manager]: [nav goal PG-12/V3 d=1.50 a=-45deg] TERMINAL CANCELED (after cancel request)[0m
 [mission_manager-11] [31m[ERROR] [1794742922.281711401] [mission_manager]: MISSION INTERRUPTED[0m
-[mission_manager-11] [0m[INFO] [1794742922.301960226] [mission_manager]: mission ABORTED. Report: /tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/f4_dispatch_3/20261115_124108_29fb/mission_report.md[0m
+[mission_manager-11] [0m[INFO] [1794742922.301960226] [mission_manager]: mission ABORTED. Report: <scratch>/live/f4_dispatch_3/20261115_124108_29fb/mission_report.md[0m
 [ERROR] [mission_manager-11]: process has died [pid 5591, exit code 2, cmd '/home/tamer/InspectLoop/install/inspectloop_mission/lib/inspectloop_mission/mission_manager --ros-args -r __node:=mission_manager --params-file /home/tamer/InspectLoop/install/inspectloop_mission/share/inspectloop_mission/config/mission_params.yaml --params-file /tmp/launch_params_t0zkf6m8'].
 [cmd_vel_gate-7] [INFO] [1794742923.773394079] [cmd_vel_gate]: gate -> STOPPED_NO_COMMAND
 [health_monitor-8] [ERROR] [1794742938.719749555] [health_monitor]: /camera/image_raw: DEGRADED (age 0.08 s)

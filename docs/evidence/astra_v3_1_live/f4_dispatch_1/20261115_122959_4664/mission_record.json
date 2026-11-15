@@ -2,7 +2,7 @@
   "mission_id": "20261115_122959_4664",
   "mission_name": "warehouse_pressure_round",
   "mission_file": "/home/tamer/InspectLoop/install/inspectloop_mission/share/inspectloop_mission/config/gauges.yaml",
-  "run_dir": "/tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/f4_dispatch_1/20261115_122959_4664",
+  "run_dir": "<scratch>/live/f4_dispatch_1/20261115_122959_4664",
   "state": "ABORTED",
   "abort_reason": "interrupted (SIGINT)",
   "started_wall": "2026-11-15T12:29:59",

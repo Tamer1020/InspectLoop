@@ -363,7 +363,7 @@
 [component_container_isolated-10] [INFO] [1794180583.741416481] [lifecycle_manager_navigation]: Server docking_server connected with bond.
 [component_container_isolated-10] [INFO] [1794180583.741499368] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
 [component_container_isolated-10] [INFO] [1794180583.741508484] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
-[mission_manager-11] [0m[INFO] [1794180584.750501923] [mission_manager]: mission 20261109_002944_ac36 "warehouse_pressure_round": 4 gauges -> /tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo2/20261109_002944_ac36[0m
+[mission_manager-11] [0m[INFO] [1794180584.750501923] [mission_manager]: mission 20261109_002944_ac36 "warehouse_pressure_round": 4 gauges -> <scratch>/live/demo2/20261109_002944_ac36[0m
 [mission_manager-11] [0m[INFO] [1794180587.310917939] [mission_manager]: system ready[0m
 [mission_manager-11] [0m[INFO] [1794180587.382092458] [mission_manager]: === PG-11 (tag 11) Rack N1 - compressed-air header[0m
 [mission_manager-11] [0m[INFO] [1794180587.478677576] [mission_manager]: [PG-11] -> viewpoint V0 d=1.50 a=+0deg (-7.00, 2.49)[0m
@@ -672,7 +672,7 @@
 [component_container_isolated-10] [INFO] [1794180806.505724485] [controller_server]: Optimizer reset
 [component_container_isolated-10] [INFO] [1794180806.533863733] [bt_navigator]: Goal succeeded
 [mission_manager-11] [0m[INFO] [1794180806.612781957] [mission_manager]: [nav goal HOME] TERMINAL SUCCEEDED[0m
-[mission_manager-11] [0m[INFO] [1794180806.847791359] [mission_manager]: mission COMPLETED. Report: /tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo2/20261109_002944_ac36/mission_report.md[0m
+[mission_manager-11] [0m[INFO] [1794180806.847791359] [mission_manager]: mission COMPLETED. Report: <scratch>/live/demo2/20261109_002944_ac36/mission_report.md[0m
 [INFO] [mission_manager-11]: process has finished cleanly [pid 182052]
 [INFO] [launch.user]: Mission finished - report written. Shutting down (exit_on_mission_end).
 [INFO] [component_container_isolated-10]: sending signal 'SIGINT' to process[component_container_isolated-10]

@@ -2,7 +2,7 @@
   "mission_id": "20261109_001640_0420",
   "mission_name": "warehouse_pressure_round",
   "mission_file": "/home/tamer/InspectLoop/install/inspectloop_mission/share/inspectloop_mission/config/gauges.yaml",
-  "run_dir": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420",
+  "run_dir": "<scratch>/live/demo1/20261109_001640_0420",
   "state": "COMPLETED",
   "abort_reason": null,
   "started_wall": "2026-11-09T00:16:40",
@@ -258,9 +258,9 @@
                 "WRONG_VIEWPOINT",
                 "STALE_OBSERVATION"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V0_t00025.90_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V0_t00025.90_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V0_t00025.90_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V0_t00025.90_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V0_t00025.90_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V0_t00025.90_rectified.png",
               "detail": "rejected by mission: result too old when consumed: last frame 13.08 s old (limit 8.0 s); robot pose at acquisition time unknown",
               "consumed_time_s": 39.28,
               "result_age_s": 13.08,
@@ -317,9 +317,9 @@
               "quality_flags": [
                 "STALE_OBSERVATION"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V0_t00041.00_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V0_t00041.00_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V0_t00041.00_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V0_t00041.00_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V0_t00041.00_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V0_t00041.00_rectified.png",
               "detail": "rejected by mission: result too old when consumed: last frame 9.66 s old (limit 8.0 s)",
               "consumed_time_s": 51.064,
               "result_age_s": 9.664,
@@ -407,9 +407,9 @@
               "quality_flags": [
                 "STALE_OBSERVATION"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V5_t00052.90_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V5_t00052.90_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V5_t00052.90_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V5_t00052.90_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V5_t00052.90_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V5_t00052.90_rectified.png",
               "detail": "rejected by mission: result too old when consumed: last frame 8.92 s old (limit 8.0 s)",
               "consumed_time_s": 62.215,
               "result_age_s": 8.915,
@@ -466,9 +466,9 @@
                 "WRONG_VIEWPOINT",
                 "STALE_OBSERVATION"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V5_t00064.00_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V5_t00064.00_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V5_t00064.00_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V5_t00064.00_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V5_t00064.00_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V5_t00064.00_rectified.png",
               "detail": "rejected by mission: result too old when consumed: last frame 11.16 s old (limit 8.0 s); robot pose at acquisition time unknown",
               "consumed_time_s": 75.66,
               "result_age_s": 11.16,
@@ -557,9 +557,9 @@
               "quality_flags": [
                 "STALE_OBSERVATION"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V10_t00080.10_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V10_t00080.10_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V10_t00080.10_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V10_t00080.10_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V10_t00080.10_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V10_t00080.10_rectified.png",
               "detail": "rejected by mission: result too old when consumed: last frame 10.32 s old (limit 8.0 s)",
               "consumed_time_s": 90.823,
               "result_age_s": 10.323,
@@ -615,9 +615,9 @@
               "quality_flags": [
                 "STALE_OBSERVATION"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V10_t00092.50_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V10_t00092.50_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-11_V10_t00092.50_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V10_t00092.50_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V10_t00092.50_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-11_V10_t00092.50_rectified.png",
               "detail": "rejected by mission: result too old when consumed: last frame 8.45 s old (limit 8.0 s)",
               "consumed_time_s": 101.345,
               "result_age_s": 8.445,
@@ -942,9 +942,9 @@
                 "AMBIGUOUS_NEEDLE",
                 "NEEDLE_PARTIAL"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-12_V0_t00131.20_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-12_V0_t00131.20_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-12_V0_t00131.20_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-12_V0_t00131.20_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-12_V0_t00131.20_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-12_V0_t00131.20_rectified.png",
               "detail": "no reading: OCCLUDED, LOW_NEEDLE_CONTRAST, AMBIGUOUS_NEEDLE, NEEDLE_PARTIAL",
               "consumed_time_s": 139.553,
               "result_age_s": 7.853,
@@ -1027,9 +1027,9 @@
               "sharpness": 1016.8,
               "processing_time_ms": 8012.7,
               "quality_flags": [],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-12_V3_t00151.60_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-12_V3_t00151.60_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-12_V3_t00151.60_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-12_V3_t00151.60_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-12_V3_t00151.60_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-12_V3_t00151.60_rectified.png",
               "detail": "6.82 +/- 0.08 bar from 5/5 frames",
               "consumed_time_s": 159.931,
               "result_age_s": 7.931,
@@ -1080,7 +1080,7 @@
         ],
         "alarm": "NORMAL",
         "viewpoint": "V3 d=1.50 a=-45deg",
-        "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-12_V3_t00151.60_annotated.png",
+        "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-12_V3_t00151.60_annotated.png",
         "reason": "5 valid frames, sigma 0.075 <= 0.15",
         "outcome_class": "MEASURED",
         "observations": 2,
@@ -1308,8 +1308,8 @@
               "quality_flags": [
                 "TAG_NOT_VISIBLE"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-13_V0_t00187.90_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-13_V0_t00187.90_annotated.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-13_V0_t00187.90_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-13_V0_t00187.90_annotated.png",
               "rectified_image_path": "",
               "detail": "no reading: TAG_NOT_VISIBLE",
               "consumed_time_s": 188.812,
@@ -1357,8 +1357,8 @@
               "quality_flags": [
                 "TAG_NOT_VISIBLE"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-13_V0_t00190.50_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-13_V0_t00190.50_annotated.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-13_V0_t00190.50_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-13_V0_t00190.50_annotated.png",
               "rectified_image_path": "",
               "detail": "no reading: TAG_NOT_VISIBLE",
               "consumed_time_s": 191.464,
@@ -1438,8 +1438,8 @@
               "quality_flags": [
                 "TAG_NOT_VISIBLE"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-13_V1_t00202.80_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-13_V1_t00202.80_annotated.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-13_V1_t00202.80_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-13_V1_t00202.80_annotated.png",
               "rectified_image_path": "",
               "detail": "no reading: TAG_NOT_VISIBLE",
               "consumed_time_s": 203.631,
@@ -1487,8 +1487,8 @@
               "quality_flags": [
                 "TAG_NOT_VISIBLE"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-13_V1_t00205.40_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-13_V1_t00205.40_annotated.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-13_V1_t00205.40_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-13_V1_t00205.40_annotated.png",
               "rectified_image_path": "",
               "detail": "no reading: TAG_NOT_VISIBLE",
               "consumed_time_s": 206.563,
@@ -1568,8 +1568,8 @@
               "quality_flags": [
                 "TAG_NOT_VISIBLE"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-13_V2_t00220.40_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-13_V2_t00220.40_annotated.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-13_V2_t00220.40_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-13_V2_t00220.40_annotated.png",
               "rectified_image_path": "",
               "detail": "no reading: TAG_NOT_VISIBLE",
               "consumed_time_s": 221.664,
@@ -1617,8 +1617,8 @@
               "quality_flags": [
                 "TAG_NOT_VISIBLE"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-13_V2_t00223.50_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-13_V2_t00223.50_annotated.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-13_V2_t00223.50_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-13_V2_t00223.50_annotated.png",
               "rectified_image_path": "",
               "detail": "no reading: TAG_NOT_VISIBLE",
               "consumed_time_s": 224.548,
@@ -1942,9 +1942,9 @@
               "quality_flags": [
                 "STALE_OBSERVATION"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V0_t00247.00_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V0_t00247.00_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V0_t00247.00_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V0_t00247.00_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V0_t00247.00_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V0_t00247.00_rectified.png",
               "detail": "rejected by mission: result too old when consumed: last frame 9.83 s old (limit 8.0 s)",
               "consumed_time_s": 257.131,
               "result_age_s": 9.831,
@@ -2001,9 +2001,9 @@
                 "WRONG_VIEWPOINT",
                 "STALE_OBSERVATION"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V0_t00258.90_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V0_t00258.90_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V0_t00258.90_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V0_t00258.90_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V0_t00258.90_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V0_t00258.90_rectified.png",
               "detail": "rejected by mission: result too old when consumed: last frame 12.05 s old (limit 8.0 s); robot pose at acquisition time unknown",
               "consumed_time_s": 271.545,
               "result_age_s": 12.045,
@@ -2093,9 +2093,9 @@
                 "WRONG_VIEWPOINT",
                 "STALE_OBSERVATION"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V5_t00273.60_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V5_t00273.60_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V5_t00273.60_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V5_t00273.60_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V5_t00273.60_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V5_t00273.60_rectified.png",
               "detail": "rejected by mission: result too old when consumed: last frame 13.16 s old (limit 8.0 s); robot pose at acquisition time unknown",
               "consumed_time_s": 287.264,
               "result_age_s": 13.164,
@@ -2153,9 +2153,9 @@
                 "WRONG_VIEWPOINT",
                 "STALE_OBSERVATION"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V5_t00288.90_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V5_t00288.90_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V5_t00288.90_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V5_t00288.90_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V5_t00288.90_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V5_t00288.90_rectified.png",
               "detail": "rejected by mission: result too old when consumed: last frame 13.47 s old (limit 8.0 s); robot pose at acquisition time unknown",
               "consumed_time_s": 303.07,
               "result_age_s": 13.47,
@@ -2245,9 +2245,9 @@
                 "WRONG_VIEWPOINT",
                 "STALE_OBSERVATION"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V10_t00307.30_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V10_t00307.30_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V10_t00307.30_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V10_t00307.30_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V10_t00307.30_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V10_t00307.30_rectified.png",
               "detail": "rejected by mission: result too old when consumed: last frame 13.44 s old (limit 8.0 s); robot pose at acquisition time unknown",
               "consumed_time_s": 321.142,
               "result_age_s": 13.442,
@@ -2304,9 +2304,9 @@
               "quality_flags": [
                 "STALE_OBSERVATION"
               ],
-              "raw_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V10_t00322.80_raw.png",
-              "annotated_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V10_t00322.80_annotated.png",
-              "rectified_image_path": "/tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/images/PG-14_V10_t00322.80_rectified.png",
+              "raw_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V10_t00322.80_raw.png",
+              "annotated_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V10_t00322.80_annotated.png",
+              "rectified_image_path": "<scratch>/live/demo1/20261109_001640_0420/images/PG-14_V10_t00322.80_rectified.png",
               "detail": "rejected by mission: result too old when consumed: last frame 8.98 s old (limit 8.0 s)",
               "consumed_time_s": 332.178,
               "result_age_s": 8.978,

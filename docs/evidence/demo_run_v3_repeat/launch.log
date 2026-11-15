@@ -318,7 +318,7 @@
 [component_container_isolated-10] [INFO] [1794181451.253833153] [lifecycle_manager_navigation]: [34m[1mActivating smoother_server[0m[0m
 [component_container_isolated-10] [INFO] [1794181451.254246553] [smoother_server]: Activating
 [component_container_isolated-10] [INFO] [1794181451.254297790] [smoother_server]: Creating bond (smoother_server) to lifecycle manager.
-[mission_manager-11] [0m[INFO] [1794181451.350916329] [mission_manager]: mission 20261109_004411_d64d "warehouse_pressure_round": 4 gauges -> /tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo3/20261109_004411_d64d[0m
+[mission_manager-11] [0m[INFO] [1794181451.350916329] [mission_manager]: mission 20261109_004411_d64d "warehouse_pressure_round": 4 gauges -> <scratch>/live/demo3/20261109_004411_d64d[0m
 [component_container_isolated-10] [INFO] [1794181451.365860276] [lifecycle_manager_navigation]: Server smoother_server connected with bond.
 [component_container_isolated-10] [INFO] [1794181451.365911975] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
 [component_container_isolated-10] [INFO] [1794181451.366301228] [planner_server]: Activating
@@ -679,7 +679,7 @@
 [component_container_isolated-10] [INFO] [1794181678.689609819] [controller_server]: Optimizer reset
 [component_container_isolated-10] [INFO] [1794181678.718057032] [bt_navigator]: Goal succeeded
 [mission_manager-11] [0m[INFO] [1794181678.772535333] [mission_manager]: [nav goal HOME] TERMINAL SUCCEEDED[0m
-[mission_manager-11] [0m[INFO] [1794181678.922851101] [mission_manager]: mission COMPLETED. Report: /tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo3/20261109_004411_d64d/mission_report.md[0m
+[mission_manager-11] [0m[INFO] [1794181678.922851101] [mission_manager]: mission COMPLETED. Report: <scratch>/live/demo3/20261109_004411_d64d/mission_report.md[0m
 [mission_manager-11] terminate called without an active exception
 [ERROR] [mission_manager-11]: process has died [pid 189367, exit code -6, cmd '/home/tamer/InspectLoop/install/inspectloop_mission/lib/inspectloop_mission/mission_manager --ros-args -r __node:=mission_manager --params-file /home/tamer/InspectLoop/install/inspectloop_mission/share/inspectloop_mission/config/mission_params.yaml --params-file /tmp/launch_params_3f_s4ofa'].
 [INFO] [launch.user]: Mission finished - report written. Shutting down (exit_on_mission_end).

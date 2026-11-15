@@ -220,9 +220,9 @@
             "AMBIGUOUS_NEEDLE",
             "NEEDLE_PARTIAL"
           ],
-          "raw_image_path": "/tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/f4_dispatch_3/20261115_124108_29fb/images/PG-12_V0_t00058.10_raw.png",
-          "annotated_image_path": "/tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/f4_dispatch_3/20261115_124108_29fb/images/PG-12_V0_t00058.10_annotated.png",
-          "rectified_image_path": "/tmp/claude-1000/-home-tamer/0c4421a9-06b4-44b9-8252-90f553da16cb/scratchpad/live/f4_dispatch_3/20261115_124108_29fb/images/PG-12_V0_t00058.10_rectified.png",
+          "raw_image_path": "<scratch>/live/f4_dispatch_3/20261115_124108_29fb/images/PG-12_V0_t00058.10_raw.png",
+          "annotated_image_path": "<scratch>/live/f4_dispatch_3/20261115_124108_29fb/images/PG-12_V0_t00058.10_annotated.png",
+          "rectified_image_path": "<scratch>/live/f4_dispatch_3/20261115_124108_29fb/images/PG-12_V0_t00058.10_rectified.png",
           "detail": "no reading: OCCLUDED, LOW_NEEDLE_CONTRAST, AMBIGUOUS_NEEDLE, NEEDLE_PARTIAL",
           "consumed_time_s": 59.064,
           "result_age_s": 0.564,

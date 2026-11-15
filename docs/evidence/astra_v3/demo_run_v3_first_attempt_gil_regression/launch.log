@@ -358,7 +358,7 @@
 [component_container_isolated-10] [INFO] [1794179802.648635586] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
 [component_container_isolated-10] [INFO] [1794179802.648690951] [lifecycle_manager_navigation]: [34m[1mActivating docking_server[0m[0m
 [component_container_isolated-10] [INFO] [1794179802.649143619] [docking_server]: Activating docking_server
-[mission_manager-11] [0m[INFO] [1794179802.661238395] [mission_manager]: mission 20261109_001640_0420 "warehouse_pressure_round": 4 gauges -> /tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420[0m
+[mission_manager-11] [0m[INFO] [1794179802.661238395] [mission_manager]: mission 20261109_001640_0420 "warehouse_pressure_round": 4 gauges -> <scratch>/live/demo1/20261109_001640_0420[0m
 [component_container_isolated-10] [INFO] [1794179802.669731706] [docking_server]: Creating bond (docking_server) to lifecycle manager.
 [component_container_isolated-10] [INFO] [1794179802.785058082] [lifecycle_manager_navigation]: Server docking_server connected with bond.
 [component_container_isolated-10] [INFO] [1794179802.785140813] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
@@ -734,7 +734,7 @@
 [component_container_isolated-10] [INFO] [1794180199.482266407] [controller_server]: Optimizer reset
 [component_container_isolated-10] [INFO] [1794180199.511092104] [bt_navigator]: Goal succeeded
 [mission_manager-11] [0m[INFO] [1794180199.643870571] [mission_manager]: [nav goal HOME] TERMINAL SUCCEEDED[0m
-[mission_manager-11] [0m[INFO] [1794180199.894164694] [mission_manager]: mission COMPLETED. Report: /tmp/claude-1000/-home-tamer-InspectLoop/a05cbd6b-23ea-4ad2-b3be-46b1e28599f0/scratchpad/live/demo1/20261109_001640_0420/mission_report.md[0m
+[mission_manager-11] [0m[INFO] [1794180199.894164694] [mission_manager]: mission COMPLETED. Report: <scratch>/live/demo1/20261109_001640_0420/mission_report.md[0m
 [mission_manager-11] The following exception was never retrieved: cannot use Destroyable because destruction was requested
 [mission_manager-11] The following exception was never retrieved: cannot use Destroyable because destruction was requested
 [INFO] [mission_manager-11]: process has finished cleanly [pid 179864]

@@ -1,5 +1,8 @@
 # Test results
 
+> Archived run logs and records under `docs/evidence/` are unedited except that absolute
+> temporary working-directory prefixes are shortened to `<scratch>`.
+>
 > **Release candidate (V3.2, 2026-11-15)** — §V3.1/V3.2 below. §V3 (after the independent review
 > of V2, 2026-11-09; detail in `docs/ASTRA_V3_REMEDIATION_REPORT.md`), §0 (V2) and §1–7 (V1) are
 > kept for traceability.
